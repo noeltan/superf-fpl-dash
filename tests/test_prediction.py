@@ -6,8 +6,17 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+import sys
+import types
+
 from predict import actual_order, roll_record, score_prediction, window_for
-from superf.claude_call import allowed_numbers, find_violations, validate
+from superf.claude_call import (
+    MAX_TOKENS,
+    allowed_numbers,
+    find_violations,
+    request_call,
+    validate,
+)
 from superf.projection import (
     clean_sheet_probability,
     fixture_adjustment,
@@ -237,6 +246,139 @@ def test_validate_rejects_calling_the_same_manager_twice():
         "reasoning": "Short.",
     }
     assert any("same manager" in p for p in validate(call, ALLOWED, {"noel"}, {"Saka"}))
+
+
+# --- the request loop --------------------------------------------------------
+# The call is one API request a week, made unattended by a cron job, and every
+# failure path in it is silent by design: whatever goes wrong, the projection
+# ranking publishes and the week carries on. That is the right behaviour and it
+# is also why none of this can be left untested — a loop that never once
+# succeeds looks exactly like a loop that works.
+
+def good_call(reasoning="Noel projects 58.4 against Jack on 56.1."):
+    return {
+        "first": {"manager": "noel", "confidence": "medium"},
+        "second": {"manager": "jack", "confidence": "low"},
+        "agrees_with_projection": True,
+        "swing_player": {"name": "Saka", "owned_by": ["jack"], "why": "Owned by both."},
+        "reasoning": reasoning,
+    }
+
+
+class FakeToolUse:
+    type = "tool_use"
+
+    def __init__(self, payload, block_id="toolu_01"):
+        self.id = block_id
+        self.name = "publish_call"
+        self.input = payload
+
+
+class FakeResponse:
+    def __init__(self, content, stop_reason="tool_use", model="fake-model-1"):
+        self.content = content
+        self.stop_reason = stop_reason
+        self.model = model
+
+
+def fake_anthropic(monkeypatch, responses):
+    """Stand in for the SDK, and record what was sent."""
+    sent = []
+
+    class Messages:
+        def create(self, **kwargs):
+            sent.append(kwargs)
+            return responses[len(sent) - 1]
+
+    client = types.SimpleNamespace(messages=Messages())
+    module = types.SimpleNamespace(Anthropic=lambda api_key=None: client)
+    monkeypatch.setitem(sys.modules, "anthropic", module)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    monkeypatch.setenv("ANTHROPIC_MODEL", "configured-model")
+    return sent
+
+
+def call_it():
+    return request_call(
+        prompt="Gameweek 2.",
+        allowed=ALLOWED,
+        manager_ids={"noel", "jack"},
+        swing_names={"Saka"},
+        projections=PROJECTIONS,
+        names={"noel": "Noel", "jack": "Jack"},
+    )
+
+
+def test_the_token_budget_leaves_room_for_thinking(monkeypatch):
+    """max_tokens caps thinking plus text, so sizing it around a 120-word answer
+    truncates the tool call — and a truncated call is a silent fallback."""
+    sent = fake_anthropic(monkeypatch, [FakeResponse([FakeToolUse(good_call())])])
+    call, model = call_it()
+    assert not call.get("_fallback")
+    assert model == "fake-model-1"
+    assert sent[0]["max_tokens"] == MAX_TOKENS >= 4000
+
+
+def test_a_rejected_call_is_retried_as_a_tool_result(monkeypatch):
+    """A tool_use block must be answered by a tool_result in the next user turn.
+    Sent as loose text, the retry 400s and the retry path never runs at all."""
+    sent = fake_anthropic(monkeypatch, [
+        FakeResponse([FakeToolUse(good_call("Noel scores about 71."), "toolu_A")]),
+        FakeResponse([FakeToolUse(good_call(), "toolu_B")]),
+    ])
+    call, _ = call_it()
+    assert not call.get("_fallback")
+    assert len(sent) == 2
+
+    replay, rejection = sent[1]["messages"][-2:]
+    assert replay["role"] == "assistant"
+    assert rejection["role"] == "user"
+    result = rejection["content"][0]
+    assert result["type"] == "tool_result"
+    assert result["tool_use_id"] == "toolu_A"
+    assert result["is_error"] is True
+    assert "71" in result["content"]
+
+
+def test_two_bad_calls_publish_the_projection_ranking(monkeypatch):
+    sent = fake_anthropic(monkeypatch, [
+        FakeResponse([FakeToolUse(good_call("Noel scores about 71."), "toolu_A")]),
+        FakeResponse([FakeToolUse(good_call("Jack scores about 84."), "toolu_B")]),
+    ])
+    call, model = call_it()
+    assert call["_fallback"] is True
+    assert model is None
+    assert len(sent) == 2
+
+
+@pytest.mark.parametrize("stop_reason", ["refusal", "max_tokens"])
+def test_a_response_with_no_tool_call_falls_back(monkeypatch, stop_reason):
+    """Both arrive as HTTP 200 with content that has no tool_use block in it."""
+    fake_anthropic(monkeypatch, [FakeResponse([], stop_reason=stop_reason)])
+    call, model = call_it()
+    assert call["_fallback"] is True
+    assert model is None
+
+
+def test_an_api_failure_never_fails_the_run(monkeypatch):
+    class Boom:
+        def create(self, **kwargs):
+            raise RuntimeError("overloaded")
+
+    monkeypatch.setitem(sys.modules, "anthropic", types.SimpleNamespace(
+        Anthropic=lambda api_key=None: types.SimpleNamespace(messages=Boom())))
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    monkeypatch.setenv("ANTHROPIC_MODEL", "configured-model")
+    call, model = call_it()
+    assert call["_fallback"] is True and model is None
+
+
+@pytest.mark.parametrize("missing", ["ANTHROPIC_API_KEY", "ANTHROPIC_MODEL"])
+def test_missing_configuration_falls_back_rather_than_guessing_a_model(monkeypatch, missing):
+    fake_anthropic(monkeypatch, [FakeResponse([FakeToolUse(good_call())])])
+    monkeypatch.delenv(missing)
+    call, model = call_it()
+    assert call["_fallback"] is True and model is None
 
 
 # --- §12.1 the window --------------------------------------------------------

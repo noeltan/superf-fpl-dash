@@ -31,6 +31,14 @@ log = logging.getLogger(__name__)
 MAX_WORDS = 120
 NUMBER_PATTERN = re.compile(r"\d+(?:\.\d+)?")
 
+# `max_tokens` caps thinking *plus* the response, and thinking is on by default
+# on the current models. The call itself is tiny — two manager ids, a swing
+# player and 120 words — but sizing the budget around the answer would let a
+# long think truncate the tool call, and a truncated call is indistinguishable
+# from a bad one: it falls back silently and the projection ranking publishes
+# itself as the call, every week, with nothing in the file saying so.
+MAX_TOKENS = 8000
+
 CALL_TOOL = {
     "name": "publish_call",
     "description": "Publish the gameweek call, its reasoning and the swing player.",
@@ -268,7 +276,7 @@ def request_call(
         try:
             response = client.messages.create(
                 model=model,
-                max_tokens=1600,
+                max_tokens=MAX_TOKENS,
                 system=SYSTEM,
                 tools=[CALL_TOOL],
                 tool_choice={"type": "tool", "name": "publish_call"},
@@ -278,9 +286,13 @@ def request_call(
             log.warning("model call failed: %s", exc)
             return deterministic_fallback(projections, names), None
 
+        stop = getattr(response, "stop_reason", None)
         block = next((b for b in response.content if getattr(b, "type", "") == "tool_use"), None)
         if block is None:
-            log.warning("model returned no tool call")
+            # A refusal returns HTTP 200 with no tool call, as does a response
+            # that ran out of budget mid-call. Both look like success to code
+            # that indexes content[0], so say which one it was.
+            log.warning("model returned no tool call (stop_reason=%s)", stop)
             return deterministic_fallback(projections, names), None
 
         call = dict(block.input)
@@ -290,17 +302,28 @@ def request_call(
 
         log.warning("call rejected (attempt %d): %s", attempt + 1, "; ".join(problems))
         if attempt == 0:
+            # The rejection has to come back as a tool_result, not as loose
+            # text: a tool_use block must be answered by a tool_result in the
+            # very next user turn, and the assistant turn is replayed verbatim
+            # because it may carry thinking blocks that cannot be reconstructed.
             messages += [
                 {"role": "assistant", "content": response.content},
                 {
                     "role": "user",
-                    "content": (
-                        "That call was rejected: "
-                        + "; ".join(problems)
-                        + ". Every number in the reasoning must be one the projections "
-                        "gave you. Rewrite it, using words instead of any figure you "
-                        "cannot point at. Call the tool again."
-                    ),
+                    "content": [
+                        {
+                            "type": "tool_result",
+                            "tool_use_id": block.id,
+                            "is_error": True,
+                            "content": (
+                                "That call was rejected: "
+                                + "; ".join(problems)
+                                + ". Every number in the reasoning must be one the "
+                                "projections gave you. Rewrite it, using words instead "
+                                "of any figure you cannot point at. Call the tool again."
+                            ),
+                        }
+                    ],
                 },
             ]
 
