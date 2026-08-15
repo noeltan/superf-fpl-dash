@@ -203,9 +203,23 @@ def scores_from_snapshot(
 
         row = record.get("history", {}).get(entry_id)
         picks = record.get("picks", {}).get(entry_id)
-        # A manager active for this gameweek but with no history row never set a
-        # squad. They score 0 and still pay (§10).
+        # No history row means FPL has no record of this entry playing at all.
+        # Missing a deadline is NOT this: FPL rolls the previous squad over and
+        # it scores normally, so a genuine 0 here is non-participation.
         did_not_set = row is None
+
+        # Which is why picks and history have to agree. A manager who fielded a
+        # team but whose history row is absent is a gap in what the API
+        # returned, not somebody who sat the week out — and booking them at 0
+        # charges them the stake for a week they played. The snapshot is frozen
+        # on first sight, so that verdict would never be revisited and would
+        # surface as a disputed total in May.
+        if did_not_set and (picks or {}).get("picks"):
+            raise LedgerError(
+                f"GW{gw}: {manager['id']!r} (entry {entry_id}) has a squad but no history "
+                "row. Refusing to book them at 0 points — delete "
+                f"{snapshot_mod.path_for(gw)} and rebuild once the API is consistent."
+            )
 
         stats = TiebreakStats()
         if picks and element_stats:
@@ -413,6 +427,11 @@ def main() -> int:
     except FetchError as exc:
         log.error("gameweek detail unavailable: %s", exc)
         return 2
+    except LedgerError as exc:
+        log.error("SNAPSHOT IS INCONSISTENT: %s", exc)
+        log.error("nothing published — charging a stake for a gameweek somebody "
+                  "actually played is exactly the error that survives to May")
+        return 1
 
     try:
         adjustments = corrections_mod.load(CORRECTIONS_JSON)
