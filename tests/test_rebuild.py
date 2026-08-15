@@ -18,6 +18,7 @@ from build import scores_from_snapshot, settled_date
 from conftest import LEAGUE
 from superf import snapshot as snapshot_mod
 from superf.ledger import Gameweek, settle
+from superf.money import LedgerError
 from superf.tiebreak import TiebreakStats
 
 MANAGERS = [dict(m, started_event=1) for m in LEAGUE]
@@ -151,13 +152,32 @@ def test_the_tiebreak_ladder_rebuilds_from_the_snapshot(record):
     assert noel.stats == TiebreakStats(goals=2, assists=2, conceded=2, cards=1)
 
 
-def test_a_manager_with_no_history_row_rebuilds_as_a_missed_deadline(record):
+def test_no_history_row_and_no_squad_is_non_participation(record):
+    """Not a missed deadline — FPL rolls the previous squad over and it scores
+    normally. A true 0 means the entry never played that gameweek at all, and
+    they are in the league, so they still pay."""
     stripped = json.loads(json.dumps(record))
     del stripped["history"]["1652821"]
+    del stripped["picks"]["1652821"]
     scores = scores_from_snapshot(stripped, MANAGERS)
     assert scores["noel"].did_not_set is True
     assert scores["noel"].points == 0
     assert scores["noel"].active is True
+
+
+def test_a_squad_with_no_history_row_refuses_to_publish(record):
+    """The dangerous case: they fielded a team, so the missing row is a gap in
+    what the API returned. Booking 0 would charge them for a week they played,
+    and the snapshot freezes that verdict until somebody disputes a total in
+    May — so the build stops instead."""
+    stripped = json.loads(json.dumps(record))
+    del stripped["history"]["1652821"]
+    assert stripped["picks"]["1652821"]["picks"], "fixture must still hold a squad"
+
+    with pytest.raises(LedgerError) as caught:
+        scores_from_snapshot(stripped, MANAGERS)
+    assert "noel" in str(caught.value)
+    assert "no history row" in str(caught.value)
 
 
 def test_the_full_ledger_rebuilds_from_snapshots_alone(record):

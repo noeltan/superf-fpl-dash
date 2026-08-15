@@ -42,7 +42,12 @@ class ManagerScore:
 
     @property
     def net_points(self) -> int:
-        """Points as they count for money. A missed deadline scores 0 and still pays."""
+        """Points as they count for money.
+
+        Missing a deadline does *not* land here: FPL rolls the previous squad
+        over and it scores normally. This is 0 only for a manager who never
+        entered a team at all, who is in the league and pays regardless.
+        """
         return 0 if self.points is None else int(self.points)
 
 

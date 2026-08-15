@@ -369,7 +369,7 @@ class Dashboard {
           pnlInk: pnl > 0 ? "var(--good)" : pnl < 0 ? "var(--crit)" : "var(--ink-2)"
         };
       }),
-      foot: "★ counts top-three finishes — for bragging only, no money. Forget to set team? Reads 0 ✕ and you still pay RM" +
+      foot: "★ counts top-three finishes — for bragging only, no money. Miss the deadline also never mind — FPL roll your last team over and it score as usual. 0 ✕ only show up if somebody never enter a team at all, and that one still pay RM" +
         D.stakes.weekly.stake + ". Accrued only ah — nobody pay anything yet, we settle in May."
     };
 

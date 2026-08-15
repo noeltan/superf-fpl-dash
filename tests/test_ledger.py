@@ -67,9 +67,11 @@ def test_season_banks_only_when_gw38_is_final(league):
     assert sum(result.totals.values()) == 0
 
 
-# --- §10 missed deadlines ----------------------------------------------------
+# --- §10 non-participation ---------------------------------------------------
+# Not a missed deadline: FPL rolls the previous squad over and it scores as
+# usual. This is the manager who never entered a team at all.
 
-def test_missed_deadline_scores_zero_and_still_pays(league):
+def test_never_setting_a_team_scores_zero_and_still_pays(league):
     points = dict(GW1_POINTS, chris=0)
     calendar = full_season({1: points}, months={1: "AUG"})
     calendar[1].scores["chris"].did_not_set = True
