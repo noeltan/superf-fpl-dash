@@ -9,4 +9,4 @@
  * settled ledger, the prediction card and both tabs all come from the JSON
  * files. Only the in-match live layer stays hidden.
  */
-export const PROXY_BASE = "";
+export const PROXY_BASE = "https://superf-fpl-proxy.workers.dev";
