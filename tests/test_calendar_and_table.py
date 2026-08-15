@@ -141,11 +141,15 @@ def test_unfinished_fixtures_are_ignored():
     assert all(row["p"] == 0 for row in table)
 
 
-def test_preseason_table_is_twenty_clubs_on_zero():
-    """§9.6 — pre-season is a real state that will be seen."""
-    table = build_table([], TEAMS)
-    assert len(table) == 3
-    assert all(row["pts"] == 0 and row["form"] == [] for row in table)
+def test_preseason_table_is_empty_so_the_view_can_say_so_deliberately():
+    """§9.6 — pre-season is a real state that will be seen.
+
+    An empty table triggers the designed empty state ("Twenty clubs, all still
+    zero"). Twenty rows of zeros would render as though something had gone
+    wrong, which is the opposite of saying so deliberately.
+    """
+    assert build_table([], TEAMS) == []
+    assert build_table([fixture(finished=False)], TEAMS) == []
 
 
 def test_form_keeps_only_the_last_five_results():
