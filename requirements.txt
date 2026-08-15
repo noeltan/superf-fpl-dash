@@ -1,0 +1,7 @@
+requests>=2.31
+
+# Optional — only needed for the Google Sheets backup mirror.
+google-auth>=2.28
+
+# Optional — only needed by predict.py.
+anthropic>=0.40

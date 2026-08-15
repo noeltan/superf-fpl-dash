@@ -1,0 +1,409 @@
+"""Assemble ``data.json`` in exactly the shape the prototype reads.
+
+The prototype's ``DATA`` object is the canonical schema (spec §5 is updated to
+match it in ``SCHEMA.md``). Every key it reads is emitted here, key for key.
+
+Money crosses this boundary as ringgit, because that is what the view formats.
+Everything upstream of here is integer sen.
+"""
+
+from __future__ import annotations
+
+from typing import Mapping, Sequence
+
+from . import copy as copytext
+from .config import (
+    CURRENCY,
+    EXPECTED_GAMEWEEKS,
+    MONTHLY_SPLIT,
+    MONTHLY_STAKE_PER_GW_RM,
+    SEASON_SPLIT,
+    SEASON_STAKE_RM,
+    SEASON,
+    TZ_NAME,
+    TZ_OFFSET_HOURS,
+    WEEKLY_SPLIT,
+    WEEKLY_STAKE_RM,
+)
+from .ledger import Gameweek, Settlement
+from .money import advertised_net, rm_to_sen, sen_to_rm
+
+
+def _rm(sen: int) -> float | int:
+    return sen_to_rm(sen)
+
+
+def stakes_block(n: int, month_gameweeks: int) -> dict:
+    """§7.2F — generated from ``N``, never hardcoded prose.
+
+    ``monthly`` describes the month bucket currently in view: its length drives
+    the stake, so a 2-gameweek August and a 6-gameweek December differ here.
+    """
+    weekly_stake = rm_to_sen(WEEKLY_STAKE_RM)
+    monthly_stake = rm_to_sen(MONTHLY_STAKE_PER_GW_RM * month_gameweeks)
+    season_stake = rm_to_sen(SEASON_STAKE_RM)
+    return {
+        "weekly": {
+            "stake": WEEKLY_STAKE_RM,
+            "pot": _rm(weekly_stake * n),
+            "split": list(WEEKLY_SPLIT),
+            "net": [_rm(v) for v in advertised_net(weekly_stake, n, WEEKLY_SPLIT)],
+        },
+        "monthly": {
+            "stake_per_gw": MONTHLY_STAKE_PER_GW_RM,
+            "gameweeks": month_gameweeks,
+            "stake": _rm(monthly_stake),
+            "pot": _rm(monthly_stake * n),
+            "split": list(MONTHLY_SPLIT),
+            "net": [_rm(v) for v in advertised_net(monthly_stake, n, MONTHLY_SPLIT)],
+        },
+        "season": {
+            "stake": SEASON_STAKE_RM,
+            "pot": _rm(season_stake * n),
+            "split": list(SEASON_SPLIT),
+            "net": [_rm(v) for v in advertised_net(season_stake, n, SEASON_SPLIT)],
+        },
+    }
+
+
+def exposure_block(n: int, total_gameweeks: int = EXPECTED_GAMEWEEKS) -> dict:
+    """§3.4 / §7.2F — "how much can this cost me?", derived from N.
+
+    §3.4 says RM480 staked at N=8; §3.7's closing "RM380 -> RM420" line is stale,
+    written before the season stake was raised from RM40 to RM100. Deriving it
+    means the two can never disagree again.
+    """
+    weekly_stake = rm_to_sen(WEEKLY_STAKE_RM)
+    monthly_stake_total = rm_to_sen(MONTHLY_STAKE_PER_GW_RM) * total_gameweeks
+    season_stake = rm_to_sen(SEASON_STAKE_RM)
+
+    staked = weekly_stake * total_gameweeks + monthly_stake_total + season_stake
+
+    weekly_best = advertised_net(weekly_stake, n, WEEKLY_SPLIT)[0] * total_gameweeks
+    # Winning every month is worth (0.7N - 1) x the season's total monthly stake,
+    # whatever shape the buckets happen to be.
+    monthly_best = (
+        advertised_net(monthly_stake_total, n, MONTHLY_SPLIT)[0]
+        if monthly_stake_total
+        else 0
+    )
+    season_best = advertised_net(season_stake, n, SEASON_SPLIT)[0]
+
+    return {
+        "staked": _rm(staked),
+        "best": _rm(weekly_best + monthly_best + season_best),
+        "worst": _rm(-staked),
+    }
+
+
+def _place_counts(settlement: Settlement, managers: Sequence[str]) -> tuple[dict, dict]:
+    """Podium finishes (display only, §2) and weeks won."""
+    podiums = {m: 0 for m in managers}
+    weeks_won = {m: 0 for m in managers}
+    for ranking in settlement.rankings.values():
+        if not ranking.groups:
+            continue
+        for manager in ranking.winners:
+            weeks_won[manager] = weeks_won.get(manager, 0) + 1
+        for manager in managers:
+            place = ranking.place_of(manager)
+            if place is not None and place <= 3:
+                podiums[manager] = podiums.get(manager, 0) + 1
+    return podiums, weeks_won
+
+
+def _ranked_ids(settlement: Settlement, managers: Sequence[str]) -> list[str]:
+    if settlement.season_ranking and settlement.season_ranking.groups:
+        ordered = [m for group in settlement.season_ranking.groups for m in group]
+        return ordered + [m for m in managers if m not in ordered]
+    return list(managers)
+
+
+def build_payload(
+    *,
+    generated_at: str,
+    league_name: str,
+    league_id: int,
+    managers: Sequence[Mapping],
+    teams: Mapping[int, Mapping],
+    events: Sequence[Mapping],
+    breaks: Sequence[Mapping],
+    month_buckets: Sequence[Mapping],
+    fixtures_by_gw: Mapping[int, Sequence[Mapping]],
+    pl_table: Sequence[Mapping],
+    gameweeks: Mapping[int, Gameweek],
+    settlement: Settlement,
+    current: Mapping,
+    you: str | None = None,
+) -> dict:
+    ids = [m["id"] for m in managers]
+    n = len(ids)
+    final_gws = sorted(gw for gw, g in gameweeks.items() if g.is_final)
+    settled_through = final_gws[-1] if final_gws else 0
+    you = you or (ids[0] if ids else "")
+
+    bucket_by_month = {b["month"]: list(b["gameweeks"]) for b in month_buckets}
+
+    # --- season points, standings -------------------------------------------
+    totals_points = {m: 0 for m in ids}
+    for gw in final_gws:
+        for manager, score in gameweeks[gw].scores.items():
+            if score.active:
+                totals_points[manager] += score.net_points
+
+    rank = _ranked_ids(settlement, ids)
+    leader_points = totals_points[rank[0]] if rank else 0
+    behind = {m: leader_points - totals_points[m] for m in ids}
+
+    # Rank before the most recent settled gameweek (§5 `rank_prev`).
+    rank_prev: dict[str, int] = {}
+    if len(final_gws) >= 1:
+        prior = {m: 0 for m in ids}
+        for gw in final_gws[:-1]:
+            for manager, score in gameweeks[gw].scores.items():
+                if score.active:
+                    prior[manager] += score.net_points
+        ordered_prior = sorted(ids, key=lambda m: (-prior[m], m))
+        rank_prev = {m: i + 1 for i, m in enumerate(ordered_prior)}
+
+    # --- gameweeks -----------------------------------------------------------
+    gameweek_rows = []
+    for gw in final_gws:
+        gameweek = gameweeks[gw]
+        ranking = settlement.rankings.get(gw)
+        scores = {}
+        for manager in ids:
+            score = gameweek.scores.get(manager)
+            if score is None or not score.active:
+                # A manager who was not in the league yet. Kept present so the
+                # view can index every manager in every settled gameweek
+                # without a lookup miss (§3.8.6 joiner safety).
+                scores[manager] = {
+                    "points": None, "hits": 0, "transfers": 0, "chip": None,
+                    "did_not_set": False, "active": False,
+                }
+            else:
+                scores[manager] = {
+                    "points": score.net_points,
+                    "hits": score.hits,
+                    "transfers": score.transfers,
+                    "chip": score.chip,
+                    "did_not_set": score.did_not_set,
+                    "active": True,
+                }
+        pot_sen = rm_to_sen(WEEKLY_STAKE_RM) * len(gameweek.active_managers)
+        gameweek_rows.append(
+            {
+                "gw": gw,
+                "month": gameweek.month,
+                "note": gameweek.note,
+                "scores": scores,
+                "winners": ranking.winners if ranking else [],
+                "pot": _rm(pot_sen) if gameweek.pays_pot else 0,
+                "tiebreak": ranking.tiebreak if ranking else None,
+                "bonus_change": None,  # §11.4, written by the live layer when it happens
+            }
+        )
+
+    # --- months --------------------------------------------------------------
+    # Only *complete* months go in `months[]`: the view labels the last entry
+    # SETTLED, so an in-progress bucket would lie. The running month lives in
+    # `month_current` instead.
+    month_rows = []
+    for bucket in month_buckets:
+        month, bucket_gws = bucket["month"], list(bucket["gameweeks"])
+        played = [gw for gw in bucket_gws if gw in final_gws]
+        if not played or len(played) != len(bucket_gws):
+            continue
+        ledger = settlement.monthly.get(month)
+        ranking = settlement.month_rankings.get(month)
+        if not ledger or not ranking:
+            continue
+
+        month_totals = {}
+        for gw in played:
+            for manager, score in gameweeks[gw].scores.items():
+                if score.active:
+                    month_totals[manager] = month_totals.get(manager, 0) + score.net_points
+        order = [m for group in ranking.groups for m in group]
+        stake_sen = rm_to_sen(MONTHLY_STAKE_PER_GW_RM * len(bucket_gws))
+        pot_sen = sum(
+            rm_to_sen(MONTHLY_STAKE_PER_GW_RM) * len(gameweeks[gw].active_managers)
+            for gw in played
+            if gameweeks[gw].pays_pot
+        )
+        nets = [ledger.get(m, 0) for m in order[:2]]
+        margin = (
+            month_totals.get(order[0], 0) - month_totals.get(order[1], 0)
+            if len(order) > 1
+            else 0
+        )
+        month_rows.append(
+            {
+                "month": month,
+                "gameweeks": bucket_gws,
+                "played": played,
+                "complete": True,
+                "stake": _rm(stake_sen),
+                "pot": _rm(pot_sen),
+                "split": list(MONTHLY_SPLIT),
+                "net": [_rm(v) for v in nets],
+                "totals": month_totals,
+                "order": order,
+                "gap_to_first": margin,
+                "callout": copytext.settled_month_callout(
+                    month,
+                    _display(managers, order[0]),
+                    month_totals.get(order[0], 0),
+                    _rm(nets[0]) if nets else 0,
+                    _display(managers, order[1]) if len(order) > 1 else "-",
+                    month_totals.get(order[1], 0) if len(order) > 1 else 0,
+                    _rm(nets[1]) if len(nets) > 1 else 0,
+                    _rm(stake_sen),
+                    max(len(order) - 2, 0),
+                    len(bucket_gws),
+                ),
+            }
+        )
+
+    # --- the running month ---------------------------------------------------
+    current_month = _current_month(month_buckets, final_gws, current)
+    month_current = None
+    if current_month:
+        month, bucket_gws = current_month["month"], current_month["gameweeks"]
+        played = [gw for gw in bucket_gws if gw in final_gws]
+        stake_sen = rm_to_sen(MONTHLY_STAKE_PER_GW_RM * len(bucket_gws))
+        nets = advertised_net(stake_sen, n, MONTHLY_SPLIT)
+        opens_gw = bucket_gws[0]
+        if played and len(played) < len(bucket_gws):
+            note = copytext.month_in_progress_note(
+                month, len(played), len(bucket_gws), _rm(stake_sen * n)
+            )
+        else:
+            note = copytext.month_opens_note(
+                month, len(bucket_gws), opens_gw, _rm(stake_sen), _rm(stake_sen * n)
+            )
+        month_current = {
+            "month": month,
+            "gameweeks": len(bucket_gws),
+            "opens_gw": opens_gw,
+            "stake": _rm(stake_sen),
+            "pot": _rm(stake_sen * n),
+            "net": [_rm(v) for v in nets],
+            "note": note,
+        }
+
+    # --- ledger --------------------------------------------------------------
+    weekly_totals = {m: 0 for m in ids}
+    for gw_ledger in settlement.weekly.values():
+        for manager, value in gw_ledger.items():
+            weekly_totals[manager] += value
+    monthly_totals = {m: 0 for m in ids}
+    for month_ledger in settlement.monthly.values():
+        for manager, value in month_ledger.items():
+            monthly_totals[manager] += value
+
+    last_gw = final_gws[-1] if final_gws else None
+    delta_source = {m: 0 for m in ids}
+    if last_gw is not None:
+        for manager, value in settlement.weekly.get(last_gw, {}).items():
+            delta_source[manager] += value
+        for month, month_ledger in settlement.monthly.items():
+            if bucket_by_month.get(month, [])[-1:] == [last_gw]:
+                for manager, value in month_ledger.items():
+                    delta_source[manager] += value
+
+    ledger_block = {}
+    for manager in ids:
+        ledger_block[manager] = {
+            "weekly": _rm(weekly_totals[manager]),
+            "monthly": _rm(monthly_totals[manager]),
+            "total": _rm(settlement.totals.get(manager, 0)),
+            "projected_season": _rm(
+                settlement.season.get(manager, settlement.projected_season.get(manager, 0))
+            ),
+            "delta_last_gw": _rm(delta_source[manager]),
+            # Per-gameweek weekly amount, matching §5's own [-5, -5] example and
+            # the prototype's reading — not a running cumulative total.
+            "by_gameweek": [_rm(settlement.weekly.get(gw, {}).get(manager, 0)) for gw in final_gws],
+        }
+
+    podiums, weeks_won = _place_counts(settlement, ids)
+
+    active_totals = [totals_points[m] for m in ids if totals_points[m] or final_gws]
+    avg_points = round(sum(active_totals) / len(active_totals), 1) if active_totals else 0
+    high = None
+    for gw in final_gws:
+        for manager, score in gameweeks[gw].scores.items():
+            if score.active and (high is None or score.net_points > high["points"]):
+                high = {"gw": gw, "manager": manager, "points": score.net_points}
+
+    month_for_stakes = len(current_month["gameweeks"]) if current_month else 0
+
+    return {
+        "generated_at": generated_at,
+        "league": {"id": league_id, "name": league_name, "currency": CURRENCY, "players": n},
+        "current": dict(current),
+        "tz": {"name": TZ_NAME, "offset": TZ_OFFSET_HOURS},
+        "stakes": stakes_block(n, month_for_stakes),
+        "exposure": exposure_block(n),
+        "managers": [dict(m) for m in managers],
+        "teams": {
+            str(team_id): {
+                "id": team_id, "name": team["name"], "short": team["short_name"]
+            }
+            for team_id, team in sorted(teams.items())
+        },
+        "events": [dict(e) for e in events],
+        "breaks": [dict(b) for b in breaks],
+        "month_buckets": [dict(b) for b in month_buckets],
+        "fixtures": {
+            str(gw): [dict(f) for f in rows] for gw, rows in sorted(fixtures_by_gw.items())
+        },
+        "pl_table": [dict(r) for r in pl_table],
+        "gameweeks": gameweek_rows,
+        "months": month_rows,
+        "month_current": month_current,
+        "totals": totals_points,
+        "rank": rank,
+        "rank_prev": rank_prev,
+        "behind": behind,
+        "ledger": ledger_block,
+        "podiums": podiums,
+        "weeks_won": weeks_won,
+        "stats": {"avg_points": avg_points, "high": high},
+        "settled": {
+            "through_gw": settled_through,
+            "projected": (
+                "season pot settled"
+                if settlement.season_is_final
+                else "season pot projected, not banked"
+            ),
+        },
+        "checks": {
+            "zero_sum": sum(settlement.totals.values()) == 0,
+            "gameweeks_expected": EXPECTED_GAMEWEEKS,
+            "gameweeks_present": len(events),
+        },
+    }
+
+
+def _display(managers: Sequence[Mapping], manager_id: str) -> str:
+    for manager in managers:
+        if manager["id"] == manager_id:
+            return manager.get("short") or manager["display_name"]
+    return manager_id
+
+
+def _current_month(
+    month_buckets: Sequence[Mapping], final_gws: Sequence[int], current: Mapping
+) -> dict | None:
+    """The bucket in play: the one holding next_gw, else the first incomplete one."""
+    next_gw = current.get("next_gw") or current.get("gameweek") or 1
+    for bucket in month_buckets:
+        if next_gw in bucket["gameweeks"]:
+            return dict(bucket)
+    for bucket in month_buckets:
+        if not all(gw in final_gws for gw in bucket["gameweeks"]):
+            return dict(bucket)
+    return dict(month_buckets[-1]) if month_buckets else None

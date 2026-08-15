@@ -1,0 +1,13 @@
+{
+  "_comment": "Stable slugs, assigned once from entry_id and never changed (spec §5). The API cannot produce these names on its own — Chris arrives as first_name 'Christopher Chin', last_name 'Jing Haur'. A manager who joins later and is missing here gets an auto-slug; add them so it stays stable.",
+  "managers": [
+    { "entry_id": 1652821, "id": "noel",      "display_name": "Noel Tan",         "short": "Noel" },
+    { "entry_id": 1427521, "id": "jack",      "display_name": "Jack Siah",        "short": "Jack" },
+    { "entry_id": 2686159, "id": "sam",       "display_name": "Sam Lim",          "short": "Sam" },
+    { "entry_id": 4590653, "id": "weihun",    "display_name": "Wei Hun Wong",     "short": "Wei Hun" },
+    { "entry_id": 2488327, "id": "soonlee",   "display_name": "Soon Lee Loo",     "short": "Soon Lee" },
+    { "entry_id": 1840731, "id": "boonsiang", "display_name": "Boon Siang Ng",    "short": "Boon" },
+    { "entry_id": 1567532, "id": "tianpin",   "display_name": "Tian Pin Lee",     "short": "Tian Pin" },
+    { "entry_id": 1641730, "id": "chris",     "display_name": "Christopher Chin", "short": "Chris" }
+  ]
+}
