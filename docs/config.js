@@ -9,4 +9,6 @@
  * settled ledger, the prediction card and both tabs all come from the JSON
  * files. Only the in-match live layer stays hidden.
  */
-export const PROXY_BASE = "https://superf-fpl-proxy.workers.dev";
+/* No trailing slash: paths are appended verbatim, and `//api/...` misses the
+ * Worker's allowlist and 404s. */
+export const PROXY_BASE = "https://superf-fpl-proxy.superf-fpl-proxy.workers.dev";
