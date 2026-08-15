@@ -7,6 +7,9 @@
  * defines five states and the map only had four, and two table cells learned to
  * render a dash for a manager who was not in the league yet.
  *
+ * Money vocabulary follows §3.9.1 exactly: nothing is paid until May, so the
+ * running figure is "owes" / "is owed" and never "won" or "collected".
+ *
  * Derived-value policy is unchanged: the view formats (RM, the true minus sign,
  * dates, MYT conversion) and does layout maths only. It never computes money,
  * ranking or aggregation. Those arrive settled in data.json.
@@ -78,6 +81,9 @@ class Dashboard {
         ? data.current.next_gw
         : data.current.gameweek,
       theme: this.detectTheme(),
+      detailRange: "all",
+      potView: "chart",
+      ledgerView: "chart",
       showProj: false,
       moneyOpen: null,
       tick: 0,
@@ -161,7 +167,7 @@ class Dashboard {
     }
   }
 
-  state = { tab:"gw", you:null, cmp:null, fxGW:null, theme:"light",
+  state = { tab:"gw", you:null, cmp:null, fxGW:null, theme:"light", detailRange:"all", potView:"chart", ledgerView:"chart",
             showProj:false, moneyOpen:null, tick:0, liveSince:Date.now() };
 
   /* ---------- formatting only — no money maths ---------- */
@@ -183,6 +189,12 @@ class Dashboard {
       ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getUTCMonth()]; }
   dateShort(iso){ const d = this.myt(iso);
     return d.getUTCDate() + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getUTCMonth()]; }
+  sen(v){ return this.rm(v / 100); }
+  senFlat(v){ return this.rmFlat(v / 100); }
+  sen2(v){ const a = Math.abs(v / 100).toFixed(2);
+    return (v > 0 ? "+RM" : v < 0 ? "\u2212RM" : "RM") + a; }
+  sen2Flat(v){ return (v < 0 ? "\u2212RM" : "RM") + Math.abs(v / 100).toFixed(2); }
+  senAbs(v){ return "RM" + Math.abs(v / 100).toFixed(2); }
   monthName(m){ return {AUG:"August",SEP:"September",OCT:"October",NOV:"November",DEC:"December",
     JAN:"January",FEB:"February",MAR:"March",APR:"April",MAY:"May"}[m] || m; }
   ago(sec){ if (sec < 60) return sec + "s ago";
@@ -341,11 +353,11 @@ class Dashboard {
         " weekly pot settle same night, so don't forget to set team ah.",
       signups: D.managers.map(m => ({ name:m.display_name, team:m.team_name, ink:inkOf(m.id), weight:wOf(m.id) })),
       head: [ {label:"#",align:"left"}, {label:"Manager",align:"left"}, {label:"GW" + (lastGW ? lastGW.gw : ""),align:"right"},
-              {label:"Total",align:"right"}, {label:"Behind",align:"right"}, {label:"★ Top 3",align:"right"}, {label:"P&L",align:"right"} ],
+              {label:"Total",align:"right"}, {label:"Behind",align:"right"}, {label:"★ Top 3",align:"right"}, {label:"Accrued",align:"right"} ],
       rows: D.rank.map((id, i) => {
         const sc = lastGW ? lastGW.scores[id] : null;
         const dns = sc ? sc.did_not_set : false;
-        const pnl = D.ledger[id].total;
+        const pnl = D.ledger[id].accrued;
         return {
           pos: i + 1, name: byId[id].display_name, team: byId[id].team_name,
           ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id), mark: markOf(id),
@@ -353,12 +365,12 @@ class Dashboard {
           gwInk: dns ? "var(--crit)" : "var(--ink-1)", gwWeight: dns ? 620 : 450,
           total: D.totals[id], behind: D.behind[id] === 0 ? "—" : D.behind[id],
           podiums: D.podiums[id] === 0 ? "—" : D.podiums[id],
-          pnl: rm(pnl),
+          pnl: this.sen(pnl),
           pnlInk: pnl > 0 ? "var(--good)" : pnl < 0 ? "var(--crit)" : "var(--ink-2)"
         };
       }),
       foot: "★ counts top-three finishes — for bragging only, no money. Forget to set team? Reads 0 ✕ and you still pay RM" +
-        D.stakes.weekly.stake + ". P&L here is banked money only, no projection."
+        D.stakes.weekly.stake + ". Accrued only ah — nobody pay anything yet, we settle in May."
     };
 
     /* ---- PL table ---- */
@@ -514,14 +526,18 @@ class Dashboard {
 
     /* ---- season tab ---- */
     const L = D.ledger[you];
+    const owes = L.accrued < 0;
     const hero = {
-      label: "YOUR SEASON P&L · " + byId[you].display_name.toUpperCase(),
-      value: rm(L.total),
-      ink: L.total > 0 ? "var(--good)" : L.total < 0 ? "var(--crit)" : "var(--ink-1)",
-      delta: rm(L.delta_last_gw),
+      label: "ACCRUED BALANCE · " + byId[you].display_name.toUpperCase() + " · NOTHING PAID YET",
+      value: this.sen2(L.accrued),
+      position: L.accrued === 0 ? "You are square with the league."
+        : owes ? "You owe " + this.senAbs(L.accrued) + " — only settle after GW38."
+               : "You are owed " + this.senAbs(L.accrued) + " — only settle after GW38.",
+      ink: L.accrued > 0 ? "var(--good)" : L.accrued < 0 ? "var(--crit)" : "var(--ink-1)",
+      delta: this.sen(L.delta_last_gw),
       deltaInk: L.delta_last_gw > 0 ? "var(--good)" : L.delta_last_gw < 0 ? "var(--crit)" : "var(--ink-2)",
       deltaNote: lastGW ? "since GW" + lastGW.gw : "",
-      projected: "On current standings season pot project " + rm(L.projected_season) + " — showing only, nothing banked until GW38 final.",
+      projected: "On current standings the season pot project " + this.sen(L.projected_season) + " — showing only, not inside the accrued balance until GW38 final.",
       kpis: [
         { label:"LEAGUE RANK", value: (D.rank.indexOf(you) + 1),
           sub: D.behind[you] === 0 ? "leading" : D.behind[you] + " points behind" },
@@ -548,6 +564,9 @@ class Dashboard {
           money: i === 0 ? rm(mp.net[0]) : i === 1 ? rm(mp.net[1]) : rm(-mp.stake),
           moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
         })),
+        view: S.potView, isChart: S.potView === "chart", isTable: S.potView === "table",
+        onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
+        viewLabel: S.potView === "chart" ? "Table view" : "Chart view",
         callout: mp.callout, calloutBg:"var(--tint-warn)",
         foot: "Money shown is what each position would pay if the month end right now. Only settle when the last gameweek in the bucket is final."
       };
@@ -565,6 +584,9 @@ class Dashboard {
           money: i === 0 ? rm(settledMonth.net[0]) : i === 1 ? rm(settledMonth.net[1]) : rm(-settledMonth.stake),
           moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
         })),
+        view: S.potView, isChart: S.potView === "chart", isTable: S.potView === "table",
+        onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
+        viewLabel: S.potView === "chart" ? "Table view" : "Chart view",
         callout: settledMonth.callout, calloutBg:"var(--tint)",
         foot: monthCurrent.note
       };
@@ -575,27 +597,32 @@ class Dashboard {
         sub: monthCurrent.gameweeks + " gameweeks · RM" + monthCurrent.stake + " each · 70/30",
         potLabel: this.rmFlat(monthCurrent.pot),
         prizeLabel: rm(monthCurrent.net[0]) + " · " + rm(monthCurrent.net[1]),
-        hasBars:false, rows:[],
+        hasBars:false, rows:[], view:"chart", isChart:true, isTable:false,
+        onView: () => {}, viewLabel:"",
         callout: monthCurrent.note, calloutBg:"var(--surface-2)",
         foot: "Bars only fill up once GW" + monthCurrent.opens_gw + " scores come in. Nobody owe anybody before that."
       };
     }
 
-    const maxAbs = Math.max.apply(null, D.managers.map(m => Math.abs(D.ledger[m.id].total))) || 1;
-    const ledgerRows = D.managers.slice().sort((a,b) => D.ledger[b.id].total - D.ledger[a.id].total).map(m => {
-      const v = D.ledger[m.id].total, w = Math.round(Math.abs(v) / maxAbs * 100) + "%";
+    const maxAbs = Math.max.apply(null, D.managers.map(m => Math.abs(D.ledger[m.id].accrued))) || 1;
+    const ledgerRows = D.managers.slice().sort((a,b) => D.ledger[b.id].accrued - D.ledger[a.id].accrued).map(m => {
+      const v = D.ledger[m.id].accrued, w = Math.round(Math.abs(v) / maxAbs * 100) + "%";
       return {
         name: byId[m.id].display_name, ink: inkOf(m.id), weight: wOf(m.id),
         negW: v < 0 ? w : "0%", posW: v > 0 ? w : "0%",
         negFill: v < 0 ? "var(--neg)" : "transparent", posFill: v > 0 ? "var(--pos)" : "transparent",
-        value: rm(v), valInk: v > 0 ? "var(--pos)" : v < 0 ? "var(--neg)" : "var(--ink-2)",
-        title: byId[m.id].display_name + " — weekly " + rm(D.ledger[m.id].weekly) +
-          ", monthly " + rm(D.ledger[m.id].monthly) + ", banked " + rm(v)
+        value: this.sen(v), valInk: v > 0 ? "var(--pos)" : v < 0 ? "var(--neg)" : "var(--ink-2)",
+        weeklyTxt: this.sen(D.ledger[m.id].weekly), monthlyTxt: this.sen(D.ledger[m.id].monthly),
+        title: byId[m.id].display_name + " — weekly " + this.sen(D.ledger[m.id].weekly) +
+          ", monthly " + this.sen(D.ledger[m.id].monthly) + ", accrued " + this.sen2(v)
       };
     });
     const ledger = { rows: ledgerRows,
-      sub: "Banked weekly and monthly pots only, centred on RM0",
-      foot: "Blue side up, red side down, and both sides always equal — every ringgit somebody won came out of the eight stakes. League keep nothing." };
+      isChart: S.ledgerView === "chart", isTable: S.ledgerView === "table",
+      onView: () => this.setState({ ledgerView: S.ledgerView === "chart" ? "table" : "chart" }),
+      viewLabel: S.ledgerView === "chart" ? "Table view" : "Chart view",
+      sub: "Accrued weekly and monthly pots, centred on RM0 — none of it paid yet",
+      foot: "Blue side is owed money, red side owe money, and both sides always equal — every ringgit came out of the eight stakes. League keep nothing, and nothing move until May." };
 
     const weekly = {
       sub: "Top score take the whole " + this.rmFlat(D.stakes.weekly.pot),
@@ -603,29 +630,53 @@ class Dashboard {
         const w = g.winners[0];
         return { gw:g.gw, winner: byId[w].display_name, ink: inkOf(w),
           points: g.scores[w].points, prize: rm(D.stakes.weekly.net[0]),
+          chip: g.scores[w].chip ? g.scores[w].chip.toUpperCase() : "",
+          hasChip: !!g.scores[w].chip,
+          gwNote: g.note ? g.note.toUpperCase() : "", hasGWNote: !!g.note,
+          bonusNote: g.bonus_change
+            ? "Bonus changed the winner: " + byId[g.bonus_change.from].short + " → " +
+              byId[g.bonus_change.to].short + ", confirmed " + this.hhmm(g.bonus_change.at) + " MYT."
+            : "",
+          hasBonusNote: !!g.bonus_change,
           note: g.tiebreak ? g.tiebreak.text
             : g.winners.length > 1 ? "Split " + g.winners.length + " ways"
-            : "Everybody else pay RM" + D.stakes.weekly.stake + (g.note ? " · " + g.note : "") };
+            : "Everybody else pay RM" + D.stakes.weekly.stake };
       }),
       foot: "Every gameweek cost RM10 — RM5 to the week, RM5 to the month. Tie? Goals first, then assists, then goals conceded, then cards. Official FPL rule, cannot argue."
     };
 
+    const playedMonths = D.month_buckets.filter(mb => settledGWs.some(g => g.month === mb.month));
+    const range = playedMonths.some(mb => mb.month === S.detailRange) ? S.detailRange : "all";
+    const shownGWs = range === "all" ? settledGWs : settledGWs.filter(g => g.month === range);
     const detail = {
-      cols: settledGWs.map(g => "GW" + g.gw),
-      pots: settledGWs.map(g => this.rmFlat(g.pot)),
+      rangeOptions: [{ v:"all", label:"All " + settledGWs.length + " GWs" }]
+        .concat(playedMonths.map(mb => ({ v:mb.month, label:this.monthName(mb.month) })))
+        .map(o => ({ label:o.label, onClick:() => this.setState({ detailRange:o.v }),
+          bg: range === o.v ? "var(--ink-1)" : "var(--surface-1)",
+          ink: range === o.v ? "var(--plane)" : "var(--ink-2)",
+          border: range === o.v ? "var(--ink-1)" : "var(--border)" })),
+      rangeNote: range === "all"
+        ? "Showing every settled gameweek. Weekly, monthly and accrued columns are always season to date."
+        : "Showing " + this.monthName(range) + " only — " + shownGWs.length +
+          " gameweek(s). Weekly, monthly and accrued columns stay season to date, not filtered.",
+      cols: shownGWs.map(g => "GW" + g.gw),
+      pots: shownGWs.map(g => this.rmFlat(g.pot)),
       rows: D.rank.map(id => ({
         name: byId[id].display_name, ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id), mark: markOf(id),
-        cells: settledGWs.map(g => {
+        stickyBg: id === you ? "var(--surface-2)" : "var(--surface-1)",
+        cells: shownGWs.map(g => {
           const sc = g.scores[id] || {}, won = g.winners.indexOf(id) >= 0;
           const absent = sc.points === null || sc.points === undefined;
-          return { text: sc.did_not_set ? "0 ✕" : absent ? "—" : sc.points + (won ? " ★" : ""),
-            ink: sc.did_not_set ? "var(--crit)" : absent ? "var(--ink-muted)"
-              : won ? "var(--good)" : "var(--ink-1)",
+          return { text: sc.did_not_set ? "0 ✕" : absent ? "—" : sc.points + (won ? " ★" : "") + (sc.chip ? " ◆" : ""),
+            title: byId[id].short + " GW" + g.gw + " — " + (sc.did_not_set ? "never set team" : absent ? "not in the league yet" : sc.points + " pts") +
+              (sc.hits ? ", " + sc.hits + " pt hit" : "") + ", " + (sc.transfers || 0) + " transfer(s)" +
+              (sc.chip ? ", played " + sc.chip : "") + (g.note ? " · " + g.note : ""),
+            ink: sc.did_not_set ? "var(--crit)" : absent ? "var(--ink-muted)" : won ? "var(--good)" : "var(--ink-1)",
             weight: won || sc.did_not_set ? 640 : 450 };
         }),
-        total: D.totals[id], weekly: rm(D.ledger[id].weekly), monthly: rm(D.ledger[id].monthly),
-        pnl: rm(D.ledger[id].total),
-        pnlInk: D.ledger[id].total > 0 ? "var(--good)" : D.ledger[id].total < 0 ? "var(--crit)" : "var(--ink-2)"
+        total: D.totals[id], weekly: this.sen(D.ledger[id].weekly), monthly: this.sen(D.ledger[id].monthly),
+        pnl: this.sen(D.ledger[id].accrued),
+        pnlInk: D.ledger[id].accrued > 0 ? "var(--good)" : D.ledger[id].accrued < 0 ? "var(--crit)" : "var(--ink-2)"
       }))
     };
 
@@ -648,7 +699,7 @@ class Dashboard {
       staked: this.rmFlat(D.exposure.staked), best: rm(D.exposure.best), worst: rm(D.exposure.worst),
       zeroInk: (isLive || isProv) ? "var(--ink-muted)" : D.checks.zero_sum ? "var(--good)" : "var(--crit)",
       zeroLabel: (isLive || isProv) ? "Settles at full time"
-        : D.checks.zero_sum ? "Ledger balances · RM0" : "Ledger does not balance",
+        : D.checks.zero_sum ? "Book balances · RM0" : "Book does not balance",
       settledLine: isPre ? "Nothing settled yet · " + D.checks.gameweeks_present + " of " + D.checks.gameweeks_expected + " gameweeks scheduled"
         : "Settled through GW" + D.settled.through_gw + " · " + D.settled.projected,
       ties: [
@@ -658,6 +709,64 @@ class Dashboard {
         {n:4,rule:"Yellow and red cards",dir:"fewest"},
         {n:5,rule:"Split the pot",dir:"ours"}
       ]
+    };
+
+    /* §7.2G statement — accrual ledger, per manager */
+    const stRows = (D.ledger[you].statement || []).map(r => ({
+      date: this.dateShort(r.date + "T00:00:00Z"),
+      event: r.type === "weekly" ? "GW" + r.gw + " weekly" : this.monthName(r.month) + " monthly",
+      detail: r.detail,
+      amount: this.sen2(r.amount),
+      amountInk: r.amount > 0 ? "var(--pos)" : r.amount < 0 ? "var(--neg)" : "var(--ink-2)",
+      balance: this.sen2Flat(r.balance),
+      balanceInk: r.balance > 0 ? "var(--pos)" : r.balance < 0 ? "var(--neg)" : "var(--ink-2)"
+    }));
+    const stmt = {
+      has: stRows.length > 0, empty: stRows.length === 0,
+      who: byId[you].display_name,
+      head: L.accrued === 0 ? byId[you].display_name + " is square with the league"
+        : L.accrued < 0 ? byId[you].display_name + " owes " + this.senAbs(L.accrued)
+                        : byId[you].display_name + " is owed " + this.senAbs(L.accrued),
+      headInk: L.accrued > 0 ? "var(--good)" : L.accrued < 0 ? "var(--crit)" : "var(--ink-1)",
+      sub: "One row per settled event, oldest first. Change the You selector up top to read somebody else's line.",
+      rows: stRows,
+      emptyNote: "Nothing settled yet, so nothing in the book. First row appear after GW1 go final.",
+      corrections: (D.corrections || []).length,
+      correctionNote: (D.corrections || []).length
+        ? (D.corrections || []).length + " correction(s) posted — shown as their own rows, original entries never deleted."
+        : "No corrections posted. If we ever find a mistake, it comes in as a new row with a reason — we never quietly rewrite an old one.",
+      onCSV: () => this.downloadCSV(
+        "superf-statement-" + you + ".csv",
+        [["date","event","detail","amount_rm","balance_rm"]].concat(
+          (D.ledger[you].statement || []).map(r => [ r.date,
+            r.type === "weekly" ? "GW" + r.gw + " weekly" : r.month + " monthly",
+            r.detail, (r.amount / 100).toFixed(2), (r.balance / 100).toFixed(2) ])))
+    };
+
+    /* §7.2H settlement sheet */
+    const sPay = (D.settlement && D.settlement.payments) || [];
+    const settle = {
+      has: sPay.length > 0, empty: sPay.length === 0,
+      final: !!(D.settlement && D.settlement.settled),
+      tag: (D.settlement && D.settlement.settled) ? "FINAL" : "NOT FINAL",
+      tagRule: (D.settlement && D.settlement.settled) ? "var(--good)" : "var(--axis)",
+      tagInk: (D.settlement && D.settlement.settled) ? "var(--good)" : "var(--ink-muted)",
+      title: (D.settlement && D.settlement.settled) ? "Settlement sheet" : "Settlement preview",
+      sub: (D.settlement && D.settlement.settled)
+        ? "GW38 is final. This is who pays whom — " + sPay.length + " transfers, nothing more."
+        : "If the season ended today, " + sPay.length + " payments would settle the whole league. Nobody owe anything yet.",
+      rows: sPay.map(p => ({
+        from: byId[p.from].display_name, to: byId[p.to].display_name,
+        amount: this.sen2Flat(p.amount),
+        fromInk: inkOf(p.from), toInk: inkOf(p.to),
+        fromWeight: wOf(p.from), toWeight: wOf(p.to)
+      })),
+      total: this.sen2Flat(sPay.reduce((a,p) => a + p.amount, 0)),
+      foot: "Minimum-transfer set: at most " + (N - 1) + " payments instead of up to " + (N * (N - 1)) +
+        ". Sorted by amount then id, so the sheet come out the same every time you run it.",
+      emptyNote: "Nothing to settle yet. Once a gameweek go final the preview shows who would pay whom.",
+      onCSV: () => this.downloadCSV("superf-settlement.csv",
+        [["from","to","amount_rm"]].concat(sPay.map(p => [p.from, p.to, (p.amount / 100).toFixed(2)])))
     };
 
     const season = {
@@ -682,7 +791,7 @@ class Dashboard {
       isGW: S.tab === "gw", isSeason: S.tab === "season",
       showCountdown: !showLive, cd, brk,
       showLive, live, fx, cal, standings, pl, pred,
-      hero, pot, ledger, weekly, detail, money, season,
+      hero, pot, ledger, weekly, detail, stmt, settle, money, season,
       footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +
         " of " + D.checks.gameweeks_expected + " gameweeks in the calendar · " +

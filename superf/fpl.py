@@ -140,27 +140,6 @@ class Fetcher:
             return cached
         raise FetchError(f"could not fetch {path}: {last_error}")
 
-    # -- immutable snapshots --------------------------------------------------
-
-    def snapshot(self, gw: int, name: str, fetch, *, final: bool) -> Any:
-        """Read ``raw/gw{n}/{name}.json`` if present, else fetch.
-
-        Only writes the snapshot once the gameweek is Final, because that is the
-        point at which the answer stops changing. Bonus moves and auto-subs land
-        before then (§11.3), and freezing provisional data would bake in a wrong
-        pot winner permanently.
-        """
-        path = self.raw_dir / f"gw{gw:02d}" / f"{name}.json"
-        if path.exists():
-            self.snapshot_hits += 1
-            return json.loads(path.read_text())
-        payload = fetch()
-        if final and payload is not None:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(payload, separators=(",", ":"), sort_keys=True))
-            log.info("snapshotted GW%d %s", gw, name)
-        return payload
-
     # -- endpoints ------------------------------------------------------------
 
     def bootstrap(self) -> dict:
@@ -192,23 +171,13 @@ class Fetcher:
     def entry_history(self, entry_id: int) -> dict | None:
         return self.get(f"/entry/{entry_id}/history/", allow_404=True)
 
-    def entry_picks(self, entry_id: int, gw: int, *, final: bool) -> dict | None:
+    def entry_picks(self, entry_id: int, gw: int) -> dict | None:
         """Squad and multipliers. Returns None before the deadline passes."""
-        return self.snapshot(
-            gw,
-            f"picks_{entry_id}",
-            lambda: self.get(f"/entry/{entry_id}/event/{gw}/picks/", allow_404=True),
-            final=final,
-        )
+        return self.get(f"/entry/{entry_id}/event/{gw}/picks/", allow_404=True)
 
-    def event_live(self, gw: int, *, final: bool) -> dict | None:
+    def event_live(self, gw: int) -> dict | None:
         """Per-player stats for a gameweek. Empty before kickoff."""
-        return self.snapshot(
-            gw,
-            "live",
-            lambda: self.get(f"/event/{gw}/live/", allow_404=True),
-            final=final,
-        )
+        return self.get(f"/event/{gw}/live/", allow_404=True)
 
     def summary(self) -> str:
         return (

@@ -52,7 +52,9 @@ class Gameweek:
     month: str
     state: str
     scores: dict[str, ManagerScore] = field(default_factory=dict)
-    note: str | None = None  # "double gameweek" | "postponed" | None
+    note: str | None = None  # "double gameweek" | "blank gameweek" | "postponed" | None
+    # §11.4 — set when confirmed bonus moved the pot from one manager to another.
+    bonus_change: dict | None = None
 
     @property
     def is_final(self) -> bool:

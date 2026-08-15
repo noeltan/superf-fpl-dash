@@ -28,6 +28,7 @@ import os
 from pathlib import Path
 
 from .config import BACKUPS
+from .money import minimum_transfers
 
 log = logging.getLogger(__name__)
 
@@ -36,34 +37,9 @@ SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets"
 
 # --- the settle-up ----------------------------------------------------------
 
-def net_settlement(totals: dict[str, float]) -> list[dict]:
-    """Minimum payments that square the table, largest debt against largest credit.
-
-    Produces at most N-1 transfers. Deterministic: ties break on manager id, so
-    a rerun gives byte-identical output.
-    """
-    creditors = sorted(
-        ((m, v) for m, v in totals.items() if v > 0), key=lambda kv: (-kv[1], kv[0])
-    )
-    debtors = sorted(
-        ((m, -v) for m, v in totals.items() if v < 0), key=lambda kv: (-kv[1], kv[0])
-    )
-
-    payments: list[dict] = []
-    i = j = 0
-    credits = [list(c) for c in creditors]
-    debts = [list(d) for d in debtors]
-    while i < len(debts) and j < len(credits):
-        amount = round(min(debts[i][1], credits[j][1]), 2)
-        if amount > 0:
-            payments.append({"from": debts[i][0], "to": credits[j][0], "amount": amount})
-        debts[i][1] = round(debts[i][1] - amount, 2)
-        credits[j][1] = round(credits[j][1] - amount, 2)
-        if debts[i][1] <= 0:
-            i += 1
-        if credits[j][1] <= 0:
-            j += 1
-    return payments
+def net_settlement(totals: dict[str, int]) -> list[dict]:
+    """§3.9.3, in sen. Thin wrapper so the CSV and data.json cannot disagree."""
+    return minimum_transfers(totals)
 
 
 # --- table builders ----------------------------------------------------------
@@ -75,27 +51,50 @@ def _name(payload: dict, manager_id: str) -> str:
     return manager_id
 
 
+def _rm(sen: int) -> str:
+    return f"{sen / 100:.2f}"
+
+
 def ledger_rows(payload: dict) -> list[list]:
-    """Running per-pot tally — the settle-up base."""
-    banked_season = payload["settled"]["projected"] == "season pot settled"
+    """The accrued book — what each manager owes or is owed, unpaid (§3.9.1)."""
+    settled = payload["settlement"]["settled"]
     rows = [[
         "manager", "team", "entry_id", "points", "weekly_rm", "monthly_rm",
-        "season_rm", "season_is_banked", "total_rm",
+        "season_rm", "season_is_settled", "accrued_rm", "position",
     ]]
     for manager_id in payload["rank"]:
         entry = next(m for m in payload["managers"] if m["id"] == manager_id)
         led = payload["ledger"][manager_id]
+        accrued = led["accrued"]
         rows.append([
             entry["display_name"], entry["team_name"], entry["entry_id"],
             payload["totals"].get(manager_id, 0),
-            led["weekly"], led["monthly"], led["projected_season"],
-            "yes" if banked_season else "no (projected)",
-            led["total"],
+            _rm(led["weekly"]), _rm(led["monthly"]), _rm(led["projected_season"]),
+            "yes" if settled else "no (projected)",
+            _rm(accrued),
+            "square" if accrued == 0 else ("is owed" if accrued > 0 else "owes"),
         ])
     rows.append([
         "TOTAL", "", "", "", "", "", "", "",
-        round(sum(payload["ledger"][m]["total"] for m in payload["ledger"]), 2),
+        _rm(sum(payload["ledger"][m]["accrued"] for m in payload["ledger"])), "",
     ])
+    return rows
+
+
+def statement_rows(payload: dict) -> list[list]:
+    """§3.9.2 — every manager's line, so a disputed total can be decomposed."""
+    rows = [["manager", "date", "event", "detail", "amount_rm", "balance_rm"]]
+    for manager_id in payload["rank"]:
+        for row in payload["ledger"][manager_id].get("statement", []):
+            event = (
+                f"GW{row['gw']} weekly" if row["type"] == "weekly"
+                else f"{row['month']} monthly" if row["type"] == "monthly"
+                else "correction"
+            )
+            rows.append([
+                _name(payload, manager_id), row["date"], event, row["detail"],
+                _rm(row["amount"]), _rm(row["balance"]),
+            ])
     return rows
 
 
@@ -105,19 +104,19 @@ def gameweek_rows(payload: dict) -> list[list]:
     rows = [["manager", "gw", "month", "points", "hits", "chip", "did_not_set",
              "won_pot", "weekly_rm", "running_weekly_rm"]]
     for manager_id in payload["rank"]:
-        running = 0.0
+        running = 0
         for index, gameweek in enumerate(gameweeks):
             score = gameweek["scores"].get(manager_id, {})
             if not score.get("active", True):
                 continue
             amount = payload["ledger"][manager_id]["by_gameweek"][index]
-            running = round(running + amount, 2)
+            running += amount
             rows.append([
                 _name(payload, manager_id), gameweek["gw"], gameweek["month"],
                 score.get("points"), score.get("hits", 0), score.get("chip") or "",
                 "yes" if score.get("did_not_set") else "",
                 "yes" if manager_id in gameweek["winners"] else "",
-                amount, running,
+                _rm(amount), _rm(running),
             ])
     return rows
 
@@ -137,20 +136,21 @@ def month_rows(payload: dict) -> list[list]:
 
 
 def settle_up_rows(payload: dict) -> list[list]:
-    totals = {m: payload["ledger"][m]["total"] for m in payload["ledger"]}
+    """§3.9.3 — read straight from data.json so the sheet and the site agree."""
     rows = [["from", "to", "amount_rm"]]
-    for payment in net_settlement(totals):
+    for payment in payload["settlement"]["payments"]:
         rows.append([
             _name(payload, payment["from"]), _name(payload, payment["to"]),
-            payment["amount"],
+            _rm(payment["amount"]),
         ])
     if len(rows) == 1:
-        rows.append(["nobody owes anybody", "", 0])
+        rows.append(["nobody owes anybody", "", "0.00"])
     return rows
 
 
 TABLES = {
     "ledger": ledger_rows,
+    "statement": statement_rows,
     "gameweeks": gameweek_rows,
     "months": month_rows,
     "settle_up": settle_up_rows,

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from superf.backup import net_settlement
+from superf.money import minimum_transfers as net_settlement
 from superf.fplcal import (
     build_breaks,
     build_events,
@@ -167,15 +167,16 @@ def test_form_keeps_only_the_last_five_results():
 # --- the settle-up ------------------------------------------------------------
 
 def test_settlement_squares_everybody_with_at_most_n_minus_one_payments():
-    totals = {"a": 116, "b": 4, "c": -20, "d": -20, "e": -20, "f": -20, "g": -20, "h": -20}
+    totals = {"a": 11600, "b": 400, "c": -2000, "d": -2000, "e": -2000,
+              "f": -2000, "g": -2000, "h": -2000}
     payments = net_settlement(totals)
     assert len(payments) <= len(totals) - 1
 
-    net = {m: 0.0 for m in totals}
+    net = {m: 0 for m in totals}
     for payment in payments:
         net[payment["from"]] -= payment["amount"]
         net[payment["to"]] += payment["amount"]
-    assert {m: round(v, 2) for m, v in net.items()} == {m: float(v) for m, v in totals.items()}
+    assert net == totals
 
 
 def test_settlement_is_empty_when_nobody_owes_anything():

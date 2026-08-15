@@ -8,16 +8,29 @@ stalled mid-February. **Nothing here is manually entered.** The FPL API is the
 sole source of truth for scores; this repo owns the weekly, monthly and season
 money on top of it.
 
-Money is not moved gameweek by gameweek — it accrues all season and is squared
-up once at the end. The running per-pot tally *is* the debt, which is why the
-backups in `backups/` are part of the system rather than a convenience.
+**The league settles once, after GW38** (§3.9). No cash moves during the season:
+every stake and payout is an *accrual*. That changes what this is — not a
+dashboard reporting money that has already moved, but **the book of record for
+money nobody has paid yet**. An error posted in November survives seven months
+and only surfaces when someone is asked for RM400, so correctness and
+auditability are the product, not nice properties.
+
+The words matter and are used exactly (§3.9.1): *provisional* → *accrued*
+("owes" / "is owed") → *projected* (not in the book at all) → *settled* (paid,
+after GW38). Never "won" or "collected".
 
 ```
-build.py    →  docs/data.json        the settled ledger, one commit per update
-predict.py  →  docs/prediction.json  the weekly call, and its later scorecard
-docs/       →  GitHub Pages          the page itself
-worker/     →  Cloudflare Worker     the one header GitHub Pages cannot send
+data/2026-27/raw/gw-NN.json   IMMUTABLE pruned FPL snapshot — the source of truth
+data/2026-27/corrections.json append-only adjusting entries (§3.9.4)
+data/2026-27/data.json        derived ledger, rebuildable from the two above
+docs/                         GitHub Pages — the published copy and the page
+worker/                       Cloudflare Worker — the one header Pages cannot send
 ```
+
+**`raw/` is append-only; `data.json` is disposable.** You can delete `data.json`
+and rebuild it from `raw/` plus `corrections.json` — `tests/test_rebuild.py`
+holds us to it, because a tiebreak bug found in March has to be recomputed from
+source, not from the numbers you no longer trust.
 
 ## The money, in one sentence
 
@@ -77,6 +90,8 @@ this is merged.
 | `superf/projection.py` | §12.2 Layer 1 — deterministic xP |
 | `superf/claude_call.py` | §12.2 Layer 2 — and the guard on what it may quote |
 | `superf/emit.py` | assembles `data.json` to the contract in `SCHEMA.md` |
+| `superf/snapshot.py` | §4.2 pruned immutable snapshots, and §11.4 bonus flips |
+| `superf/corrections.py` | §3.9.4 adjusting entries that never rewrite history |
 | `superf/backup.py` | CSV + Sheets, including the end-of-season settle-up |
 | `docs/runtime.js` | the template runtime the prototype needed and did not ship with |
 | `tools/gen_workflows.py` | regenerates both workflows from the real calendar |
@@ -96,9 +111,10 @@ managers occupy.** That is the only reading that stays zero-sum, and it
 reproduces §3.5's own example: two winners on the weekly pot take +RM15 each.
 
 **Snapshot once, never re-fetch.** A Final gameweek's inputs cannot change, so
-they are written to `raw/gwNN/` on first sight and read from disk forever after.
-The ledger is fully reproducible with the API switched off, and a steady-state
-run is about 20 requests.
+they are written to `data/2026-27/raw/gw-NN.json` on first sight and read from
+disk forever after. Snapshots are **pruned** to the ~120 players the league
+actually owns (§4.2) — tens of KB per gameweek rather than half a megabyte. A
+steady-state run is about 20 requests.
 
 **A fetch failure publishes nothing.** The previous `data.json` stays live and
 ages, which fires the §9.5 stale banner. A stale number that says it is stale
@@ -107,6 +123,14 @@ beats a fresh number built from half an API.
 **The prediction model may only quote numbers the projection produced**, and
 that is enforced: every numeric token in the reasoning is checked against an
 allowed set, retried once, then falls back to the projection ranking.
+
+**Every statement must reconcile to the accrued balance.** The emitter asserts
+it row by row. Under deferred settlement a total nobody can decompose is a total
+nobody will pay without an argument (§3.9.2).
+
+**Corrections are appended, never applied in place.** An adjusting entry carries
+its own reason and must itself sum to zero; the original row stays visible
+(§3.9.4).
 
 ### Changes to the prototype
 

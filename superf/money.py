@@ -149,6 +149,42 @@ def advertised_net(stake_sen: int, n: int, shares: Sequence[float]) -> list[int]
     return [ledger[m] for m in managers[: len(shares)]]
 
 
+def minimum_transfers(balances: Mapping[str, int]) -> list[dict]:
+    """§3.9.3 — the minimal payment set that squares the book.
+
+    The book is zero-sum, so debtors owe exactly what creditors are owed. Do not
+    make eight people pay eight people: match the largest debt against the
+    largest credit, which never exceeds N-1 payments.
+
+    Sorting by amount *then id* makes the output deterministic, so the
+    settlement sheet is reproducible run to run.
+    """
+    total = sum(balances.values())
+    if total != 0:
+        raise LedgerError(f"cannot settle a book that does not balance: residue {total} sen")
+
+    debtors = sorted(
+        ([m, -v] for m, v in balances.items() if v < 0), key=lambda kv: (-kv[1], kv[0])
+    )
+    creditors = sorted(
+        ([m, v] for m, v in balances.items() if v > 0), key=lambda kv: (-kv[1], kv[0])
+    )
+
+    payments: list[dict] = []
+    i = j = 0
+    while i < len(debtors) and j < len(creditors):
+        amount = min(debtors[i][1], creditors[j][1])
+        if amount > 0:
+            payments.append({"from": debtors[i][0], "to": creditors[j][0], "amount": amount})
+        debtors[i][1] -= amount
+        creditors[j][1] -= amount
+        if debtors[i][1] == 0:
+            i += 1
+        if creditors[j][1] == 0:
+            j += 1
+    return payments
+
+
 def assert_zero_sum(ledger: Mapping[str, int], label: str) -> None:
     """§3.8.5. A ledger that does not balance is never published."""
     total = sum(ledger.values())

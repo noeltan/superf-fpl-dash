@@ -51,15 +51,22 @@ MAX_REQUESTS_PER_RUN = int(os.environ.get("SUPERF_MAX_REQUESTS", "400"))
 REQUEST_TIMEOUT = 30
 RETRY_BACKOFF = [2, 4, 8, 16]
 
-# --- paths -------------------------------------------------------------------
-DOCS = ROOT / "docs"
-RAW = ROOT / "raw"  # immutable per-gameweek API snapshots
-CACHE = ROOT / ".cache"  # volatile HTTP cache (ETags), safe to delete
-BACKUPS = ROOT / "backups"  # CSV ledger snapshots per finalised gameweek
+# --- paths (§4.1 — the git repo is the database) ------------------------------
+SEASON_SLUG = SEASON.replace("/", "-")            # "2026/27" -> "2026-27"
+DATA_DIR = ROOT / "data" / SEASON_SLUG            # canonical, append-only history
+RAW = DATA_DIR / "raw"                            # immutable pruned API snapshots
+DOCS = ROOT / "docs"                              # GitHub Pages root (published copy)
+CACHE = ROOT / ".cache"                           # volatile HTTP cache, safe to delete
+BACKUPS = ROOT / "backups"                        # CSV snapshots per finalised gameweek
 PREDICTIONS = DOCS / "predictions"
 
+# `data.json` is a derived artifact: disposable, rebuildable byte-identically
+# from raw/ plus corrections.json (§4.2). `raw/` and `corrections.json` are not.
 DATA_JSON = DOCS / "data.json"
 PREDICTION_JSON = DOCS / "prediction.json"
+CANONICAL_DATA = DATA_DIR / "data.json"
+CANONICAL_PREDICTION = DATA_DIR / "prediction.json"
+CORRECTIONS_JSON = DATA_DIR / "corrections.json"
 
 MANAGERS_FILE = ROOT / "managers.json"
 

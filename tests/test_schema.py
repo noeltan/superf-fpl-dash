@@ -72,7 +72,8 @@ TOP_LEVEL = [
     "generated_at", "league", "current", "tz", "stakes", "exposure", "managers",
     "teams", "events", "breaks", "month_buckets", "fixtures", "pl_table",
     "gameweeks", "months", "month_current", "totals", "rank", "rank_prev",
-    "behind", "ledger", "podiums", "weeks_won", "stats", "settled", "checks",
+    "behind", "ledger", "corrections", "settlement", "podiums", "weeks_won",
+    "stats", "settled", "checks",
 ]
 
 
@@ -88,7 +89,8 @@ def test_manager_records_carry_every_field(payload):
 def test_ledger_records_carry_every_field(payload):
     for entry in payload["ledger"].values():
         assert set(entry) >= {
-            "weekly", "monthly", "total", "projected_season", "delta_last_gw", "by_gameweek"
+            "weekly", "monthly", "accrued", "projected_season", "delta_last_gw",
+            "by_gameweek", "statement",
         }
 
 
@@ -118,28 +120,29 @@ def test_exposure_matches_section_3_4():
 
 
 def test_ledger_matches_the_mock_exactly(payload):
-    """The mock's own comment: 'Soon Lee +RM116, Jack +RM4, other six -RM20 each'."""
+    """The prototype's mock, in sen (§3.8.1). Only the ledger, statement and
+    settlement are sen — stakes and exposure stay in ringgit."""
     expected = {
-        "noel": {"weekly": -10, "monthly": -10, "total": -20, "projected_season": -100},
-        "jack": {"weekly": -10, "monthly": 14, "total": 4, "projected_season": 100},
-        "sam": {"weekly": -10, "monthly": -10, "total": -20, "projected_season": -100},
-        "weihun": {"weekly": -10, "monthly": -10, "total": -20, "projected_season": 20},
-        "soonlee": {"weekly": 70, "monthly": 46, "total": 116, "projected_season": 380},
-        "boonsiang": {"weekly": -10, "monthly": -10, "total": -20, "projected_season": -100},
-        "tianpin": {"weekly": -10, "monthly": -10, "total": -20, "projected_season": -100},
-        "chris": {"weekly": -10, "monthly": -10, "total": -20, "projected_season": -100},
+        "noel": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
+        "jack": {"weekly": -1000, "monthly": 1400, "accrued": 400, "projected_season": 10000},
+        "sam": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
+        "weihun": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": 2000},
+        "soonlee": {"weekly": 7000, "monthly": 4600, "accrued": 11600, "projected_season": 38000},
+        "boonsiang": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
+        "tianpin": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
+        "chris": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
     }
     for manager, values in expected.items():
         actual = payload["ledger"][manager]
         for key, value in values.items():
             assert actual[key] == value, f"{manager}.{key}"
-    assert sum(payload["ledger"][m]["total"] for m in payload["ledger"]) == 0
+    assert sum(payload["ledger"][m]["accrued"] for m in payload["ledger"]) == 0
 
 
 def test_by_gameweek_is_the_per_gameweek_weekly_amount(payload):
-    """§5's own example is [-5, -5], not a running total."""
-    assert payload["ledger"]["noel"]["by_gameweek"] == [-5, -5]
-    assert payload["ledger"]["soonlee"]["by_gameweek"] == [35, 35]
+    """§5's own example is [-500, -500] in sen, not a running total."""
+    assert payload["ledger"]["noel"]["by_gameweek"] == [-500, -500]
+    assert payload["ledger"]["soonlee"]["by_gameweek"] == [3500, 3500]
 
 
 def test_standings_match_the_mock(payload):
@@ -185,7 +188,7 @@ def test_only_complete_months_are_listed(payload):
 def test_missed_deadline_is_flagged_and_still_charged(payload):
     gw2 = payload["gameweeks"][1]
     assert gw2["scores"]["chris"]["did_not_set"] is True
-    assert payload["ledger"]["chris"]["by_gameweek"][1] == -5
+    assert payload["ledger"]["chris"]["by_gameweek"][1] == -500
 
 
 def test_checks_block_is_honest(payload):
@@ -220,7 +223,8 @@ def test_the_published_file_conforms():
     assert len(published["events"]) == 38
     assert len(published["teams"]) == 20
     assert published["league"]["players"] == len(published["managers"])
-    assert sum(published["ledger"][m]["total"] for m in published["ledger"]) == 0
+    assert sum(published["ledger"][m]["accrued"] for m in published["ledger"]) == 0
+    assert len(published["settlement"]["payments"]) <= len(published["managers"]) - 1
     for manager in published["managers"]:
         assert manager["id"] in published["ledger"]
         assert manager["id"] in published["totals"]

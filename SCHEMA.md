@@ -13,8 +13,9 @@ computes money.
 
 ## `data.json`
 
-Written by `build.py`. Money crosses this boundary as **ringgit** (the view only
-formats); everything upstream is integer sen.
+Written by `build.py`. **Only `ledger`, `statement` and `settlement` are in
+sen** (§3.8.1) — `stakes`, `exposure`, `months[]` and `gameweeks[].pot` stay in
+ringgit, as §5 has them. The design's own handoff note pins this split.
 
 ```jsonc
 {
@@ -140,10 +141,30 @@ entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
                  "high": { "gw": 1, "manager": "soonlee", "points": 72 } },  // ← not in §5
 
   "ledger": {
-    "noel": { "weekly": -10, "monthly": -10, "total": -20,
-              "projected_season": -100,
-              "delta_last_gw": -5,           // ← not in §5
-              "by_gameweek": [-5, -5] }
+    "noel": { "weekly": -1000, "monthly": -1000,   // SEN
+              "accrued": -2000,                    // weekly + monthly — the book
+              "projected_season": -10000,          // NOT in accrued until GW38 Final
+              "delta_last_gw": -500,               // ← not in §5
+              "by_gameweek": [-500, -500],
+              "statement": [                       // §3.9.2 — one row per event
+                { "date": "2026-08-24", "type": "weekly", "gw": 1,
+                  "detail": "46 pts, 7th of 8", "amount": -500, "balance": -500 },
+                { "date": "2026-08-31", "type": "monthly", "month": "AUG",
+                  "detail": "114 pts, 5th in August", "amount": -1000, "balance": -2000 }
+              ] }
+  },
+
+  // §3.9.4 — append-only adjusting entries; each set sums to zero
+  "corrections": [
+    { "type": "correction", "date": "2027-03-14", "affects_gw": 12,
+      "reason": "GW12 tiebreak applied cards before goals conceded",
+      "adjustments": { "jack": 3500, "sam": -3500 } }
+  ],
+
+  // §3.9.3 — a muted preview until GW38, the deliverable after it
+  "settlement": {
+    "settled": false,
+    "payments": [ { "from": "noel", "to": "soonlee", "amount": 2000 } ]
   },
 
   "settled": { "through_gw": 2,
@@ -153,13 +174,22 @@ entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 ```
 
 > **`by_gameweek` is the per-gameweek weekly amount**, not a running total. §5's
-> comment says "running, for sparklines" but its own example is `[-5, -5]`, and
-> the prototype reads it as per-gameweek. The example and the prototype agree,
-> so the comment is the odd one out.
+> comment says "running, for sparklines" but its own example is `[-500, -500]`,
+> and the prototype reads it as per-gameweek. The example and the prototype
+> agree, so the comment is the odd one out.
 
-> **`total` excludes `projected_season`** until GW38 is Final, at which point the
-> season component moves into `total` and `settled.projected` becomes
-> `"season pot settled"`. Nothing else changes shape.
+> **`accrued` excludes `projected_season`** until GW38 is Final (§3.9.1:
+> "Projected" is not in the book at all). At GW38 the season component moves in,
+> a `type: "season"` statement row is appended, `settlement.settled` flips true
+> and `settled.projected` becomes `"season pot settled"`.
+
+> **Every statement ends on `accrued`.** The emitter asserts it. A manager who
+> disputes their total must be able to find the single row they disagree with
+> (§3.9.2) — a statement that does not reconcile is worse than none.
+
+**Statement row types:** `weekly` (carries `gw`), `monthly` (carries `month`),
+`season`, `correction` (carries `affects_gw`). Ordered oldest first, and within
+a date: weekly, then monthly, then season, then corrections.
 
 ---
 
@@ -254,3 +284,5 @@ variable, and what lands in the file is what the API actually answered with —
 | §10 | "Ties — per §3.4" | §3.5 |
 | §7.1D | "the August problem (§3.5)" | §3.7 |
 | §12.4 | `"model": "claude-opus-4-6"` | recorded from the API response at runtime |
+| §3.9.2 | statement dates 22/29 Aug | the design's mock uses 24/31 Aug — the last kickoff of each gameweek, which is when it actually stopped moving |
+| §4.1 | `data/2026-27/raw/gw-NN.json` | matched, plus `gw-NN.provisional.json` recording who led before bonus confirmed, so §11.4 can name a flip |

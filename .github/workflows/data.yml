@@ -90,7 +90,7 @@ jobs:
         run: |
           git config user.name  "superf-bot"
           git config user.email "superf-bot@users.noreply.github.com"
-          for path in docs raw backups; do
+          for path in docs data backups; do
             [ -e "$path" ] && git add "$path"
           done
           if git diff --cached --quiet; then

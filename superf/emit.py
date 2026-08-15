@@ -12,6 +12,7 @@ from __future__ import annotations
 from typing import Mapping, Sequence
 
 from . import copy as copytext
+from . import corrections as corrections_mod
 from .config import (
     CURRENCY,
     EXPECTED_GAMEWEEKS,
@@ -26,7 +27,7 @@ from .config import (
     WEEKLY_STAKE_RM,
 )
 from .ledger import Gameweek, Settlement
-from .money import advertised_net, rm_to_sen, sen_to_rm
+from .money import LedgerError, advertised_net, minimum_transfers, rm_to_sen, sen_to_rm
 
 
 def _rm(sen: int) -> float | int:
@@ -134,10 +135,15 @@ def build_payload(
     gameweeks: Mapping[int, Gameweek],
     settlement: Settlement,
     current: Mapping,
+    settled_dates: Mapping[int, str] | None = None,
+    corrections: Sequence[Mapping] | None = None,
     you: str | None = None,
 ) -> dict:
     ids = [m["id"] for m in managers]
     n = len(ids)
+    settled_dates = settled_dates or {}
+    corrections = list(corrections or [])
+    corrections_mod.validate(corrections, ids)
     final_gws = sorted(gw for gw, g in gameweeks.items() if g.is_final)
     settled_through = final_gws[-1] if final_gws else 0
     you = you or (ids[0] if ids else "")
@@ -201,7 +207,10 @@ def build_payload(
                 "winners": ranking.winners if ranking else [],
                 "pot": _rm(pot_sen) if gameweek.pays_pot else 0,
                 "tiebreak": ranking.tiebreak if ranking else None,
-                "bonus_change": None,  # §11.4, written by the live layer when it happens
+                # §11.4 — a permanent, timestamped note when confirmed bonus
+                # flipped the pot. That is precisely the moment people accuse
+                # each other of cheating.
+                "bonus_change": gameweek.bonus_change,
             }
         )
 
@@ -313,20 +322,48 @@ def build_payload(
                 for manager, value in month_ledger.items():
                     delta_source[manager] += value
 
+    # §3.9.4 — adjusting entries, applied on top of the settled pots.
+    correction_net = corrections_mod.apply(corrections, ids)
+
     ledger_block = {}
     for manager in ids:
+        statement = _statement_for(
+            manager, ids, final_gws, gameweeks, settlement, month_rows,
+            settled_dates, corrections,
+        )
+        accrued = settlement.totals.get(manager, 0) + correction_net.get(manager, 0)
         ledger_block[manager] = {
-            "weekly": _rm(weekly_totals[manager]),
-            "monthly": _rm(monthly_totals[manager]),
-            "total": _rm(settlement.totals.get(manager, 0)),
-            "projected_season": _rm(
-                settlement.season.get(manager, settlement.projected_season.get(manager, 0))
+            # SEN, not ringgit (§3.8.1). Only the ledger, statement and
+            # settlement are sen — stakes and exposure stay in RM as §5 has them.
+            "weekly": weekly_totals[manager],
+            "monthly": monthly_totals[manager],
+            "accrued": accrued,
+            "projected_season": settlement.season.get(
+                manager, settlement.projected_season.get(manager, 0)
             ),
-            "delta_last_gw": _rm(delta_source[manager]),
-            # Per-gameweek weekly amount, matching §5's own [-5, -5] example and
-            # the prototype's reading — not a running cumulative total.
-            "by_gameweek": [_rm(settlement.weekly.get(gw, {}).get(manager, 0)) for gw in final_gws],
+            "delta_last_gw": delta_source[manager],
+            # Per-gameweek weekly amount, matching §5's own [-500, -500] example
+            # and the prototype's reading — not a running cumulative total.
+            "by_gameweek": [settlement.weekly.get(gw, {}).get(manager, 0) for gw in final_gws],
+            "statement": statement,
         }
+        if statement and statement[-1]["balance"] != accrued:
+            raise LedgerError(
+                f"{manager}'s statement ends at {statement[-1]['balance']} sen but the "
+                f"accrued balance is {accrued} sen — every row must trace (§3.9.2)"
+            )
+
+    # §3.9.3 — who pays whom. A preview until GW38, the deliverable after it.
+    balances = {m: ledger_block[m]["accrued"] for m in ids}
+    settlement_block = {
+        "settled": settlement.season_is_final,
+        "payments": minimum_transfers(balances),
+    }
+    if len(settlement_block["payments"]) > max(len(ids) - 1, 0):
+        raise LedgerError(
+            f"settlement produced {len(settlement_block['payments'])} payments, "
+            f"which exceeds the N-1 bound of {len(ids) - 1}"
+        )
 
     podiums, weeks_won = _place_counts(settlement, ids)
 
@@ -369,6 +406,8 @@ def build_payload(
         "rank_prev": rank_prev,
         "behind": behind,
         "ledger": ledger_block,
+        "corrections": [dict(c) for c in corrections],
+        "settlement": settlement_block,
         "podiums": podiums,
         "weeks_won": weeks_won,
         "stats": {"avg_points": avg_points, "high": high},
@@ -381,11 +420,107 @@ def build_payload(
             ),
         },
         "checks": {
-            "zero_sum": sum(settlement.totals.values()) == 0,
+            "zero_sum": sum(ledger_block[m]["accrued"] for m in ids) == 0,
             "gameweeks_expected": EXPECTED_GAMEWEEKS,
             "gameweeks_present": len(events),
         },
     }
+
+
+def ordinal(place: int) -> str:
+    if 10 <= place % 100 <= 20:
+        return f"{place}th"
+    return f"{place}{ {1: 'st', 2: 'nd', 3: 'rd'}.get(place % 10, 'th') }"
+
+
+def _statement_for(
+    manager: str,
+    ids: Sequence[str],
+    final_gws: Sequence[int],
+    gameweeks: Mapping[int, Gameweek],
+    settlement: Settlement,
+    month_rows: Sequence[Mapping],
+    settled_dates: Mapping[int, str],
+    corrections: Sequence[Mapping],
+) -> list[dict]:
+    """§3.9.2 — one row per settled event, oldest first, with a running balance.
+
+    A manager who disputes their total must be able to find the single row they
+    disagree with. That is the whole design goal, so every row traces to exactly
+    one settled gameweek, month, or adjusting entry.
+    """
+    rows: list[dict] = []
+
+    for gw in final_gws:
+        gameweek = gameweeks[gw]
+        score = gameweek.scores.get(manager)
+        if score is None or not score.active:
+            continue
+        amount = settlement.weekly.get(gw, {}).get(manager)
+        if amount is None:
+            continue
+        ranking = settlement.rankings.get(gw)
+        place = ranking.place_of(manager) if ranking else None
+        field = len(gameweek.active_managers)
+        if score.did_not_set:
+            detail = "never set team, 0 pts"
+        elif manager in (ranking.winners if ranking else []):
+            detail = f"{score.net_points} pts, 1st of {field}, top score"
+        else:
+            detail = f"{score.net_points} pts, {ordinal(place or field)} of {field}"
+        rows.append({
+            "date": settled_dates.get(gw, ""), "type": "weekly", "gw": gw,
+            "detail": detail, "amount": amount, "_sort": (settled_dates.get(gw, ""), 0, gw),
+        })
+
+    for month in month_rows:
+        ledger = settlement.monthly.get(month["month"])
+        if not ledger or manager not in ledger:
+            continue
+        order = month["order"]
+        place = order.index(manager) + 1 if manager in order else len(order)
+        points = month["totals"].get(manager, 0)
+        name = copytext.month_name(month["month"])
+        detail = f"{points} pts, {ordinal(place)} in {name}"
+        if place <= len(MONTHLY_SPLIT):
+            detail += f" — {round(MONTHLY_SPLIT[place - 1] * 100)}% share"
+        last_gw = month["gameweeks"][-1]
+        rows.append({
+            "date": settled_dates.get(last_gw, ""), "type": "monthly",
+            "month": month["month"], "detail": detail, "amount": ledger[manager],
+            "_sort": (settled_dates.get(last_gw, ""), 1, last_gw),
+        })
+
+    # Once GW38 is Final the season pot moves from projected into the book, so
+    # it needs a row like any other event — otherwise the statement stops short
+    # of the balance somebody is being asked to pay (§3.9.2).
+    if settlement.season_is_final and manager in settlement.season:
+        ranking = settlement.season_ranking
+        place = ranking.place_of(manager) if ranking else None
+        points = sum(
+            gameweeks[gw].scores[manager].net_points
+            for gw in final_gws
+            if gameweeks[gw].scores.get(manager) and gameweeks[gw].scores[manager].active
+        )
+        detail = f"{points} pts, {ordinal(place or 0)} overall"
+        if place and place <= len(SEASON_SPLIT):
+            detail += f" — {round(SEASON_SPLIT[place - 1] * 100)}% share"
+        last_gw = final_gws[-1] if final_gws else 0
+        rows.append({
+            "date": settled_dates.get(last_gw, ""), "type": "season",
+            "detail": detail, "amount": settlement.season[manager],
+            "_sort": (settled_dates.get(last_gw, ""), 2, last_gw),
+        })
+
+    for row in corrections_mod.statement_rows(corrections, manager):
+        rows.append({**row, "_sort": (row["date"], 3, row.get("affects_gw") or 0)})
+
+    rows.sort(key=lambda r: r.pop("_sort"))
+    balance = 0
+    for row in rows:
+        balance += row["amount"]
+        row["balance"] = balance
+    return rows
 
 
 def _display(managers: Sequence[Mapping], manager_id: str) -> str:
