@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-15T15:08:33Z",
+ "generated_at": "2026-08-15T15:27:02Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -63,27 +63,6 @@
  },
  "managers": [
   {
-   "id": "jack",
-   "display_name": "Jack Siah",
-   "short": "Jack",
-   "team_name": "Speedmaster",
-   "entry_id": 1427521
-  },
-  {
-   "id": "tianpin",
-   "display_name": "Tian Pin Lee",
-   "short": "Tian Pin",
-   "team_name": "Vege went tight",
-   "entry_id": 1567532
-  },
-  {
-   "id": "chris",
-   "display_name": "Christopher Chin",
-   "short": "Chris",
-   "team_name": "My Team",
-   "entry_id": 1641730
-  },
-  {
    "id": "noel",
    "display_name": "Noel Tan",
    "short": "Noel",
@@ -91,18 +70,11 @@
    "entry_id": 1652821
   },
   {
-   "id": "boonsiang",
-   "display_name": "Boon Siang Ng",
-   "short": "Boon",
-   "team_name": "Boon",
-   "entry_id": 1840731
-  },
-  {
-   "id": "soonlee",
-   "display_name": "Soon Lee Loo",
-   "short": "Soon Lee",
-   "team_name": "SLucky XI",
-   "entry_id": 2488327
+   "id": "jack",
+   "display_name": "Jack Siah",
+   "short": "Jack",
+   "team_name": "Speedmaster",
+   "entry_id": 1427521
   },
   {
    "id": "sam",
@@ -117,6 +89,34 @@
    "short": "Wei Hun",
    "team_name": "Vini Jr's Chin",
    "entry_id": 4590653
+  },
+  {
+   "id": "soonlee",
+   "display_name": "Soon Lee Loo",
+   "short": "Soon Lee",
+   "team_name": "SLucky XI",
+   "entry_id": 2488327
+  },
+  {
+   "id": "boonsiang",
+   "display_name": "Boon Siang Ng",
+   "short": "Boon",
+   "team_name": "Boon",
+   "entry_id": 1840731
+  },
+  {
+   "id": "tianpin",
+   "display_name": "Tian Pin Lee",
+   "short": "Tian Pin",
+   "team_name": "Vege went tight",
+   "entry_id": 1567532
+  },
+  {
+   "id": "chris",
+   "display_name": "Christopher Chin",
+   "short": "Chris",
+   "team_name": "My Team",
+   "entry_id": 1641730
   }
  ],
  "teams": {
@@ -5559,268 +5559,7 @@
    }
   ]
  },
- "pl_table": [
-  {
-   "pos": 1,
-   "team": 1,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 2,
-   "team": 2,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 3,
-   "team": 3,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 4,
-   "team": 4,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 5,
-   "team": 5,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 6,
-   "team": 6,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 7,
-   "team": 7,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 8,
-   "team": 8,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 9,
-   "team": 9,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 10,
-   "team": 10,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 11,
-   "team": 11,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 12,
-   "team": 12,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 13,
-   "team": 13,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 14,
-   "team": 14,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 15,
-   "team": 15,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 16,
-   "team": 16,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 17,
-   "team": 17,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 18,
-   "team": 18,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 19,
-   "team": 19,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  },
-  {
-   "pos": 20,
-   "team": 20,
-   "p": 0,
-   "w": 0,
-   "d": 0,
-   "l": 0,
-   "gf": 0,
-   "ga": 0,
-   "gd": 0,
-   "pts": 0,
-   "form": []
-  }
- ],
+ "pl_table": [],
  "gameweeks": [],
  "months": [],
  "month_current": {
@@ -5836,61 +5575,37 @@
   "note": "August opens with GW1 \u2014 RM10 each, RM80 in the pot, 2 gameweeks to decide it."
  },
  "totals": {
-  "jack": 0,
-  "tianpin": 0,
-  "chris": 0,
   "noel": 0,
-  "boonsiang": 0,
-  "soonlee": 0,
+  "jack": 0,
   "sam": 0,
-  "weihun": 0
+  "weihun": 0,
+  "soonlee": 0,
+  "boonsiang": 0,
+  "tianpin": 0,
+  "chris": 0
  },
  "rank": [
-  "jack",
-  "tianpin",
-  "chris",
   "noel",
-  "boonsiang",
-  "soonlee",
+  "jack",
   "sam",
-  "weihun"
+  "weihun",
+  "soonlee",
+  "boonsiang",
+  "tianpin",
+  "chris"
  ],
  "rank_prev": {},
  "behind": {
-  "jack": 0,
-  "tianpin": 0,
-  "chris": 0,
   "noel": 0,
-  "boonsiang": 0,
-  "soonlee": 0,
+  "jack": 0,
   "sam": 0,
-  "weihun": 0
+  "weihun": 0,
+  "soonlee": 0,
+  "boonsiang": 0,
+  "tianpin": 0,
+  "chris": 0
  },
  "ledger": {
-  "jack": {
-   "weekly": 0,
-   "monthly": 0,
-   "total": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": []
-  },
-  "tianpin": {
-   "weekly": 0,
-   "monthly": 0,
-   "total": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": []
-  },
-  "chris": {
-   "weekly": 0,
-   "monthly": 0,
-   "total": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": []
-  },
   "noel": {
    "weekly": 0,
    "monthly": 0,
@@ -5899,15 +5614,7 @@
    "delta_last_gw": 0,
    "by_gameweek": []
   },
-  "boonsiang": {
-   "weekly": 0,
-   "monthly": 0,
-   "total": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": []
-  },
-  "soonlee": {
+  "jack": {
    "weekly": 0,
    "monthly": 0,
    "total": 0,
@@ -5930,27 +5637,59 @@
    "projected_season": 0,
    "delta_last_gw": 0,
    "by_gameweek": []
+  },
+  "soonlee": {
+   "weekly": 0,
+   "monthly": 0,
+   "total": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": []
+  },
+  "boonsiang": {
+   "weekly": 0,
+   "monthly": 0,
+   "total": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": []
+  },
+  "tianpin": {
+   "weekly": 0,
+   "monthly": 0,
+   "total": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": []
+  },
+  "chris": {
+   "weekly": 0,
+   "monthly": 0,
+   "total": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": []
   }
  },
  "podiums": {
-  "jack": 0,
-  "tianpin": 0,
-  "chris": 0,
   "noel": 0,
-  "boonsiang": 0,
-  "soonlee": 0,
+  "jack": 0,
   "sam": 0,
-  "weihun": 0
+  "weihun": 0,
+  "soonlee": 0,
+  "boonsiang": 0,
+  "tianpin": 0,
+  "chris": 0
  },
  "weeks_won": {
-  "jack": 0,
-  "tianpin": 0,
-  "chris": 0,
   "noel": 0,
-  "boonsiang": 0,
-  "soonlee": 0,
+  "jack": 0,
   "sam": 0,
-  "weihun": 0
+  "weihun": 0,
+  "soonlee": 0,
+  "boonsiang": 0,
+  "tianpin": 0,
+  "chris": 0
  },
  "stats": {
   "avg_points": 0,

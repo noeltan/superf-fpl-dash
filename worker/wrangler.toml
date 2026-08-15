@@ -1,0 +1,5 @@
+name = "superf-fpl-proxy"
+main = "index.js"
+compatibility_date = "2026-08-15"
+
+# No KV, no D1, no secrets. It adds one header and caches for 30 seconds.

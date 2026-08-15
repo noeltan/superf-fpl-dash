@@ -63,6 +63,12 @@ def build_table(
                 row["l"] += 1
                 row["_form"].append("L")
 
+    if not played:
+        # Pre-season is a real state that will be seen (§9.6). An empty table
+        # lets the view show its designed empty state rather than twenty rows
+        # of zeros that look like a bug.
+        return []
+
     table = []
     for row in rows.values():
         row["gd"] = row["gf"] - row["ga"]
