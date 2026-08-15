@@ -1,5 +1,9 @@
 requests>=2.31
 
+# The tests gate publishing — data.yml refuses to build a ledger it has not
+# just proved — so pytest belongs in the runtime install, not a dev extra.
+pytest>=7.4
+
 # Optional — only needed for the Google Sheets backup mirror.
 google-auth>=2.28
 

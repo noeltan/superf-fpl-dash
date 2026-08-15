@@ -7,8 +7,10 @@ name: tests
 # publishes. A ledger that does not balance should fail here, long before it
 # gets near data.json.
 on:
+  # Only main on push: a branch with an open PR would otherwise run twice per
+  # commit, and two identical red checks are not twice the signal.
   push:
-    branches: ["**"]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
