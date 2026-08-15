@@ -27,10 +27,12 @@ docs/                         GitHub Pages — the published copy and the page
 worker/                       Cloudflare Worker — the one header Pages cannot send
 ```
 
-**`raw/` is append-only; `data.json` is disposable.** You can delete `data.json`
-and rebuild it from `raw/` plus `corrections.json` — `tests/test_rebuild.py`
-holds us to it, because a tiebreak bug found in March has to be recomputed from
-source, not from the numbers you no longer trust.
+**`raw/` is append-only; `data.json` is disposable.** `raw/gw-NN.json` freezes
+each settled gameweek's scores and `raw/season.json` mirrors the calendar, clubs
+and roster, so `build.py --offline` rebuilds the published file byte-identically
+with the API switched off. CI proves it on every push, because a tiebreak bug
+found in March has to be recomputed from source, not from the numbers you no
+longer trust.
 
 ## The money, in one sentence
 

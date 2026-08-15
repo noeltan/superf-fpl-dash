@@ -344,6 +344,7 @@ def main() -> int:
     parser.add_argument("--offline", action="store_true", help="read only from cache and raw/")
     parser.add_argument("--out", type=Path, default=None, help="override the published path")
     parser.add_argument("--no-backup", action="store_true", help="skip CSV ledger snapshots")
+    parser.add_argument("--generated-at", help="pin generated_at, for reproducible rebuilds")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -353,18 +354,35 @@ def main() -> int:
     )
 
     now = datetime.now(timezone.utc)
+    if args.generated_at:
+        now = parse_utc(args.generated_at)
     fetcher = Fetcher(offline=args.offline)
 
-    try:
-        bootstrap = fetcher.bootstrap()
-        standings = fetcher.league_standings(LEAGUE_ID)
-        all_fixtures = fetcher.fixtures()
-        managers = collect_managers(standings, fetcher)
-    except FetchError as exc:
-        log.error("could not reach the FPL API: %s", exc)
-        log.error("nothing published — the previous data.json stays live and will age "
-                  "into the stale banner")
-        return 2
+    # §4.2 — "delete data.json and rebuild it from raw/ plus corrections.json".
+    # That has to include the calendar, the clubs and the roster, not only the
+    # scores, so the offline path reads the season mirror rather than the API.
+    season = snapshot_mod.load_season() if args.offline else None
+    if season:
+        log.info("rebuilding offline from %s", snapshot_mod.season_path())
+        raw_events = season["events"]
+        teams = {int(t["id"]): t for t in season["teams"]}
+        all_fixtures = season["fixtures"]
+        managers = [dict(m) for m in season["managers"]]
+        league_name = season.get("league_name", "SuperF")
+    else:
+        try:
+            bootstrap = fetcher.bootstrap()
+            standings = fetcher.league_standings(LEAGUE_ID)
+            all_fixtures = fetcher.fixtures()
+            managers = collect_managers(standings, fetcher)
+        except FetchError as exc:
+            log.error("could not reach the FPL API: %s", exc)
+            log.error("nothing published — the previous data.json stays live and will age "
+                      "into the stale banner")
+            return 2
+        raw_events = bootstrap["events"]
+        teams = {int(t["id"]): t for t in bootstrap["teams"]}
+        league_name = standings.get("league", {}).get("name", "SuperF")
 
     if not managers:
         log.error("league %s returned no members", LEAGUE_ID)
@@ -377,14 +395,15 @@ def main() -> int:
         )
         return 1
 
-    events = build_events(bootstrap["events"])
+    events = build_events(raw_events)
     month_buckets = build_month_buckets(events)
     breaks = build_breaks(events)
-    teams = {int(t["id"]): t for t in bootstrap["teams"]}
     fixtures_by_gw = shape_fixtures(all_fixtures)
 
     try:
-        histories = {
+        # Offline, every Final gameweek is read from its snapshot, so no history
+        # is needed; unplayed gameweeks have no scores to carry anyway.
+        histories = {} if season else {
             int(m["entry_id"]): (fetcher.entry_history(int(m["entry_id"])) or {})
             for m in managers
         }
@@ -424,7 +443,7 @@ def main() -> int:
     try:
         payload = build_payload(
             generated_at=iso_z(now),
-            league_name=standings.get("league", {}).get("name", "SuperF"),
+            league_name=league_name,
             league_id=LEAGUE_ID,
             managers=roster,
             teams=teams,
@@ -462,6 +481,11 @@ def main() -> int:
     published.write_text(body)
     if not CORRECTIONS_JSON.exists():
         CORRECTIONS_JSON.write_text('{"corrections": []}\n')
+    if not season:
+        snapshot_mod.write_season(
+            events=raw_events, teams=list(teams.values()), managers=managers,
+            fixtures=all_fixtures, league_name=league_name,
+        )
 
     settled_through = payload["settled"]["through_gw"]
     accrued = payload["ledger"]

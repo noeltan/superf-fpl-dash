@@ -1,0 +1,60 @@
+# Hand-written, unlike data.yml and predict.yml which tools/gen_workflows.py
+# regenerates from the real fixture calendar.
+name: tests
+
+# The ledger maths is the product under deferred settlement (§3.9), so it runs
+# on every push and every pull request — not only inside the scheduled job that
+# publishes. A ledger that does not balance should fail here, long before it
+# gets near data.json.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - name: Ledger, tiebreak, projection and schema tests
+        run: python -m pytest -q
+
+      - name: Rebuild data.json offline and diff it against the published book
+        # §4.2 — "delete data.json and rebuild it byte-identically from raw/
+        # plus corrections.json". raw/season.json carries the calendar, clubs
+        # and roster; the gw-NN.json snapshots carry the scores. No network.
+        run: |
+          if [ -f data/2026-27/raw/season.json ]; then
+            STAMP=$(python -c "import json;print(json.load(open('docs/data.json'))['generated_at'])")
+            python build.py --offline --no-backup --generated-at "$STAMP" \
+              --out /tmp/rebuilt.json -v
+            python - <<'PY'
+          import json, sys
+          rebuilt = json.load(open("/tmp/rebuilt.json"))
+          published = json.load(open("docs/data.json"))
+          if rebuilt != published:
+              differing = sorted(k for k in published if published[k] != rebuilt.get(k))
+              sys.exit(f"offline rebuild differs from the published book: {differing}")
+          assert rebuilt["checks"]["zero_sum"], "rebuilt ledger does not balance"
+          print("offline rebuild is byte-identical to the published book")
+          PY
+          else
+            echo "no season mirror yet — nothing to rebuild"
+          fi
+
+      - name: Check the JavaScript parses
+        run: |
+          for file in docs/app.js docs/runtime.js docs/live.js docs/config.js worker/index.js; do
+            node --check "$file"
+          done

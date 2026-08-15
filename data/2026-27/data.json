@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-15T15:43:24Z",
+ "generated_at": "2026-08-15T15:48:33Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -63,60 +63,60 @@
  },
  "managers": [
   {
-   "id": "noel",
    "display_name": "Noel Tan",
+   "entry_id": 1652821,
+   "id": "noel",
    "short": "Noel",
-   "team_name": "JEONSOMI",
-   "entry_id": 1652821
+   "team_name": "JEONSOMI"
   },
   {
-   "id": "jack",
    "display_name": "Jack Siah",
+   "entry_id": 1427521,
+   "id": "jack",
    "short": "Jack",
-   "team_name": "Speedmaster",
-   "entry_id": 1427521
+   "team_name": "Speedmaster"
   },
   {
-   "id": "sam",
    "display_name": "Sam Lim",
+   "entry_id": 2686159,
+   "id": "sam",
    "short": "Sam",
-   "team_name": "GeGe",
-   "entry_id": 2686159
+   "team_name": "GeGe"
   },
   {
-   "id": "weihun",
    "display_name": "Wei Hun Wong",
+   "entry_id": 4590653,
+   "id": "weihun",
    "short": "Wei Hun",
-   "team_name": "Vini Jr's Chin",
-   "entry_id": 4590653
+   "team_name": "Vini Jr's Chin"
   },
   {
-   "id": "soonlee",
    "display_name": "Soon Lee Loo",
+   "entry_id": 2488327,
+   "id": "soonlee",
    "short": "Soon Lee",
-   "team_name": "SLucky XI",
-   "entry_id": 2488327
+   "team_name": "SLucky XI"
   },
   {
-   "id": "boonsiang",
    "display_name": "Boon Siang Ng",
+   "entry_id": 1840731,
+   "id": "boonsiang",
    "short": "Boon",
-   "team_name": "Boon",
-   "entry_id": 1840731
+   "team_name": "Boon"
   },
   {
-   "id": "tianpin",
    "display_name": "Tian Pin Lee",
+   "entry_id": 1567532,
+   "id": "tianpin",
    "short": "Tian Pin",
-   "team_name": "Vege went tight",
-   "entry_id": 1567532
+   "team_name": "Vege went tight"
   },
   {
-   "id": "chris",
    "display_name": "Christopher Chin",
+   "entry_id": 1641730,
+   "id": "chris",
    "short": "Chris",
-   "team_name": "My Team",
-   "entry_id": 1641730
+   "team_name": "My Team"
   }
  ],
  "teams": {

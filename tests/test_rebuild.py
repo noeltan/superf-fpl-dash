@@ -184,6 +184,42 @@ def test_settled_date_is_the_last_kickoff():
     assert settled_date([]) == ""
 
 
+# --- the season mirror --------------------------------------------------------
+
+SEASON_ARGS = dict(
+    events=[{"id": 2, "deadline_time": "2026-08-28T17:30:00Z", "noise": "dropped"},
+            {"id": 1, "deadline_time": "2026-08-21T17:30:00Z"}],
+    teams=[{"id": 2, "name": "Chelsea", "short_name": "CHE", "strength": 4},
+           {"id": 1, "name": "Arsenal", "short_name": "ARS", "strength": 5}],
+    managers=MANAGERS,
+    fixtures=FIXTURES,
+    league_name="SuperF",
+)
+
+
+def test_the_season_mirror_round_trips(tmp_path):
+    """Without the calendar, clubs and roster, `raw/` rebuilds the ledger but
+    not data.json — and §4.2 asks for the file."""
+    snapshot_mod.write_season(root=tmp_path, **SEASON_ARGS)
+    loaded = snapshot_mod.load_season(root=tmp_path)
+    assert [e["id"] for e in loaded["events"]] == [1, 2]      # sorted
+    assert [t["id"] for t in loaded["teams"]] == [1, 2]
+    assert "noise" not in loaded["events"][0]                 # pruned
+    assert "strength" not in loaded["teams"][0]
+    assert len(loaded["managers"]) == len(MANAGERS)
+    assert loaded["league_name"] == "SuperF"
+
+
+def test_the_season_mirror_is_deterministic(tmp_path):
+    first = snapshot_mod.write_season(root=tmp_path, **SEASON_ARGS).read_bytes()
+    second = snapshot_mod.write_season(root=tmp_path, **SEASON_ARGS).read_bytes()
+    assert first == second
+
+
+def test_no_season_mirror_reads_as_absent(tmp_path):
+    assert snapshot_mod.load_season(root=tmp_path) is None
+
+
 # --- §11.4 bonus flips --------------------------------------------------------
 
 def test_a_bonus_flip_is_named_permanently(tmp_path):

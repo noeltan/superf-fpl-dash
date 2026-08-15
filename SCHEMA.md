@@ -286,3 +286,4 @@ variable, and what lands in the file is what the API actually answered with —
 | §12.4 | `"model": "claude-opus-4-6"` | recorded from the API response at runtime |
 | §3.9.2 | statement dates 22/29 Aug | the design's mock uses 24/31 Aug — the last kickoff of each gameweek, which is when it actually stopped moving |
 | §4.1 | `data/2026-27/raw/gw-NN.json` | matched, plus `gw-NN.provisional.json` recording who led before bonus confirmed, so §11.4 can name a flip |
+| §4.2 | rebuild from `raw/` + `corrections.json` | needs the calendar, clubs and roster too, which no per-gameweek snapshot carries — `raw/season.json` mirrors them so the rebuild is of the *file*, not just the ledger |

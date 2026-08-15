@@ -198,3 +198,59 @@ def bonus_change_for(gw: int, final_winner: str, at: str, root: Path | None = No
     if not leader or leader == final_winner:
         return None
     return {"from": leader, "to": final_winner, "at": at}
+
+
+# --- season-level mirror ------------------------------------------------------
+# Per-gameweek snapshots freeze the scores, but `data.json` also needs the
+# calendar, the clubs and the roster. Without those, "delete data.json and
+# rebuild it from raw/" (§4.2) is only true of the ledger, not of the file.
+#
+# This one is refreshed every run rather than frozen: fixtures fill in scores and
+# a manager can still join. It is the current-state mirror that makes a full
+# offline rebuild possible; the immutable history lives in gw-NN.json.
+
+def season_path(root: Path | None = None) -> Path:
+    return (root or RAW) / "season.json"
+
+
+def write_season(
+    *,
+    events: Sequence[Mapping],
+    teams: Sequence[Mapping],
+    managers: Sequence[Mapping],
+    fixtures: Sequence[Mapping],
+    league_name: str,
+    root: Path | None = None,
+) -> Path:
+    path = season_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "version": SNAPSHOT_VERSION,
+        "league_name": league_name,
+        "events": [
+            {"id": e["id"], "deadline_time": e["deadline_time"]}
+            for e in sorted(events, key=lambda e: e["id"])
+        ],
+        "teams": [
+            {"id": t["id"], "name": t["name"], "short_name": t["short_name"]}
+            for t in sorted(teams, key=lambda t: t["id"])
+        ],
+        "managers": [dict(m) for m in managers],
+        "fixtures": [
+            {
+                k: f.get(k)
+                for k in ("id", "event", "team_h", "team_a", "team_h_score",
+                          "team_a_score", "team_h_difficulty", "team_a_difficulty",
+                          "kickoff_time", "minutes", "started", "finished",
+                          "finished_provisional")
+            }
+            for f in sorted(fixtures, key=lambda f: f.get("id", 0))
+        ],
+    }
+    path.write_text(json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n")
+    return path
+
+
+def load_season(root: Path | None = None) -> dict | None:
+    path = season_path(root)
+    return json.loads(path.read_text()) if path.exists() else None
