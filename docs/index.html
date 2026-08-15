@@ -69,7 +69,7 @@ select,button{font:inherit}
 <div style="min-height:100vh;background:var(--plane)">
 
 <div style="position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--border)">
-  <div style="max-width:1280px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+  <div style="max-width:1280px;margin:0 auto;padding:12px clamp(12px,3vw,24px);display:flex;align-items:center;gap:16px;flex-wrap:wrap">
     <div style="display:flex;align-items:baseline;gap:10px">
       <div style="font-size:21px;font-weight:670;letter-spacing:-.025em">SuperF</div>
       <div style="font-size:12px;color:var(--ink-muted);font-variant-numeric:tabular-nums">2026/27 · league 310479 · {{league.players}} managers</div>
@@ -80,31 +80,31 @@ select,button{font:inherit}
       <span style="font-size:11.5px;color:var(--ink-muted);font-variant-numeric:tabular-nums">{{chrome.stateSub}}</span>
     </div>
     <div style="flex:1;min-width:12px"></div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2)">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)">
       <span style="width:9px;height:9px;border-radius:2px;background:var(--accent);flex:none"></span>
       <span>You</span>
-      <sc-raw-select value="{{you}}" sc-camel-on-change="{{onYou}}" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:12.5px">
+      <sc-raw-select value="{{you}}" sc-camel-on-change="{{onYou}}" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12.5px">
         <sc-for list="{{managerOpts}}" as="m" hint-placeholder-count="8"><option value="{{m.id}}">{{m.name}}</option></sc-for>
       </sc-raw-select>
       <span style="width:9px;height:9px;border-radius:2px;background:var(--compare);flex:none;margin-left:8px"></span>
       <span>Compare</span>
-      <sc-raw-select value="{{cmp}}" sc-camel-on-change="{{onCmp}}" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:12.5px">
+      <sc-raw-select value="{{cmp}}" sc-camel-on-change="{{onCmp}}" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12.5px">
         <sc-for list="{{managerOpts}}" as="m" hint-placeholder-count="8"><option value="{{m.id}}">{{m.name}}</option></sc-for>
       </sc-raw-select>
     </div>
-    <button sc-camel-on-click="{{toggleTheme}}" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12.5px;cursor:pointer">{{chrome.themeLabel}}</button>
+    <button sc-camel-on-click="{{toggleTheme}}" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer">{{chrome.themeLabel}}</button>
   </div>
-  <div style="max-width:1280px;margin:0 auto;padding:0 24px 12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+  <div style="max-width:1280px;margin:0 auto;padding:0 clamp(12px,3vw,24px) 12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
     <div style="display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:11px">
       <sc-for list="{{tabs}}" as="t" hint-placeholder-count="2">
-        <button sc-camel-on-click="{{t.onClick}}" style="border:none;cursor:pointer;padding:7px 17px;border-radius:8px;font-size:14px;background:{{t.bg}};color:{{t.ink}};font-weight:{{t.weight}};box-shadow:{{t.shadow}}">{{t.label}}</button>
+        <button sc-camel-on-click="{{t.onClick}}" style="border:none;cursor:pointer;padding:10px 18px;border-radius:8px;font-size:14px;background:{{t.bg}};color:{{t.ink}};font-weight:{{t.weight}};box-shadow:{{t.shadow}}">{{t.label}}</button>
       </sc-for>
     </div>
     <div style="flex:1;min-width:12px"></div>
     </div>
 </div>
 
-<div style="max-width:1280px;margin:0 auto;padding:20px 24px 72px">
+<div style="max-width:1280px;margin:0 auto;padding:16px clamp(12px,3vw,24px) 72px">
 
 <sc-if value="{{banner.show}}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;gap:11px;background:var(--tint-warn);border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:10px;padding:12px 15px;margin-bottom:18px;font-size:13.5px;color:var(--ink-2)">
@@ -117,10 +117,10 @@ select,button{font:inherit}
 <div>
 
   <sc-if value="{{showCountdown}}" hint-placeholder-val="{{ true }}">
-  <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin-bottom:18px">
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:22px 24px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:18px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px)">
       <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:10px">{{cd.label}}</div>
-      <div style="font-size:64px;font-weight:660;letter-spacing:-.035em;line-height:.95;font-variant-numeric:tabular-nums">{{cd.big}}</div>
+      <div style="font-size:clamp(38px,10vw,64px);font-weight:660;letter-spacing:-.035em;line-height:.95;font-variant-numeric:tabular-nums">{{cd.big}}</div>
       <div style="display:flex;align-items:baseline;gap:9px;margin-top:16px;flex-wrap:wrap">
         <span style="font-size:10px;font-weight:680;letter-spacing:.1em;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:2px 5px">MYT</span>
         <span style="font-size:17px;font-weight:600;font-variant-numeric:tabular-nums">{{cd.myt}}</span>
@@ -128,7 +128,7 @@ select,button{font:inherit}
       </div>
       <div style="font-size:12.5px;color:var(--ink-2);margin-top:12px;padding-top:12px;border-top:1px solid var(--grid);line-height:1.55">{{cd.note}}</div>
     </div>
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);display:flex;flex-direction:column;gap:14px">
       <div>
         <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:10px">NEXT INTERNATIONAL BREAK</div>
         <div style="font-size:15px;line-height:1.55">{{brk.head}}</div>
@@ -141,7 +141,7 @@ select,button{font:inherit}
 
   <sc-if value="{{showLive}}" hint-placeholder-val="{{ false }}">
   <div style="margin-bottom:18px">
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-top:3px solid {{live.bar.rule}};border-radius:14px;padding:18px 22px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-top:3px solid {{live.bar.rule}};border-radius:14px;padding:clamp(14px,4vw,18px) clamp(13px,4vw,22px);margin-bottom:18px">
       <div style="display:flex;align-items:center;gap:13px;flex-wrap:wrap">
         <i style="width:9px;height:9px;border-radius:50%;flex:none;background:{{live.bar.dot}};animation:{{live.bar.anim}}"></i>
         <span style="font-size:14px;font-weight:670;letter-spacing:.09em;color:{{live.bar.ink}}">{{live.bar.title}}</span>
@@ -153,8 +153,8 @@ select,button{font:inherit}
       <div style="font-size:13px;color:var(--ink-2);margin-top:11px;padding-top:11px;border-top:1px solid var(--grid);line-height:1.6">{{live.bar.note}}</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:18px;margin-bottom:18px">
-      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:18px;margin-bottom:18px">
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:4px">
           <div>
             <div style="font-size:14.5px;font-weight:640">Live table — GW{{live.gw}}</div>
@@ -162,7 +162,7 @@ select,button{font:inherit}
           </div>
           <span style="font-size:10px;font-weight:680;letter-spacing:.1em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:3px 6px;white-space:nowrap">PROVISIONAL</span>
         </div>
-        <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px">
+        <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px;margin-top:12px">
           <sc-raw-thead>
             <sc-raw-tr>
               <sc-raw-th style="text-align:right;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 8px 8px;border-bottom:1px solid var(--grid)">Live</sc-raw-th>
@@ -201,21 +201,21 @@ select,button{font:inherit}
       </div>
 
       <div style="display:flex;flex-direction:column;gap:18px">
-        <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+        <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
           <div style="font-size:14.5px;font-weight:640;margin-bottom:3px">Pot leader — provisional</div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-bottom:14px">Not banked until every fixture says finished. Cannot rush.</div>
           <div style="display:flex;align-items:baseline;gap:10px">
-            <div style="font-size:30px;font-weight:650;letter-spacing:-.02em">{{live.pot.name}}</div>
+            <div style="font-size:clamp(24px,6.5vw,30px);font-weight:650;letter-spacing:-.02em">{{live.pot.name}}</div>
             <span style="font-size:10px;font-weight:680;letter-spacing:.1em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:2px 5px">PROVISIONAL</span>
           </div>
           <div style="font-size:13.5px;color:var(--ink-2);margin-top:8px">{{live.pot.margin}}</div>
           <div style="margin-top:14px;padding:11px 13px;background:var(--tint-warn);border-radius:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)">{{live.pot.note}}</div>
         </div>
-        <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+        <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
           <div style="font-size:14.5px;font-weight:640;margin-bottom:3px">Match ticker</div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-bottom:12px">{{live.tickerSub}}</div>
           <sc-for list="{{live.ticker}}" as="f" hint-placeholder-count="6">
-            <div style="display:grid;grid-template-columns:1fr 62px 1fr;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--grid)">
+            <div style="display:grid;grid-template-columns:1fr minmax(54px,62px) 1fr;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--grid)">
               <div style="text-align:right;font-size:13px;color:{{f.hInk}};font-weight:{{f.hWeight}}">{{f.home}}</div>
               <div style="text-align:center;font-size:13.5px;font-weight:640;font-variant-numeric:tabular-nums;background:var(--surface-2);border-radius:6px;padding:2px 0">{{f.score}}</div>
               <div style="text-align:left;font-size:13px;color:{{f.aInk}};font-weight:{{f.aWeight}}">{{f.away}}</div>
@@ -226,8 +226,8 @@ select,button{font:inherit}
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
-      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px">
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="font-size:14.5px;font-weight:640;margin-bottom:3px">Captain differentials</div>
         <div style="font-size:12.5px;color:var(--ink-muted);margin-bottom:14px">Who captain who, and what they got back so far. This one always the biggest argument.</div>
         <sc-for list="{{live.caps}}" as="c" hint-placeholder-count="5">
@@ -240,7 +240,7 @@ select,button{font:inherit}
           </div>
         </sc-for>
       </div>
-      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px">
           <div>
             <div style="font-size:14.5px;font-weight:640">Provisional bonus</div>
@@ -265,14 +265,14 @@ select,button{font:inherit}
   </div>
   </sc-if>
 
-  <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-bottom:18px">
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px">
         <div>
           <div style="font-size:14.5px;font-weight:640">{{fx.title}}</div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">{{fx.sub}}</div>
         </div>
-        <sc-raw-select value="{{fx.gw}}" sc-camel-on-change="{{fx.onGW}}" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:5px 9px;font-size:12.5px">
+        <sc-raw-select value="{{fx.gw}}" sc-camel-on-change="{{fx.onGW}}" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12.5px">
           <sc-for list="{{fx.options}}" as="o" hint-placeholder-count="3"><option value="{{o.v}}">{{o.label}}</option></sc-for>
         </sc-raw-select>
       </div>
@@ -283,7 +283,7 @@ select,button{font:inherit}
             <div style="font-size:11px;color:var(--ink-muted);letter-spacing:.04em">{{g.note}}</div>
           </div>
           <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="4">
-            <div style="display:grid;grid-template-columns:1fr 84px 1fr;align-items:center;gap:9px;padding:6px 5px;border-radius:7px">
+            <div style="display:grid;grid-template-columns:1fr minmax(64px,84px) 1fr;align-items:center;gap:clamp(5px,1.5vw,9px);padding:6px 5px;border-radius:7px">
               <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px">
                 <span style="font-size:13.5px">{{r.home}}</span>
                 <span title="difficulty {{r.dh}}" style="width:20px;height:20px;border-radius:5px;font-size:11px;font-weight:660;display:inline-flex;align-items:center;justify-content:center;flex:none;font-variant-numeric:tabular-nums;background:{{r.dhBg}};color:{{r.dhInk}}">{{r.dh}}</span>
@@ -307,7 +307,7 @@ select,button{font:inherit}
     </div>
 
     <div style="display:flex;flex-direction:column;gap:18px">
-      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="font-size:14.5px;font-weight:640;margin-bottom:3px">Season calendar</div>
         <div style="font-size:12.5px;color:var(--ink-muted);margin-bottom:14px">38 gameweeks · amber edge marks a break after that week</div>
         <div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:13px">
@@ -317,7 +317,7 @@ select,button{font:inherit}
         </div>
         <div style="font-size:12px;color:var(--ink-muted);line-height:1.65">{{cal.foot}}</div>
       </div>
-      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px;flex:1">
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);flex:1">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px">
           <div>
             <div style="font-size:14.5px;font-weight:640">SuperF standings</div>
@@ -340,7 +340,7 @@ select,button{font:inherit}
           </div>
         </sc-if>
         <sc-if value="{{standings.hasRows}}" hint-placeholder-val="{{ true }}">
-        <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px">
+        <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px">
           <sc-raw-thead>
             <sc-raw-tr>
               <sc-for list="{{standings.head}}" as="h" hint-placeholder-count="7">
@@ -371,7 +371,7 @@ select,button{font:inherit}
     </div>
   </div>
 
-  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:18px">
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);margin-bottom:18px">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px">
       <div>
         <div style="font-size:14.5px;font-weight:640">{{pred.title}}</div>
@@ -379,7 +379,7 @@ select,button{font:inherit}
       </div>
       <div style="display:flex;align-items:center;gap:9px">
         <span style="font-size:12px;color:var(--ink-2);border:1px solid var(--border);background:var(--surface-2);border-radius:999px;padding:5px 11px;font-variant-numeric:tabular-nums">{{pred.record}}</span>
-        <button sc-camel-on-click="{{pred.onToggle}}" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12.5px;cursor:pointer">{{pred.toggleLabel}}</button>
+        <button sc-camel-on-click="{{pred.onToggle}}" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer">{{pred.toggleLabel}}</button>
       </div>
     </div>
 
@@ -398,12 +398,12 @@ select,button{font:inherit}
           <span style="font-size:13.5px;color:var(--ink-2)">{{pred.verdict.text}}</span>
         </div>
       </sc-if>
-      <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:24px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(18px,3vw,24px)">
         <div>
           <sc-for list="{{pred.calls}}" as="c" hint-placeholder-count="2">
             <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--grid)">
               <div style="font-size:11px;font-weight:680;letter-spacing:.1em;color:var(--ink-muted);width:30px">{{c.slot}}</div>
-              <div style="font-size:20px;font-weight:650;letter-spacing:-.015em;flex:1;color:{{c.ink}}">{{c.name}}</div>
+              <div style="font-size:clamp(17px,4.5vw,20px);font-weight:650;letter-spacing:-.015em;flex:1;color:{{c.ink}}">{{c.name}}</div>
               <span style="font-size:10.5px;font-weight:660;letter-spacing:.08em;border:1px solid {{c.confRule}};color:{{c.confInk}};border-radius:4px;padding:2px 6px">{{c.conf}}</span>
             </div>
           </sc-for>
@@ -421,7 +421,7 @@ select,button{font:inherit}
       </div>
 
       <sc-if value="{{pred.showProj}}" hint-placeholder-val="{{ false }}">
-        <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px;margin-top:20px;padding-top:8px">
+        <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px;margin-top:20px;padding-top:8px">
           <sc-raw-thead>
             <sc-raw-tr>
               <sc-raw-th style="text-align:left;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">Manager</sc-raw-th>
@@ -451,7 +451,7 @@ select,button{font:inherit}
     </sc-if>
   </div>
 
-  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
     <div style="margin-bottom:14px">
       <div style="font-size:14.5px;font-weight:640">Premier League</div>
       <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">{{pl.sub}}</div>
@@ -461,7 +461,7 @@ select,button{font:inherit}
         <b style="color:var(--ink-1);display:block;margin-bottom:4px;font-size:15px">Twenty clubs, all still zero</b>
         {{pl.emptyNote}}
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px 18px;margin-top:16px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:2px 18px;margin-top:16px">
         <sc-for list="{{pl.clubs}}" as="c" hint-placeholder-count="20">
           <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);padding:4px 0;border-bottom:1px solid var(--grid)">
             <span>{{c.name}}</span><span style="color:var(--ink-muted);font-variant-numeric:tabular-nums">0</span>
@@ -470,7 +470,7 @@ select,button{font:inherit}
       </div>
     </sc-if>
     <sc-if value="{{pl.hasRows}}" hint-placeholder-val="{{ true }}">
-    <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px">
+    <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px">
       <sc-raw-thead>
         <sc-raw-tr>
           <sc-raw-th colspan="2" style="text-align:left;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">Club</sc-raw-th>
@@ -517,10 +517,10 @@ select,button{font:inherit}
 
   <sc-if value="{{season.empty}}" hint-placeholder-val="{{ false }}">
   <div>
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:34px 30px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:clamp(20px,6vw,34px) clamp(15px,4vw,30px);margin-bottom:18px">
       <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:12px">ACCRUED BALANCE · NOTHING PAID YET</div>
       <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
-        <div style="font-size:64px;font-weight:660;letter-spacing:-.035em;line-height:.95;font-variant-numeric:tabular-nums;color:var(--ink-muted)">RM0</div>
+        <div style="font-size:clamp(38px,10vw,64px);font-weight:660;letter-spacing:-.035em;line-height:.95;font-variant-numeric:tabular-nums;color:var(--ink-muted)">RM0</div>
         <div style="font-size:14px;color:var(--ink-2);max-width:420px;line-height:1.55">{{season.emptyNote}}</div>
       </div>
     </div>
@@ -529,10 +529,10 @@ select,button{font:inherit}
 
   <sc-if value="{{season.hasData}}" hint-placeholder-val="{{ true }}">
   <div>
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:18px;display:flex;gap:44px;flex-wrap:wrap;align-items:flex-start">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:clamp(18px,5vw,26px) clamp(14px,4vw,28px);margin-bottom:18px;display:flex;gap:44px;flex-wrap:wrap;align-items:flex-start">
       <div style="min-width:230px">
         <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:10px">{{hero.label}}</div>
-        <div style="font-size:64px;font-weight:660;letter-spacing:-.035em;line-height:.95;font-variant-numeric:tabular-nums;color:{{hero.ink}}">{{hero.value}}</div>
+        <div style="font-size:clamp(38px,10vw,64px);font-weight:660;letter-spacing:-.035em;line-height:.95;font-variant-numeric:tabular-nums;color:{{hero.ink}}">{{hero.value}}</div>
         <div style="font-size:15px;font-weight:600;margin-top:12px;color:{{hero.ink}}">{{hero.position}}</div>
         <div style="font-size:13.5px;margin-top:6px">
           <span style="font-weight:600;color:{{hero.deltaInk}}">{{hero.delta}}</span>
@@ -544,39 +544,39 @@ select,button{font:inherit}
         <sc-for list="{{hero.kpis}}" as="k" hint-placeholder-count="3">
           <div>
             <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:8px">{{k.label}}</div>
-            <div style="font-size:32px;font-weight:640;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{k.value}}</div>
+            <div style="font-size:clamp(26px,7vw,32px);font-weight:640;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{k.value}}</div>
             <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px">{{k.sub}}</div>
           </div>
         </sc-for>
       </div>
     </div>
 
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:clamp(17px,4.5vw,24px) clamp(14px,4vw,26px);margin-bottom:18px">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px">
         <div>
           <div style="display:flex;align-items:baseline;gap:11px;flex-wrap:wrap">
-            <div style="font-size:22px;font-weight:660;letter-spacing:-.02em;white-space:nowrap">{{pot.title}}</div>
+            <div style="font-size:clamp(18px,5vw,22px);font-weight:660;letter-spacing:-.02em;white-space:nowrap">{{pot.title}}</div>
             <span style="font-size:11px;font-weight:680;letter-spacing:.09em;border:1px solid {{pot.tagRule}};color:{{pot.tagInk}};border-radius:4px;padding:3px 7px">{{pot.tag}}</span>
           </div>
           <div style="font-size:13px;color:var(--ink-muted);margin-top:5px">{{pot.sub}}</div>
         </div>
-        <div style="display:flex;gap:26px;align-items:flex-start">
+        <div style="display:flex;gap:clamp(14px,4vw,26px);align-items:flex-start;flex-wrap:wrap">
           <div>
             <div style="font-size:10.5px;font-weight:660;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:5px">POT</div>
-            <div style="font-size:24px;font-weight:650;font-variant-numeric:tabular-nums">{{pot.potLabel}}</div>
+            <div style="font-size:clamp(19px,5vw,24px);font-weight:650;font-variant-numeric:tabular-nums">{{pot.potLabel}}</div>
           </div>
           <div>
             <div style="font-size:10.5px;font-weight:660;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:5px">1ST · 2ND</div>
-            <div style="font-size:24px;font-weight:650;font-variant-numeric:tabular-nums;color:var(--pos)">{{pot.prizeLabel}}</div>
+            <div style="font-size:clamp(19px,5vw,24px);font-weight:650;font-variant-numeric:tabular-nums;color:var(--pos);white-space:nowrap">{{pot.prizeLabel}}</div>
           </div>
           <sc-if value="{{pot.hasBars}}" hint-placeholder-val="{{ true }}">
-            <button sc-camel-on-click="{{pot.onView}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12.5px;cursor:pointer;white-space:nowrap">{{pot.viewLabel}}</button>
+            <button sc-camel-on-click="{{pot.onView}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">{{pot.viewLabel}}</button>
           </sc-if>
         </div>
       </div>
 
       <sc-if value="{{pot.isTable}}" hint-placeholder-val="{{ false }}">
-      <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px">
+      <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px">
         <sc-raw-thead>
           <sc-raw-tr>
             <sc-raw-th style="text-align:right;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 8px 8px;border-bottom:1px solid var(--grid)">#</sc-raw-th>
@@ -597,10 +597,22 @@ select,button{font:inherit}
         </sc-raw-tbody>
       </sc-raw-table>
       </sc-if>
+            <sc-if value="{{pot.isList}}" hint-placeholder-val="{{ false }}">
+            <div>
+              <sc-for list="{{pot.rows}}" as="r" hint-placeholder-count="8">
+                <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--grid)">
+                  <div style="font-size:11.5px;color:var(--ink-muted);font-variant-numeric:tabular-nums;width:16px;text-align:right">{{r.pos}}</div>
+                  <div style="flex:1;min-width:0;font-size:14px;color:{{r.ink}};font-weight:{{r.weight}};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{r.name}}</div>
+                  <div style="font-size:15px;font-weight:640;font-variant-numeric:tabular-nums">{{r.pts}}</div>
+                  <div style="width:76px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:{{r.moneyInk}};font-weight:{{r.moneyWeight}}">{{r.money}}</div>
+                </div>
+              </sc-for>
+            </div>
+            </sc-if>
       <sc-if value="{{pot.isChart}}" hint-placeholder-val="{{ true }}">
       <div>
         <sc-for list="{{pot.rows}}" as="r" hint-placeholder-count="8">
-          <div style="display:grid;grid-template-columns:26px 104px 1fr 52px 92px;align-items:center;gap:11px;padding:5px 0">
+          <div style="display:grid;grid-template-columns:20px minmax(70px,104px) minmax(56px,1fr) 40px 74px;align-items:center;gap:11px;padding:5px 0">
             <div style="font-size:11.5px;color:var(--ink-muted);font-variant-numeric:tabular-nums;text-align:right">{{r.pos}}</div>
             <div style="font-size:13.5px;color:{{r.ink}};font-weight:{{r.weight}};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{r.name}}</div>
             <div title="{{r.title}}" style="height:20px;background:var(--surface-2);border-radius:4px;overflow:hidden">
@@ -617,17 +629,17 @@ select,button{font:inherit}
       <div style="font-size:12px;color:var(--ink-muted);margin-top:13px;line-height:1.6">{{pot.foot}}</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
-      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px;margin-bottom:18px">
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px">
           <div>
             <div style="font-size:14.5px;font-weight:640">Money ledger</div>
             <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">{{ledger.sub}}</div>
           </div>
-          <button sc-camel-on-click="{{ledger.onView}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12.5px;cursor:pointer;white-space:nowrap">{{ledger.viewLabel}}</button>
+          <button sc-camel-on-click="{{ledger.onView}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">{{ledger.viewLabel}}</button>
         </div>
         <sc-if value="{{ledger.isTable}}" hint-placeholder-val="{{ false }}">
-        <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px">
+        <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px">
           <sc-raw-thead>
             <sc-raw-tr>
               <sc-raw-th style="text-align:left;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 8px 8px;border-bottom:1px solid var(--grid)">Manager</sc-raw-th>
@@ -648,10 +660,23 @@ select,button{font:inherit}
           </sc-raw-tbody>
         </sc-raw-table>
         </sc-if>
+                <sc-if value="{{ledger.isList}}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <sc-for list="{{ledger.rows}}" as="r" hint-placeholder-count="8">
+                    <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--grid)">
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:14px;color:{{r.ink}};font-weight:{{r.weight}};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{r.name}}</div>
+                        <div style="font-size:11.5px;color:var(--ink-muted);font-variant-numeric:tabular-nums;white-space:nowrap">weekly {{r.weeklyTxt}} · monthly {{r.monthlyTxt}}</div>
+                      </div>
+                      <div style="width:86px;text-align:right;font-size:15px;font-variant-numeric:tabular-nums;font-weight:640;color:{{r.valInk}}">{{r.value}}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                </sc-if>
         <sc-if value="{{ledger.isChart}}" hint-placeholder-val="{{ true }}">
         <div>
         <sc-for list="{{ledger.rows}}" as="r" hint-placeholder-count="8">
-          <div style="display:grid;grid-template-columns:88px 1fr 1fr 84px;align-items:center;height:31px">
+          <div style="display:grid;grid-template-columns:minmax(62px,88px) 1fr 1fr minmax(72px,84px);align-items:center;height:31px">
             <div style="font-size:12.5px;color:{{r.ink}};font-weight:{{r.weight}};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{r.name}}</div>
             <div title="{{r.title}}" style="display:flex;justify-content:flex-end;align-items:center;height:18px;border-right:1px solid var(--axis)">
               <div style="height:18px;border-radius:4px 0 0 4px;width:{{r.negW}};background:{{r.negFill}}"></div>
@@ -662,7 +687,7 @@ select,button{font:inherit}
             <div style="font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:{{r.valInk}}">{{r.value}}</div>
           </div>
         </sc-for>
-        <div style="display:grid;grid-template-columns:88px 1fr 1fr 84px;margin-top:6px">
+        <div style="display:grid;grid-template-columns:minmax(62px,88px) 1fr 1fr minmax(72px,84px);margin-top:6px">
           <div></div><div style="text-align:right;font-size:11px;color:var(--ink-muted);padding-right:3px">RM0</div><div></div><div></div>
         </div>
         </div>
@@ -670,7 +695,7 @@ select,button{font:inherit}
         <div style="font-size:12px;color:var(--ink-muted);margin-top:12px;line-height:1.6">{{ledger.foot}}</div>
       </div>
 
-      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px">
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="margin-bottom:18px">
           <div style="font-size:14.5px;font-weight:640">Weekly pots so far</div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">{{weekly.sub}}</div>
@@ -700,7 +725,7 @@ select,button{font:inherit}
       </div>
     </div>
 
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:18px;overflow-x:auto">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
         <div style="max-width:520px">
           <div style="font-size:14.5px;font-weight:640">Gameweek detail</div>
@@ -716,7 +741,7 @@ select,button{font:inherit}
         </div>
       </div>
       <div style="font-size:12px;color:var(--ink-muted);margin:-6px 0 14px">{{detail.rangeNote}}</div>
-      <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px">
+      <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px">
         <sc-raw-thead>
           <sc-raw-tr>
             <sc-raw-th style="position:sticky;left:0;z-index:2;background:var(--surface-1);text-align:left;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 8px 8px;border-bottom:1px solid var(--grid)">Manager</sc-raw-th>
@@ -757,16 +782,16 @@ select,button{font:inherit}
       <div style="font-size:12px;color:var(--ink-muted);margin-top:12px;line-height:1.6">★ won the weekly pot · ✕ never set team, still pay RM5 · ◆ chip played (hover the cell for which one) · every column adds up to RM0 because the league bank nothing. Gameweeks with a note — double, blank or postponed — are tagged in the weekly pots card so a big score reads as fixture luck, not brilliance.</div>
     </div>
 
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);margin-bottom:18px">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px">
         <div>
-          <div style="font-size:22px;font-weight:660;letter-spacing:-.02em;color:{{stmt.headInk}}">{{stmt.head}}</div>
+          <div style="font-size:clamp(18px,5vw,22px);font-weight:660;letter-spacing:-.02em;color:{{stmt.headInk}}">{{stmt.head}}</div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-top:5px">{{stmt.sub}}</div>
         </div>
-        <button sc-camel-on-click="{{stmt.onCSV}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;white-space:nowrap">Download CSV</button>
+        <button sc-camel-on-click="{{stmt.onCSV}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">Download CSV</button>
       </div>
       <sc-if value="{{stmt.has}}" hint-placeholder-val="{{ true }}">
-      <sc-raw-table style="width:100%;border-collapse:collapse;font-size:13.5px">
+      <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px">
         <sc-raw-thead>
           <sc-raw-tr>
             <sc-raw-th style="text-align:left;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 8px 8px;border-bottom:1px solid var(--grid)">Date</sc-raw-th>
@@ -795,7 +820,7 @@ select,button{font:inherit}
       <div style="font-size:12px;color:var(--ink-muted);margin-top:13px;line-height:1.6">{{stmt.correctionNote}}</div>
     </div>
 
-    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);margin-bottom:18px">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px">
         <div>
           <div style="display:flex;align-items:baseline;gap:11px;flex-wrap:wrap">
@@ -804,19 +829,19 @@ select,button{font:inherit}
           </div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-top:5px">{{settle.sub}}</div>
         </div>
-        <button sc-camel-on-click="{{settle.onCSV}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;white-space:nowrap">Download CSV</button>
+        <button sc-camel-on-click="{{settle.onCSV}}" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">Download CSV</button>
       </div>
       <sc-if value="{{settle.has}}" hint-placeholder-val="{{ true }}">
       <div>
         <sc-for list="{{settle.rows}}" as="r" hint-placeholder-count="7">
-          <div style="display:grid;grid-template-columns:1fr 26px 1fr 104px;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--grid)">
+          <div style="display:grid;grid-template-columns:1fr 22px 1fr minmax(80px,104px);align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--grid)">
             <div style="text-align:right;font-size:13.5px;color:{{r.fromInk}};font-weight:{{r.fromWeight}}">{{r.from}}</div>
             <div style="text-align:center;font-size:13px;color:var(--ink-muted)">→</div>
             <div style="text-align:left;font-size:13.5px;color:{{r.toInk}};font-weight:{{r.toWeight}}">{{r.to}}</div>
             <div style="text-align:right;font-size:13.5px;font-variant-numeric:tabular-nums;font-weight:620">{{r.amount}}</div>
           </div>
         </sc-for>
-        <div style="display:grid;grid-template-columns:1fr 26px 1fr 104px;gap:10px;padding:10px 0 0">
+        <div style="display:grid;grid-template-columns:1fr 22px 1fr minmax(80px,104px);gap:10px;padding:10px 0 0">
           <div></div><div></div>
           <div style="font-size:12.5px;color:var(--ink-muted)">Total moved</div>
           <div style="text-align:right;font-size:13.5px;font-variant-numeric:tabular-nums;font-weight:640">{{settle.total}}</div>
@@ -831,17 +856,17 @@ select,button{font:inherit}
   </div>
   </sc-if>
 
-  <div style="background:transparent;border:1px dashed var(--axis);border-radius:14px;padding:22px 24px">
+  <div style="background:transparent;border:1px dashed var(--axis);border-radius:14px;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px)">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
       <div>
         <div style="font-size:10.5px;font-weight:680;letter-spacing:.13em;color:var(--ink-muted);margin-bottom:7px">REFERENCE · RULES, NOT RESULTS</div>
         <div style="font-size:14.5px;font-weight:640;color:var(--ink-2)">How the money works</div>
         <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">{{money.sub}}</div>
       </div>
-      <button sc-camel-on-click="{{money.onToggle}}" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12.5px;cursor:pointer">{{money.toggleLabel}}</button>
+      <button sc-camel-on-click="{{money.onToggle}}" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer">{{money.toggleLabel}}</button>
     </div>
     <sc-if value="{{money.open}}" hint-placeholder-val="{{ true }}">
-    <div style="display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:28px;margin-top:22px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:clamp(20px,4vw,28px);margin-top:22px">
       <div>
         <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:11px">THE THREE POTS</div>
         <sc-for list="{{money.pots}}" as="p" hint-placeholder-count="3">
@@ -859,7 +884,7 @@ select,button{font:inherit}
       </div>
       <div>
         <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:11px">YOUR EXPOSURE</div>
-        <div style="font-size:34px;font-weight:650;letter-spacing:-.025em;font-variant-numeric:tabular-nums">{{money.staked}}</div>
+        <div style="font-size:clamp(26px,7vw,34px);font-weight:650;letter-spacing:-.025em;font-variant-numeric:tabular-nums">{{money.staked}}</div>
         <div style="font-size:12.5px;color:var(--ink-muted);margin-top:3px">staked for the whole season</div>
         <div style="display:flex;gap:22px;margin-top:16px">
           <div>
@@ -899,7 +924,7 @@ select,button{font:inherit}
 </div>
 </sc-if>
 
-<div style="max-width:1280px;margin:26px auto 0;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--ink-muted);line-height:1.7">{{footer}}</div>
+<div style="max-width:1280px;margin:26px auto 0;padding:16px clamp(12px,3vw,24px) 0;border-top:1px solid var(--border);font-size:12px;color:var(--ink-muted);line-height:1.7">{{footer}}</div>
 
 
 </div>

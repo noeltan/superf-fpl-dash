@@ -82,6 +82,10 @@ class Dashboard {
         : data.current.gameweek,
       theme: this.detectTheme(),
       detailRange: "all",
+      // Viewport width, tracked in state: below 560px the pot and ledger bar
+      // charts become lists, because a bar chart squeezed into a phone is a
+      // decoration, not a reading of who owes what.
+      vw: typeof window === "undefined" ? 1200 : window.innerWidth,
       potView: "chart",
       ledgerView: "chart",
       showProj: false,
@@ -92,7 +96,18 @@ class Dashboard {
 
     this.render();
     this.startClock();
+    this.watchViewport();
     this.startLive();
+  }
+
+  /* Rotating a phone crosses the 560px threshold, so the chart/list choice has
+   * to follow the viewport rather than be decided once at load. The 8px dead
+   * band stops a re-render on every pixel of an address-bar collapse. */
+  watchViewport() {
+    window.addEventListener("resize", () => {
+      const width = window.innerWidth;
+      if (Math.abs(width - this.state.vw) > 8) this.setState({ vw: width });
+    });
   }
 
   detectTheme() {
@@ -167,7 +182,7 @@ class Dashboard {
     }
   }
 
-  state = { tab:"gw", you:null, cmp:null, fxGW:null, theme:"light", detailRange:"all", potView:"chart", ledgerView:"chart",
+  state = { tab:"gw", you:null, cmp:null, fxGW:null, theme:"light", detailRange:"all", vw:1200, potView:"chart", ledgerView:"chart",
             showProj:false, moneyOpen:null, tick:0, liveSince:Date.now() };
 
   /* ---------- formatting only — no money maths ---------- */
@@ -564,9 +579,11 @@ class Dashboard {
           money: i === 0 ? rm(mp.net[0]) : i === 1 ? rm(mp.net[1]) : rm(-mp.stake),
           moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
         })),
-        view: S.potView, isChart: S.potView === "chart", isTable: S.potView === "table",
+        isTable: S.potView === "table",
+        isChart: S.potView === "chart" && S.vw >= 560,
+        isList: S.potView === "chart" && S.vw < 560,
         onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
-        viewLabel: S.potView === "chart" ? "Table view" : "Chart view",
+        viewLabel: S.potView === "chart" ? "Table view" : (S.vw < 560 ? "List view" : "Chart view"),
         callout: mp.callout, calloutBg:"var(--tint-warn)",
         foot: "Money shown is what each position would pay if the month end right now. Only settle when the last gameweek in the bucket is final."
       };
@@ -584,9 +601,11 @@ class Dashboard {
           money: i === 0 ? rm(settledMonth.net[0]) : i === 1 ? rm(settledMonth.net[1]) : rm(-settledMonth.stake),
           moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
         })),
-        view: S.potView, isChart: S.potView === "chart", isTable: S.potView === "table",
+        isTable: S.potView === "table",
+        isChart: S.potView === "chart" && S.vw >= 560,
+        isList: S.potView === "chart" && S.vw < 560,
         onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
-        viewLabel: S.potView === "chart" ? "Table view" : "Chart view",
+        viewLabel: S.potView === "chart" ? "Table view" : (S.vw < 560 ? "List view" : "Chart view"),
         callout: settledMonth.callout, calloutBg:"var(--tint)",
         foot: monthCurrent.note
       };
@@ -597,7 +616,7 @@ class Dashboard {
         sub: monthCurrent.gameweeks + " gameweeks · RM" + monthCurrent.stake + " each · 70/30",
         potLabel: this.rmFlat(monthCurrent.pot),
         prizeLabel: rm(monthCurrent.net[0]) + " · " + rm(monthCurrent.net[1]),
-        hasBars:false, rows:[], view:"chart", isChart:true, isTable:false,
+        hasBars:false, rows:[], isChart:false, isList:false, isTable:false,
         onView: () => {}, viewLabel:"",
         callout: monthCurrent.note, calloutBg:"var(--surface-2)",
         foot: "Bars only fill up once GW" + monthCurrent.opens_gw + " scores come in. Nobody owe anybody before that."
@@ -618,7 +637,9 @@ class Dashboard {
       };
     });
     const ledger = { rows: ledgerRows,
-      isChart: S.ledgerView === "chart", isTable: S.ledgerView === "table",
+      isChart: S.ledgerView === "chart" && S.vw >= 560,
+      isList: S.ledgerView === "chart" && S.vw < 560,
+      isTable: S.ledgerView === "table",
       onView: () => this.setState({ ledgerView: S.ledgerView === "chart" ? "table" : "chart" }),
       viewLabel: S.ledgerView === "chart" ? "Table view" : "Chart view",
       sub: "Accrued weekly and monthly pots, centred on RM0 — none of it paid yet",
