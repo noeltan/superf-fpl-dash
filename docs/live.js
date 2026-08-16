@@ -18,6 +18,7 @@ import { PROXY_BASE } from "./config.js";
 
 const BONUS_VALUES = [3, 2, 1];
 const WINDOW_TAIL_MINUTES = 150;
+const PUBLISHED_LEAD_MINUTES = 60;
 
 export function proxyConfigured() {
   return typeof PROXY_BASE === "string" && /^https?:\/\//.test(PROXY_BASE);
@@ -47,15 +48,40 @@ export function provisionalBonus(entries) {
 }
 
 /* §11.2 — open at first kickoff, close at last kickoff + 150 minutes.
- * Outside this window we do not poll at all. */
-export function inMatchWindow(fixtures, now = new Date()) {
-  const kickoffs = fixtures
-    .map((f) => f.kickoff_time && new Date(f.kickoff_time).getTime())
+ * Outside this window we do not poll at all.
+ *
+ * Reads `kickoff_time` from the API and `ko` from the published file, so the
+ * same window is computed from either source. */
+export function inMatchWindow(fixtures, now = new Date(), leadMinutes = 0) {
+  const kickoffs = (fixtures || [])
+    .map((f) => {
+      const at = f.kickoff_time || f.ko;
+      return at && new Date(at).getTime();
+    })
     .filter(Boolean);
   if (!kickoffs.length) return false;
-  const opens = Math.min(...kickoffs);
+  const opens = Math.min(...kickoffs) - leadMinutes * 60000;
   const closes = Math.max(...kickoffs) + WINDOW_TAIL_MINUTES * 60000;
   return now.getTime() >= opens && now.getTime() <= closes;
+}
+
+/* The cheap gate, answered from data.json alone — no request at all.
+ *
+ * Without it the first thing a poll did was fetch the bootstrap and all N
+ * managers' picks, and only then look at whether a match was on. Before a
+ * deadline FPL has no picks to give for the upcoming gameweek, so all N came
+ * back 404, the cache stayed empty, and every open tab repeated them once a
+ * minute — for months, for data it would have thrown away.
+ *
+ * The published kickoff times can be a week old, so a mid-week rearrangement
+ * could move one earlier than this file knows. Opening an hour early costs at
+ * most 60 requests and means a rescheduled match still lights up. */
+export function worthPolling(publishedFixtures, now = new Date()) {
+  return inMatchWindow(publishedFixtures, now, PUBLISHED_LEAD_MINUTES);
+}
+
+export async function fetchFixtures(gw) {
+  return api(`/api/fixtures/?event=${gw}`);
 }
 
 function fixtureState(fixture) {
@@ -281,8 +307,7 @@ function monthPot(data, gw, liveManagers) {
 /* One poll. Returns the assembled live object, or null when there is nothing
  * live to show. Picks are frozen after the deadline, so they are fetched once
  * and cached by the caller. */
-export async function poll({ data, gw, picksByManager, bootstrap }) {
-  const fixtures = await api(`/api/fixtures/?event=${gw}`);
+export async function poll({ data, gw, fixtures, picksByManager, bootstrap }) {
   if (!fixtures.length || !inMatchWindow(fixtures)) return null;
   if (fixtures.every((f) => f.finished)) return null; // Final — data.json owns it now
 

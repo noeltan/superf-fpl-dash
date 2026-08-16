@@ -145,6 +145,16 @@ class Dashboard {
     const gw = data.current.state === "final" ? data.current.next_gw : data.current.gameweek;
     if (!gw) return;
 
+    // Free gate first: data.json already carries every kickoff time, so a week
+    // with no football in progress costs no requests at all. Everything below
+    // this line only runs when a match plausibly is on.
+    if (!liveFeed.worthPolling(data.fixtures[gw] || data.fixtures[String(gw)])) return;
+
+    // Then one request to confirm it against the real calendar, before the
+    // expensive part. Kickoffs move.
+    const fixtures = await liveFeed.fetchFixtures(gw);
+    if (!fixtures.length || !liveFeed.inMatchWindow(fixtures)) return;
+
     if (!this._bootstrap) this._bootstrap = await liveFeed.fetchBootstrap();
     if (!this._picks) {
       // Picks are frozen after the deadline, so this happens once per gameweek.
@@ -167,6 +177,7 @@ class Dashboard {
     const assembled = await liveFeed.poll({
       data,
       gw,
+      fixtures,
       picksByManager: this._picks,
       bootstrap: this._bootstrap,
     });
