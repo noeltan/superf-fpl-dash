@@ -1,10 +1,10 @@
 {
- "generated_at": "2026-08-15T15:48:33Z",
+ "generated_at": "2026-08-16T14:03:00Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
   "currency": "RM",
-  "players": 8
+  "players": 10
  },
  "current": {
   "season": "2026/27",
@@ -19,46 +19,46 @@
  "stakes": {
   "weekly": {
    "stake": 5,
-   "pot": 40,
+   "pot": 50,
    "split": [
     1.0
    ],
    "net": [
-    35
+    45
    ]
   },
   "monthly": {
    "stake_per_gw": 5,
    "gameweeks": 2,
    "stake": 10,
-   "pot": 80,
+   "pot": 100,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    46,
-    14
+    60,
+    20
    ]
   },
   "season": {
    "stake": 100,
-   "pot": 800,
+   "pot": 1000,
    "split": [
     0.6,
     0.25,
     0.15
    ],
    "net": [
-    380,
-    100,
-    20
+    500,
+    150,
+    50
    ]
   }
  },
  "exposure": {
   "staked": 480,
-  "best": 2584,
+  "best": 3350,
   "worst": -480
  },
  "managers": [
@@ -117,6 +117,20 @@
    "short": "Chris",
    "team_name": "My Team",
    "entry_id": 1641730
+  },
+  {
+   "id": "calvinfoo",
+   "display_name": "Calvin Foo",
+   "short": "Calvin",
+   "team_name": "After 22 yrs",
+   "entry_id": 4677226
+  },
+  {
+   "id": "shaikzahir",
+   "display_name": "Shaik Zahir",
+   "short": "Shaik",
+   "team_name": "BestPlaya",
+   "entry_id": 4882676
   }
  ],
  "teams": {
@@ -5567,12 +5581,12 @@
   "gameweeks": 2,
   "opens_gw": 1,
   "stake": 10,
-  "pot": 80,
+  "pot": 100,
   "net": [
-   46,
-   14
+   60,
+   20
   ],
-  "note": "August opens with GW1 \u2014 RM10 each, RM80 in the pot, 2 gameweeks to decide it."
+  "note": "August opens with GW1 \u2014 RM10 each, RM100 in the pot, 2 gameweeks to decide it."
  },
  "totals": {
   "noel": 0,
@@ -5582,7 +5596,9 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0
  },
  "rank": [
   "noel",
@@ -5592,7 +5608,9 @@
   "soonlee",
   "boonsiang",
   "tianpin",
-  "chris"
+  "chris",
+  "calvinfoo",
+  "shaikzahir"
  ],
  "rank_prev": {},
  "behind": {
@@ -5603,7 +5621,9 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0
  },
  "ledger": {
   "noel": {
@@ -5677,6 +5697,24 @@
    "delta_last_gw": 0,
    "by_gameweek": [],
    "statement": []
+  },
+  "calvinfoo": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
+  },
+  "shaikzahir": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
   }
  },
  "corrections": [],
@@ -5692,7 +5730,9 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0
  },
  "weeks_won": {
   "noel": 0,
@@ -5702,7 +5742,9 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0
  },
  "stats": {
   "avg_points": 0,
