@@ -36,13 +36,13 @@ longer trust.
 
 ## The money, in one sentence
 
-Every gameweek costs RM10 — RM5 to the week, RM5 to the month — plus RM100 on
+Every gameweek costs RM15 — RM10 to the week, RM5 to the month — plus RM100 on
 the season. Every pot is zero-sum: the league banks nothing, and the build
 refuses to publish a ledger that does not balance.
 
 | Pot | Stake | Pot at N=8 | Split | Net at N=8 | Frequency |
 |---|---|---|---|---|---|
-| Weekly | RM5 | RM40 | 100% | 1st **+RM35** · rest −RM5 | 38× |
+| Weekly | RM10 | RM80 | 70/30 | 1st **+RM46** · 2nd **+RM14** · rest −RM10 | 38× |
 | Monthly | RM5 × gameweeks | RM80–RM240 | 70/30 | 3-GW month: **+RM69** · **+RM21** | 10× |
 | Season | RM100 | RM800 | 60/25/15 | **+RM380** · **+RM100** · **+RM20** | 1× |
 
@@ -110,7 +110,8 @@ manager. With uniform stakes it reduces to the spec's version exactly.
 
 **Ties that survive all four levels split the combined money of the places those
 managers occupy.** That is the only reading that stays zero-sum, and it
-reproduces §3.5's own example: two winners on the weekly pot take +RM15 each.
+stays zero-sum: two managers tied for the weekly pot take both paid shares
+between them, +RM30 each.
 
 **Snapshot once, never re-fetch.** A Final gameweek's inputs cannot change, so
 they are written to `data/2026-27/raw/gw-NN.json` on first sight and read from
@@ -154,4 +155,9 @@ removing the dev-state switcher (as its own handoff note instructed), two fixes:
   line predates decision #5 raising the season stake from RM40 to RM100.
 - **§3.2 says to revisit the third-place 1/N floor "if the league grows past
   12".** The risk runs the other way: 15% ≥ 1/N holds for every N ≥ 7 and gets
-  safer as N grows, but breaks at N ≤ 6. `build.py` fails on that condition.
+  safer as N grows, but breaks at N ≤ 6. It is also not only the season's
+  problem — the 70/30 weekly pays a second place, which needs N ≥ 4 — so
+  `build.py` checks every pot's last paid share and fails on any of them.
+- **§3.4's RM480 exposure and §3.7's and §3.8.7's worked figures predate the
+  weekly pot.** It is RM10 a head split 70/30, not RM5 winner-takes-all, so
+  exposure is RM670 and the settled examples are larger. The shapes hold.

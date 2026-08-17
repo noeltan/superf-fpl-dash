@@ -1,10 +1,10 @@
 {
- "generated_at": "2026-08-16T14:03:00Z",
+ "generated_at": "2026-08-17T14:53:49Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
   "currency": "RM",
-  "players": 10
+  "players": 12
  },
  "current": {
   "season": "2026/27",
@@ -18,48 +18,50 @@
  },
  "stakes": {
   "weekly": {
-   "stake": 5,
-   "pot": 50,
+   "stake": 10,
+   "pot": 120,
    "split": [
-    1.0
+    0.7,
+    0.3
    ],
    "net": [
-    45
+    74,
+    26
    ]
   },
   "monthly": {
    "stake_per_gw": 5,
    "gameweeks": 2,
    "stake": 10,
-   "pot": 100,
+   "pot": 120,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    60,
-    20
+    74,
+    26
    ]
   },
   "season": {
    "stake": 100,
-   "pot": 1000,
+   "pot": 1200,
    "split": [
     0.6,
     0.25,
     0.15
    ],
    "net": [
-    500,
-    150,
-    50
+    620,
+    200,
+    80
    ]
   }
  },
  "exposure": {
-  "staked": 480,
-  "best": 3350,
-  "worst": -480
+  "staked": 670,
+  "best": 4838,
+  "worst": -670
  },
  "managers": [
   {
@@ -128,9 +130,23 @@
   {
    "id": "shaikzahir",
    "display_name": "Shaik Zahir",
-   "short": "Shaik",
+   "short": "Zahir",
    "team_name": "BestPlaya",
    "entry_id": 4882676
+  },
+  {
+   "id": "weichenlim",
+   "display_name": "Wei Chen Lim",
+   "short": "Wei Chen",
+   "team_name": "chili pan mee",
+   "entry_id": 5140825
+  },
+  {
+   "id": "wayshoonlim",
+   "display_name": "Way Shoon Lim",
+   "short": "Way Shoon",
+   "team_name": "AyamFC",
+   "entry_id": 5250642
   }
  ],
  "teams": {
@@ -5581,12 +5597,12 @@
   "gameweeks": 2,
   "opens_gw": 1,
   "stake": 10,
-  "pot": 100,
+  "pot": 120,
   "net": [
-   60,
-   20
+   74,
+   26
   ],
-  "note": "August opens with GW1 \u2014 RM10 each, RM100 in the pot, 2 gameweeks to decide it."
+  "note": "August opens with GW1 \u2014 RM10 each, RM120 in the pot, 2 gameweeks to decide it."
  },
  "totals": {
   "noel": 0,
@@ -5598,7 +5614,9 @@
   "tianpin": 0,
   "chris": 0,
   "calvinfoo": 0,
-  "shaikzahir": 0
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "rank": [
   "noel",
@@ -5610,7 +5628,9 @@
   "tianpin",
   "chris",
   "calvinfoo",
-  "shaikzahir"
+  "shaikzahir",
+  "weichenlim",
+  "wayshoonlim"
  ],
  "rank_prev": {},
  "behind": {
@@ -5623,7 +5643,9 @@
   "tianpin": 0,
   "chris": 0,
   "calvinfoo": 0,
-  "shaikzahir": 0
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "ledger": {
   "noel": {
@@ -5715,6 +5737,24 @@
    "delta_last_gw": 0,
    "by_gameweek": [],
    "statement": []
+  },
+  "weichenlim": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
+  },
+  "wayshoonlim": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
   }
  },
  "corrections": [],
@@ -5732,7 +5772,9 @@
   "tianpin": 0,
   "chris": 0,
   "calvinfoo": 0,
-  "shaikzahir": 0
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "weeks_won": {
   "noel": 0,
@@ -5744,7 +5786,9 @@
   "tianpin": 0,
   "chris": 0,
   "calvinfoo": 0,
-  "shaikzahir": 0
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "stats": {
   "avg_points": 0,

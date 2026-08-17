@@ -8,7 +8,9 @@ from superf.config import (
     MONTHLY_SPLIT,
     SEASON_SPLIT,
     WEEKLY_SPLIT,
-    season_third_share_ok,
+    WEEKLY_STAKE_RM,
+    paid_place_floor_ok,
+    pot_floors,
 )
 from superf.money import (
     LedgerError,
@@ -63,10 +65,17 @@ def test_last_share_absorbs_the_residue():
 
 # --- the three pots at N=8 (§3.1) -------------------------------------------
 
-def test_weekly_net_first_is_five_n_minus_five():
-    for n in range(2, 13):
-        (net,) = advertised_net(rm_to_sen(5), n, WEEKLY_SPLIT)
-        assert net == rm_to_sen(5 * n - 5)
+def test_weekly_nets_are_seventy_thirty_of_ten_n():
+    """RM10 each, 70/30. First nets 7N-10, second 3N-10."""
+    for n in range(4, 13):
+        first, second = advertised_net(rm_to_sen(WEEKLY_STAKE_RM), n, WEEKLY_SPLIT)
+        assert first == rm_to_sen(7 * n - 10), f"N={n}"
+        assert second == rm_to_sen(3 * n - 10), f"N={n}"
+
+
+def test_weekly_at_eight_pays_forty_six_and_fourteen():
+    first, second = advertised_net(rm_to_sen(WEEKLY_STAKE_RM), 8, WEEKLY_SPLIT)
+    assert (first, second) == (rm_to_sen(46), rm_to_sen(14))
 
 
 def test_monthly_nets_match_the_section_3_7_table():
@@ -94,7 +103,7 @@ def test_every_pot_is_zero_sum_for_n_eight_through_twelve(n):
     managers = [f"m{i}" for i in range(n)]
     ranking = [[m] for m in managers]
     for stake_rm, split in (
-        (5, WEEKLY_SPLIT),
+        (10, WEEKLY_SPLIT),
         (30, MONTHLY_SPLIT),
         (100, SEASON_SPLIT),
     ):
@@ -105,27 +114,42 @@ def test_every_pot_is_zero_sum_for_n_eight_through_twelve(n):
 
 # --- ties (§3.5 level 5) -----------------------------------------------------
 
-def test_two_way_tie_on_the_weekly_pot_pays_fifteen_each():
-    """§3.5: 'expect fractions (+RM15 each at N=8 for two winners)'."""
+def test_two_way_tie_on_the_weekly_pot_takes_both_paid_places():
+    """Tied for first, they split 70% + 30% — the whole RM80 pot — so +RM30 each.
+
+    Under the old winner-takes-all weekly this was +RM15; the tie rule is
+    unchanged, the pot it divides is not.
+    """
     managers = [f"m{i}" for i in range(8)]
-    stakes = {m: rm_to_sen(5) for m in managers}
+    stakes = {m: rm_to_sen(WEEKLY_STAKE_RM) for m in managers}
     ranking = [["m0", "m1"]] + [[m] for m in managers[2:]]
     ledger = distribute(stakes, WEEKLY_SPLIT, ranking, order(managers))
-    assert ledger["m0"] == ledger["m1"] == rm_to_sen(15)
-    assert all(ledger[m] == rm_to_sen(-5) for m in managers[2:])
+    assert ledger["m0"] == ledger["m1"] == rm_to_sen(30)
+    assert all(ledger[m] == rm_to_sen(-10) for m in managers[2:])
+    assert sum(ledger.values()) == 0
+
+
+def test_a_tie_for_second_splits_only_the_thirty_percent():
+    managers = [f"m{i}" for i in range(8)]
+    stakes = {m: rm_to_sen(WEEKLY_STAKE_RM) for m in managers}
+    ranking = [["m0"], ["m1", "m2"]] + [[m] for m in managers[3:]]
+    ledger = distribute(stakes, WEEKLY_SPLIT, ranking, order(managers))
+    assert ledger["m0"] == rm_to_sen(46)
+    assert ledger["m1"] == ledger["m2"] == rm_to_sen(2)   # RM24 split two ways, less RM10
     assert sum(ledger.values()) == 0
 
 
 def test_three_way_tie_splits_the_pot_and_spare_sen_go_by_entry_id():
-    """RM40 across three does not divide: 4000 sen -> 1334/1333/1333."""
+    """Three tied for first take both paid places: RM80 across three does not
+    divide, so 8000 sen -> 2667/2667/2666 by entry_id."""
     managers = [f"m{i}" for i in range(8)]
-    stakes = {m: rm_to_sen(5) for m in managers}
+    stakes = {m: rm_to_sen(WEEKLY_STAKE_RM) for m in managers}
     ranking = [["m2", "m0", "m1"]] + [[m] for m in managers[3:]]
     ledger = distribute(stakes, WEEKLY_SPLIT, ranking, order(managers))
     # Earliest entry_id takes the spare sen, deterministically.
-    assert ledger["m0"] == 1334 - 500
-    assert ledger["m1"] == 1333 - 500
-    assert ledger["m2"] == 1333 - 500
+    assert ledger["m0"] == 2667 - 1000
+    assert ledger["m1"] == 2667 - 1000
+    assert ledger["m2"] == 2666 - 1000
     assert sum(ledger.values()) == 0
 
 
@@ -175,7 +199,17 @@ def test_ranking_a_manager_who_did_not_pay_is_an_error():
         distribute({"a": 500}, WEEKLY_SPLIT, [["ghost"]], {"a": 0, "ghost": 1})
 
 
-def test_third_place_share_floor_breaks_below_seven_managers():
-    """§3.2's constraint can only fail downward, not as the league grows."""
-    assert not season_third_share_ok(6)
-    assert all(season_third_share_ok(n) for n in range(7, 21))
+def test_paid_place_floors_break_downward_not_as_the_league_grows():
+    """§3.2's constraint, generalised: no paid place may finish down."""
+    # Season: 15% covers a stake from N=7 up.
+    assert not paid_place_floor_ok(6, SEASON_SPLIT)
+    assert all(paid_place_floor_ok(n, SEASON_SPLIT) for n in range(7, 21))
+    # Weekly and monthly: 30% covers a stake from N=4 up.
+    assert not paid_place_floor_ok(3, WEEKLY_SPLIT)
+    assert all(paid_place_floor_ok(n, WEEKLY_SPLIT) for n in range(4, 21))
+
+
+def test_pot_floors_names_every_pot_that_would_pay_a_loss():
+    assert pot_floors(8) == []
+    assert pot_floors(6) == ["season"]
+    assert pot_floors(3) == ["weekly", "monthly", "season"]

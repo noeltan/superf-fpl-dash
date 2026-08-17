@@ -169,7 +169,7 @@ def build_prompt(
     names = {m["id"]: m["display_name"] for m in managers}
     lines = [
         f"Gameweek {gw}. Deadline {deadline}. League of {len(managers)} managers.",
-        "Weekly pot goes entirely to the top score.",
+        "Weekly pot pays the top two, 70/30 — second place is worth having.",
         "",
         "PROJECTIONS (from code — these are the only numbers you may quote):",
     ]

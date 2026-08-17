@@ -20,25 +20,34 @@ def rm(ledger):
 
 # --- §3.8.7 the worked example ----------------------------------------------
 
-def test_worked_example_from_section_3_8_7(league):
-    """GW1 and GW2, N=8, August. Soon Lee tops both; Jack is second on the month."""
+def test_two_gameweeks_of_august_settle_end_to_end(league):
+    """GW1 and GW2, N=8, August. Soon Lee tops both weeks and the month.
+
+    This is §3.8.7's worked example under our stakes rather than the spec's: the
+    weekly pot is RM10 a head split 70/30, not RM5 winner-takes-all, so the
+    figures below are larger than §3.8.7 prints. The shape is the spec's.
+    """
     calendar = full_season({1: GW1_POINTS, 2: GW2_POINTS}, months={1: "AUG", 2: "AUG"})
     result = settle(league, calendar, AUGUST, expected_gameweeks=38)
 
-    assert result.weekly[1]["soonlee"] == rm_to_sen(35)
-    assert result.weekly[2]["soonlee"] == rm_to_sen(35)
-    assert result.weekly[1]["jack"] == rm_to_sen(-5)
+    # GW1: Soon Lee 72 first, Jack 68 second. GW2: Soon Lee 69, Noel 68.
+    assert result.weekly[1]["soonlee"] == rm_to_sen(46)
+    assert result.weekly[1]["jack"] == rm_to_sen(14)
+    assert result.weekly[2]["soonlee"] == rm_to_sen(46)
+    assert result.weekly[2]["noel"] == rm_to_sen(14)
+    assert result.weekly[1]["noel"] == rm_to_sen(-10)
 
     august = result.monthly["AUG"]
     assert august["soonlee"] == rm_to_sen(46)
     assert august["jack"] == rm_to_sen(14)
     assert august["noel"] == rm_to_sen(-10)
 
-    # Banked totals: Soon Lee +RM116, Jack +RM4, the other six -RM20 each.
-    assert result.totals["soonlee"] == rm_to_sen(116)
-    assert result.totals["jack"] == rm_to_sen(4)
-    for manager in ("noel", "sam", "weihun", "boonsiang", "tianpin", "chris"):
-        assert result.totals[manager] == rm_to_sen(-20), manager
+    # Banked: Soon Lee +RM138, Jack +RM18, Noel -RM6, the other five -RM30.
+    assert result.totals["soonlee"] == rm_to_sen(138)
+    assert result.totals["jack"] == rm_to_sen(18)
+    assert result.totals["noel"] == rm_to_sen(-6)
+    for manager in ("sam", "weihun", "boonsiang", "tianpin", "chris"):
+        assert result.totals[manager] == rm_to_sen(-30), manager
     assert sum(result.totals.values()) == 0
 
 
@@ -51,7 +60,7 @@ def test_season_is_projected_not_banked_before_gw38(league):
     assert result.projected_season["soonlee"] == rm_to_sen(380)
     assert sum(result.projected_season.values()) == 0
     # ...and it stays out of the banked total.
-    assert result.totals["soonlee"] == rm_to_sen(116)
+    assert result.totals["soonlee"] == rm_to_sen(138)
 
 
 def test_season_banks_only_when_gw38_is_final(league):
@@ -77,7 +86,7 @@ def test_never_setting_a_team_scores_zero_and_still_pays(league):
     calendar[1].scores["chris"].did_not_set = True
 
     result = settle(league, calendar, [{"month": "AUG", "gameweeks": [1]}], expected_gameweeks=38)
-    assert result.weekly[1]["chris"] == rm_to_sen(-5)
+    assert result.weekly[1]["chris"] == rm_to_sen(-10)
     assert calendar[1].scores["chris"].active is True
     assert sum(result.weekly[1].values()) == 0
 
@@ -111,8 +120,10 @@ def test_tie_broken_on_goals_awards_the_whole_pot(league):
     calendar = full_season({1: points}, months={1: "AUG"}, stats={1: stats})
     result = settle(league, calendar, [{"month": "AUG", "gameweeks": [1]}], expected_gameweeks=38)
 
-    assert result.weekly[1]["soonlee"] == rm_to_sen(35)
-    assert result.weekly[1]["jack"] == rm_to_sen(-5)
+    # Jack is level on points, so the tiebreak decides first place — but he is
+    # still second, and second is now paid.
+    assert result.weekly[1]["soonlee"] == rm_to_sen(46)
+    assert result.weekly[1]["jack"] == rm_to_sen(14)
     assert result.rankings[1].tiebreak == {"level": 1, "text": "Won on goals (4 v 2)"}
 
 
@@ -123,8 +134,9 @@ def test_tie_surviving_all_four_levels_splits_the_pot(league):
     calendar = full_season({1: points}, months={1: "AUG"}, stats={1: stats})
     result = settle(league, calendar, [{"month": "AUG", "gameweeks": [1]}], expected_gameweeks=38)
 
-    assert result.weekly[1]["soonlee"] == rm_to_sen(15)
-    assert result.weekly[1]["jack"] == rm_to_sen(15)
+    # Tied for first, they share 70% + 30% — the whole RM80 pot.
+    assert result.weekly[1]["soonlee"] == rm_to_sen(30)
+    assert result.weekly[1]["jack"] == rm_to_sen(30)
     assert result.rankings[1].tiebreak is None  # nothing resolved it
     assert sorted(result.rankings[1].winners) == ["jack", "soonlee"]
     assert sum(result.weekly[1].values()) == 0
@@ -164,11 +176,12 @@ def test_ninth_manager_joining_at_gw5_rescales_from_that_gameweek_on():
     result = settle(league, calendar, buckets, expected_gameweeks=38)
 
     # GW1-4 settle at N=8 and are never recomputed.
-    assert result.weekly[1]["soonlee"] == rm_to_sen(35)
+    assert result.weekly[1]["soonlee"] == rm_to_sen(46)
     assert "newguy" not in result.weekly[1]
-    # GW5 onward settle at N=9: the pot is RM45, so first nets +RM40.
-    assert result.weekly[5]["soonlee"] == rm_to_sen(40)
-    assert result.weekly[5]["newguy"] == rm_to_sen(-5)
+    # GW5 onward settle at N=9: the pot is RM90, so 70/30 pays +RM53 and +RM17.
+    assert result.weekly[5]["soonlee"] == rm_to_sen(53)
+    assert result.weekly[5]["jack"] == rm_to_sen(17)
+    assert result.weekly[5]["newguy"] == rm_to_sen(-10)
 
     for gw, ledger in result.weekly.items():
         assert sum(ledger.values()) == 0, gw

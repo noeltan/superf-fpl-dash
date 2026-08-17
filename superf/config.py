@@ -25,12 +25,13 @@ UTC = timezone.utc
 CURRENCY = "RM"
 
 # --- stakes (§3.1, §3.7) -----------------------------------------------------
-# Every gameweek costs RM10 — RM5 to the week, RM5 to the month.
-WEEKLY_STAKE_RM = 5
+# Every gameweek costs RM15 — RM10 to the week, RM5 to the month.
+# The weekly pot pays the top two, 70/30, like the monthly.
+WEEKLY_STAKE_RM = 10
 MONTHLY_STAKE_PER_GW_RM = 5  # §3.7: explicit config entry, never inferred
 SEASON_STAKE_RM = 100
 
-WEEKLY_SPLIT = [1.00]
+WEEKLY_SPLIT = [0.70, 0.30]
 MONTHLY_SPLIT = [0.70, 0.30]
 SEASON_SPLIT = [0.60, 0.25, 0.15]
 
@@ -86,14 +87,26 @@ def load_manager_overrides() -> dict[int, dict]:
     return {int(m["entry_id"]): m for m in raw["managers"]}
 
 
-def season_third_share_ok(n: int) -> bool:
-    """§3.2 design constraint: the third-place share must stay >= 1/N.
+def paid_place_floor_ok(n: int, split: list[float]) -> bool:
+    """No paid place may lose money: the smallest paid share must be >= 1/N.
 
-    Note the direction. 15% >= 1/N holds for every N >= 7 and only gets safer as
-    the league grows, so this can only break *downward* — at N <= 6 third place
-    finishes down on the season. §3.2's "revisit past 12" reads the risk the
-    wrong way round.
+    §3.2 states this for the season's third place, but it is a property of any
+    split, and the weekly pot acquired a paid second place when it moved to
+    70/30 — so it is checked per pot rather than written once for the season.
+
+    Note the direction. A share ``s`` covers its own stake once ``s >= 1/N``, so
+    a bigger league is always safer and a *shrinking* one is what to watch.
+    §3.2's "revisit if the league grows past 12" reads the risk backwards.
+
+    At our splits: the season's 15% needs N >= 7; the weekly and monthly 30%
+    needs N >= 4.
     """
-    if n <= 0 or len(SEASON_SPLIT) < 3:
+    if n <= 0 or not split:
         return False
-    return SEASON_SPLIT[2] >= 1 / n
+    return split[-1] >= 1 / n
+
+
+def pot_floors(n: int) -> list[str]:
+    """Every pot whose last paid place would finish down at this league size."""
+    pots = (("weekly", WEEKLY_SPLIT), ("monthly", MONTHLY_SPLIT), ("season", SEASON_SPLIT))
+    return [name for name, split in pots if not paid_place_floor_ok(n, split)]

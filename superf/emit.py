@@ -205,6 +205,23 @@ def build_payload(
                 "note": gameweek.note,
                 "scores": scores,
                 "winners": ranking.winners if ranking else [],
+                # Second place is paid on the weekly pot (70/30), so the view
+                # needs to name it — a card showing only the winner would hide
+                # a credit somebody is owed.
+                "runners_up": ranking.runners_up if ranking else [],
+                # What this gameweek actually paid, in sen, read straight off the
+                # settled ledger. NOT the advertised `stakes.weekly.net`: that is
+                # the figure at today's league size, and a gameweek played before
+                # somebody joined paid a smaller pot. Showing the advertised
+                # number against an older row would print money nobody received.
+                "winner_net": (
+                    settlement.weekly.get(gw, {}).get(ranking.winners[0])
+                    if ranking and ranking.winners else None
+                ),
+                "runner_up_net": (
+                    settlement.weekly.get(gw, {}).get(ranking.runners_up[0])
+                    if ranking and ranking.runners_up else None
+                ),
                 "pot": _rm(pot_sen) if gameweek.pays_pot else 0,
                 "tiebreak": ranking.tiebreak if ranking else None,
                 # §11.4 — a permanent, timestamped note when confirmed bonus
@@ -468,6 +485,11 @@ def _statement_for(
             detail = f"{score.net_points} pts, 1st of {field}, top score"
         else:
             detail = f"{score.net_points} pts, {ordinal(place or field)} of {field}"
+        # The weekly pot pays more than one place, so name the share that
+        # produced the amount — otherwise a credit on a row that reads "2nd of
+        # 8" is a figure nobody can decompose (§3.9.2).
+        if not score.did_not_set and place and place <= len(WEEKLY_SPLIT) > 1:
+            detail += f" — {round(WEEKLY_SPLIT[place - 1] * 100)}% share"
         rows.append({
             "date": settled_dates.get(gw, ""), "type": "weekly", "gw": gw,
             "detail": detail, "amount": amount, "_sort": (settled_dates.get(gw, ""), 0, gw),

@@ -45,7 +45,7 @@ from superf.config import (
     LEAGUE_ID,
     SEASON,
     load_manager_overrides,
-    season_third_share_ok,
+    pot_floors,
 )
 from superf.emit import build_payload
 from superf.fpl import Fetcher, FetchError
@@ -403,9 +403,12 @@ def main() -> int:
         return 2
 
     n = len(managers)
-    if not season_third_share_ok(n):
+    broken = pot_floors(n)
+    if broken:
         log.error(
-            "third place would lose money at N=%d: the 15%% share is below 1/N (§3.2)", n
+            "at N=%d the last paid place finishes down on the %s pot: its share is "
+            "below 1/N (§3.2). A podium that costs money is not publishable.",
+            n, " and ".join(broken),
         )
         return 1
 
