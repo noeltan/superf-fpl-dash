@@ -724,7 +724,7 @@ class Dashboard {
     const moneyOpen = S.moneyOpen === null ? (isPre || settledGWs.length <= 3) : S.moneyOpen;
     const st = D.stakes;
     const money = {
-      sub: "Read straight from the stakes, so if a 9th manager join the numbers fix themselves",
+      sub: "Read straight from the stakes, so when somebody new join the numbers fix themselves",
       onToggle: () => this.setState({ moneyOpen: !moneyOpen }),
       toggleLabel: moneyOpen ? "Collapse" : "Expand",
       open: moneyOpen,
@@ -736,7 +736,7 @@ class Dashboard {
         { name:"Season", stake:"RM" + st.season.stake + " × " + N, prize: rm(st.season.net[0]) + " · " + rm(st.season.net[1]) + " · " + rm(st.season.net[2]),
           note:"60/25/15 of " + this.rmFlat(st.season.pot) + ", only settle after GW38" }
       ],
-      oneLiner: "Every gameweek cost RM15 — RM10 to the week, RM5 to the month. Last paid place stay above 1/" + N + " of the season pot, so podium never lose money.",
+      oneLiner: "Every gameweek cost RM15 — RM10 to the week, RM5 to the month. Every pot last paid place stay above 1/" + N + " of that pot, so nobody get paid and still lose money.",
       staked: this.rmFlat(D.exposure.staked), best: rm(D.exposure.best), worst: rm(D.exposure.worst),
       zeroInk: (isLive || isProv) ? "var(--ink-muted)" : D.checks.zero_sum ? "var(--good)" : "var(--crit)",
       zeroLabel: (isLive || isProv) ? "Settles at full time"
