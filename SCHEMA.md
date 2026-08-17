@@ -33,7 +33,7 @@ thrown — so it was added, styled as the warning state.
   // All derived from N. Never hardcoded. `monthly` describes the bucket
   // currently in view, so a 2-gameweek August and a 6-gameweek December differ.
   "stakes": {
-    "weekly":  { "stake": 5, "pot": 40, "split": [1.0], "net": [35] },
+    "weekly":  { "stake": 10, "pot": 80, "split": [0.7, 0.3], "net": [46, 14] },
     "monthly": { "stake_per_gw": 5, "gameweeks": 3, "stake": 15, "pot": 120,
                  "split": [0.70, 0.30], "net": [69, 21] },
     "season":  { "stake": 100, "pot": 800, "split": [0.60, 0.25, 0.15],
@@ -84,8 +84,11 @@ thrown — so it was added, styled as the warning state.
   "gameweeks": [
     { "gw": 1, "month": "AUG",
       "note": null,              // "double gameweek" | "blank gameweek" | "postponed"
-      "pot": 40,
+      "pot": 80,
       "winners": ["soonlee"],    // array — a level-5 tie splits the pot
+      "runners_up": ["jack"],    // ← not in §5: 70/30 pays 2nd, so it must be nameable
+      "winner_net": 4600,        // ← not in §5: SEN, what THIS gameweek paid
+      "runner_up_net": 1400,     // ← not in §5: SEN, ditto
       "tiebreak": null,          // ← not in §5: { level, text } e.g. "Won on assists (4 v 2)"
       "bonus_change": null,      // ← not in §5: §11.4's permanent note
       "scores": {
@@ -186,6 +189,16 @@ entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 > **Every statement ends on `accrued`.** The emitter asserts it. A manager who
 > disputes their total must be able to find the single row they disagree with
 > (§3.9.2) — a statement that does not reconcile is worse than none.
+
+**`runners_up` is empty when a tie for first swallowed second place.** The tied
+managers take both paid shares between them, so there is no second place to name
+— the only reading that stays zero-sum (§3.5 level 5).
+
+**`winner_net` / `runner_up_net` are what that gameweek paid**, read off the
+settled ledger, not `stakes.weekly.net`. The advertised block is today's league
+size; a gameweek played before somebody joined settled a smaller pot and is
+never recomputed (§3.8.6). The view must show the former or it prints money
+nobody received.
 
 **Statement row types:** `weekly` (carries `gw`), `monthly` (carries `month`),
 `season`, `correction` (carries `affects_gw`). Ordered oldest first, and within

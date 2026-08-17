@@ -44,21 +44,23 @@ def payload():
 
 # --- §3.9.2 the per-manager statement ---------------------------------------
 
-def test_statement_matches_the_prototype_mock_row_for_row(payload):
-    """The design's mock hardcodes these. If they drift, the contract drifted."""
+def test_the_statement_decomposes_the_balance_row_by_row(payload):
+    """Every row explains its own amount, and the last balance is what the
+    manager is asked to pay. Noel finishes 7th in GW1 and second in GW2, so the
+    70/30 weekly pays him once — the row has to say why."""
     assert payload["ledger"]["noel"]["statement"] == [
         {"date": "2026-08-24", "type": "weekly", "gw": 1,
-         "detail": "46 pts, 7th of 8", "amount": -500, "balance": -500},
+         "detail": "46 pts, 7th of 8", "amount": -1000, "balance": -1000},
         {"date": "2026-08-31", "type": "weekly", "gw": 2,
-         "detail": "68 pts, 2nd of 8", "amount": -500, "balance": -1000},
+         "detail": "68 pts, 2nd of 8 — 30% share", "amount": 1400, "balance": 400},
         {"date": "2026-08-31", "type": "monthly", "month": "AUG",
-         "detail": "114 pts, 5th in August", "amount": -1000, "balance": -2000},
+         "detail": "114 pts, 5th in August", "amount": -1000, "balance": -600},
     ]
 
 
 def test_the_winner_and_the_share_are_named_in_the_detail(payload):
     soonlee = payload["ledger"]["soonlee"]["statement"]
-    assert soonlee[0]["detail"] == "72 pts, 1st of 8, top score"
+    assert soonlee[0]["detail"] == "72 pts, 1st of 8, top score — 70% share"
     assert soonlee[2]["detail"] == "141 pts, 1st in August — 70% share"
     assert payload["ledger"]["jack"]["statement"][2]["detail"] == (
         "134 pts, 2nd in August — 30% share"
@@ -96,19 +98,25 @@ def test_ordinals_read_correctly():
 
 # --- §3.9.3 the settlement sheet ---------------------------------------------
 
-def test_settlement_reproduces_the_worked_example_in_3_9_5(payload):
-    """Soon Lee +RM116, Jack +RM4, six on -RM20: seven payments, RM120 moved."""
+def test_the_settlement_sheet_clears_the_book_in_n_minus_one_payments(payload):
+    """Soon Lee +RM138, Jack +RM18, Noel -RM6, five on -RM30. Eight managers
+    could mean 56 transfers; this is seven, and the same seven every run.
+
+    §3.9.5 prints RM120 moved over seven payments, computed against the RM5
+    winner-takes-all weekly. Ours moves RM156 — same bound, bigger pots.
+    """
     assert payload["settlement"]["settled"] is False
     assert payload["settlement"]["payments"] == [
-        {"from": "boonsiang", "to": "soonlee", "amount": 2000},
-        {"from": "chris", "to": "soonlee", "amount": 2000},
-        {"from": "noel", "to": "soonlee", "amount": 2000},
-        {"from": "sam", "to": "soonlee", "amount": 2000},
-        {"from": "tianpin", "to": "soonlee", "amount": 2000},
-        {"from": "weihun", "to": "soonlee", "amount": 1600},
-        {"from": "weihun", "to": "jack", "amount": 400},
+        {"from": "boonsiang", "to": "soonlee", "amount": 3000},
+        {"from": "chris", "to": "soonlee", "amount": 3000},
+        {"from": "sam", "to": "soonlee", "amount": 3000},
+        {"from": "tianpin", "to": "soonlee", "amount": 3000},
+        {"from": "weihun", "to": "soonlee", "amount": 1800},
+        {"from": "weihun", "to": "jack", "amount": 1200},
+        {"from": "noel", "to": "jack", "amount": 600},
     ]
-    assert sum(p["amount"] for p in payload["settlement"]["payments"]) == 12000
+    assert len(payload["settlement"]["payments"]) <= len(payload["ledger"]) - 1
+    assert sum(p["amount"] for p in payload["settlement"]["payments"]) == 15600
 
 
 def test_settlement_never_exceeds_n_minus_one_payments():
@@ -163,8 +171,8 @@ CORRECTION = {
 
 def test_a_correction_adjusts_the_accrued_balance():
     payload = make_payload(corrections=[CORRECTION])
-    assert payload["ledger"]["jack"]["accrued"] == 400 + 3500
-    assert payload["ledger"]["soonlee"]["accrued"] == 11600 - 3500
+    assert payload["ledger"]["jack"]["accrued"] == 1800 + 3500
+    assert payload["ledger"]["soonlee"]["accrued"] == 13800 - 3500
     assert sum(v["accrued"] for v in payload["ledger"].values()) == 0
     assert payload["checks"]["zero_sum"] is True
 
@@ -173,12 +181,12 @@ def test_a_correction_appears_as_its_own_statement_row_and_never_edits_history()
     payload = make_payload(corrections=[CORRECTION])
     jack = payload["ledger"]["jack"]["statement"]
     # The original entries are untouched...
-    assert jack[0]["detail"] == "68 pts, 2nd of 8"
+    assert jack[0]["detail"] == "68 pts, 2nd of 8 — 30% share"
     assert jack[2]["detail"] == "134 pts, 2nd in August — 30% share"
     # ...and the adjustment is appended, with its reason.
     assert jack[-1] == {
         "date": "2027-03-14", "type": "correction", "affects_gw": 1,
-        "detail": CORRECTION["reason"], "amount": 3500, "balance": 3900,
+        "detail": CORRECTION["reason"], "amount": 3500, "balance": 5300,
     }
 
 

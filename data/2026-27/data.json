@@ -1,10 +1,10 @@
 {
- "generated_at": "2026-08-15T15:48:33Z",
+ "generated_at": "2026-08-17T14:30:00Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
   "currency": "RM",
-  "players": 8
+  "players": 12
  },
  "current": {
   "season": "2026/27",
@@ -18,105 +18,135 @@
  },
  "stakes": {
   "weekly": {
-   "stake": 5,
-   "pot": 40,
+   "stake": 10,
+   "pot": 120,
    "split": [
-    1.0
+    0.7,
+    0.3
    ],
    "net": [
-    35
+    74,
+    26
    ]
   },
   "monthly": {
    "stake_per_gw": 5,
    "gameweeks": 2,
    "stake": 10,
-   "pot": 80,
+   "pot": 120,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    46,
-    14
+    74,
+    26
    ]
   },
   "season": {
    "stake": 100,
-   "pot": 800,
+   "pot": 1200,
    "split": [
     0.6,
     0.25,
     0.15
    ],
    "net": [
-    380,
-    100,
-    20
+    620,
+    200,
+    80
    ]
   }
  },
  "exposure": {
-  "staked": 480,
-  "best": 2584,
-  "worst": -480
+  "staked": 670,
+  "best": 4838,
+  "worst": -670
  },
  "managers": [
   {
-   "display_name": "Noel Tan",
-   "entry_id": 1652821,
    "id": "noel",
+   "display_name": "Noel Tan",
    "short": "Noel",
-   "team_name": "JEONSOMI"
+   "team_name": "JEONSOMI",
+   "entry_id": 1652821
   },
   {
-   "display_name": "Jack Siah",
-   "entry_id": 1427521,
    "id": "jack",
+   "display_name": "Jack Siah",
    "short": "Jack",
-   "team_name": "Speedmaster"
+   "team_name": "Speedmaster",
+   "entry_id": 1427521
   },
   {
-   "display_name": "Sam Lim",
-   "entry_id": 2686159,
    "id": "sam",
+   "display_name": "Sam Lim",
    "short": "Sam",
-   "team_name": "GeGe"
+   "team_name": "GeGe",
+   "entry_id": 2686159
   },
   {
-   "display_name": "Wei Hun Wong",
-   "entry_id": 4590653,
    "id": "weihun",
+   "display_name": "Wei Hun Wong",
    "short": "Wei Hun",
-   "team_name": "Vini Jr's Chin"
+   "team_name": "Vini Jr's Chin",
+   "entry_id": 4590653
   },
   {
-   "display_name": "Soon Lee Loo",
-   "entry_id": 2488327,
    "id": "soonlee",
+   "display_name": "Soon Lee Loo",
    "short": "Soon Lee",
-   "team_name": "SLucky XI"
+   "team_name": "SLucky XI",
+   "entry_id": 2488327
   },
   {
-   "display_name": "Boon Siang Ng",
-   "entry_id": 1840731,
    "id": "boonsiang",
+   "display_name": "Boon Siang Ng",
    "short": "Boon",
-   "team_name": "Boon"
+   "team_name": "Boon",
+   "entry_id": 1840731
   },
   {
-   "display_name": "Tian Pin Lee",
-   "entry_id": 1567532,
    "id": "tianpin",
+   "display_name": "Tian Pin Lee",
    "short": "Tian Pin",
-   "team_name": "Vege went tight"
+   "team_name": "Vege went tight",
+   "entry_id": 1567532
   },
   {
-   "display_name": "Christopher Chin",
-   "entry_id": 1641730,
    "id": "chris",
+   "display_name": "Christopher Chin",
    "short": "Chris",
-   "team_name": "My Team"
+   "team_name": "My Team",
+   "entry_id": 1641730
+  },
+  {
+   "id": "calvinfoo",
+   "display_name": "Calvin Foo",
+   "short": "Calvin",
+   "team_name": "After 22 yrs",
+   "entry_id": 4677226
+  },
+  {
+   "id": "shaikzahir",
+   "display_name": "Shaik Zahir",
+   "short": "Zahir",
+   "team_name": "BestPlaya",
+   "entry_id": 4882676
+  },
+  {
+   "id": "weichenlim",
+   "display_name": "Wei Chen Lim",
+   "short": "Wei Chen",
+   "team_name": "chili pan mee",
+   "entry_id": 5140825
+  },
+  {
+   "id": "wayshoonlim",
+   "display_name": "Way Shoon Lim",
+   "short": "Way Shoon",
+   "team_name": "AyamFC",
+   "entry_id": 5250642
   }
  ],
  "teams": {
@@ -5567,12 +5597,12 @@
   "gameweeks": 2,
   "opens_gw": 1,
   "stake": 10,
-  "pot": 80,
+  "pot": 120,
   "net": [
-   46,
-   14
+   74,
+   26
   ],
-  "note": "August opens with GW1 \u2014 RM10 each, RM80 in the pot, 2 gameweeks to decide it."
+  "note": "August opens with GW1 \u2014 RM10 each, RM120 in the pot, 2 gameweeks to decide it."
  },
  "totals": {
   "noel": 0,
@@ -5582,7 +5612,11 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "rank": [
   "noel",
@@ -5592,7 +5626,11 @@
   "soonlee",
   "boonsiang",
   "tianpin",
-  "chris"
+  "chris",
+  "calvinfoo",
+  "shaikzahir",
+  "weichenlim",
+  "wayshoonlim"
  ],
  "rank_prev": {},
  "behind": {
@@ -5603,7 +5641,11 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "ledger": {
   "noel": {
@@ -5677,6 +5719,42 @@
    "delta_last_gw": 0,
    "by_gameweek": [],
    "statement": []
+  },
+  "calvinfoo": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
+  },
+  "shaikzahir": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
+  },
+  "weichenlim": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
+  },
+  "wayshoonlim": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
   }
  },
  "corrections": [],
@@ -5692,7 +5770,11 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "weeks_won": {
   "noel": 0,
@@ -5702,7 +5784,11 @@
   "soonlee": 0,
   "boonsiang": 0,
   "tianpin": 0,
-  "chris": 0
+  "chris": 0,
+  "calvinfoo": 0,
+  "shaikzahir": 0,
+  "weichenlim": 0,
+  "wayshoonlim": 0
  },
  "stats": {
   "avg_points": 0,

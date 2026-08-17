@@ -124,6 +124,18 @@ class Ranking:
     def winners(self) -> list[str]:
         return list(self.groups[0]) if self.groups else []
 
+    @property
+    def runners_up(self) -> list[str]:
+        """Whoever holds second place — empty if a tie for first swallowed it.
+
+        The weekly pot pays 70/30, so second place is a paid place and the view
+        has to be able to name it. When two managers tie for first they take
+        both shares between them and there is no second place to name.
+        """
+        if len(self.groups) < 2 or len(self.groups[0]) > 1:
+            return []
+        return list(self.groups[1])
+
     def place_of(self, manager: str) -> int | None:
         """1-indexed finishing place; tied managers share the earliest place."""
         place = 1

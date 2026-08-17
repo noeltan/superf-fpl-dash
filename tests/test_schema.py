@@ -105,9 +105,11 @@ def test_gameweek_records_carry_every_field(payload):
 
 # --- values, against the prototype's mock ------------------------------------
 
-def test_stakes_match_the_mock_at_n_eight():
+def test_stakes_block_at_n_eight():
+    """The weekly pot is RM10 a head split 70/30 — our stakes, not the RM5
+    winner-takes-all the spec and the design mock were written against."""
     assert stakes_block(8, 3) == {
-        "weekly": {"stake": 5, "pot": 40, "split": [1.0], "net": [35]},
+        "weekly": {"stake": 10, "pot": 80, "split": [0.70, 0.30], "net": [46, 14]},
         "monthly": {"stake_per_gw": 5, "gameweeks": 3, "stake": 15, "pot": 120,
                     "split": [0.70, 0.30], "net": [69, 21]},
         "season": {"stake": 100, "pot": 800, "split": [0.60, 0.25, 0.15],
@@ -115,22 +117,26 @@ def test_stakes_match_the_mock_at_n_eight():
     }
 
 
-def test_exposure_matches_section_3_4():
-    assert exposure_block(8) == {"staked": 480, "best": 2584, "worst": -480}
+def test_exposure_is_derived_from_the_stakes():
+    """RM15 a gameweek (RM10 week + RM5 month) x 38, plus RM100 on the season.
+    §3.4's RM480 predates the weekly pot doubling."""
+    assert exposure_block(8) == {"staked": 670, "best": 3002, "worst": -670}
+    assert exposure_block(8)["staked"] == 38 * (10 + 5) + 100
 
 
-def test_ledger_matches_the_mock_exactly(payload):
-    """The prototype's mock, in sen (§3.8.1). Only the ledger, statement and
-    settlement are sen — stakes and exposure stay in ringgit."""
+def test_the_ledger_block_is_sen_and_balances(payload):
+    """The ledger, statement and settlement are sen (§3.8.1); stakes and exposure
+    stay in ringgit. Figures are our 70/30 weekly, so they no longer match the
+    design mock, which was drawn against RM5 winner-takes-all."""
     expected = {
-        "noel": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
-        "jack": {"weekly": -1000, "monthly": 1400, "accrued": 400, "projected_season": 10000},
-        "sam": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
-        "weihun": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": 2000},
-        "soonlee": {"weekly": 7000, "monthly": 4600, "accrued": 11600, "projected_season": 38000},
-        "boonsiang": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
-        "tianpin": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
-        "chris": {"weekly": -1000, "monthly": -1000, "accrued": -2000, "projected_season": -10000},
+        "noel": {"weekly": 400, "monthly": -1000, "accrued": -600, "projected_season": -10000},
+        "jack": {"weekly": 400, "monthly": 1400, "accrued": 1800, "projected_season": 10000},
+        "sam": {"weekly": -2000, "monthly": -1000, "accrued": -3000, "projected_season": -10000},
+        "weihun": {"weekly": -2000, "monthly": -1000, "accrued": -3000, "projected_season": 2000},
+        "soonlee": {"weekly": 9200, "monthly": 4600, "accrued": 13800, "projected_season": 38000},
+        "boonsiang": {"weekly": -2000, "monthly": -1000, "accrued": -3000, "projected_season": -10000},
+        "tianpin": {"weekly": -2000, "monthly": -1000, "accrued": -3000, "projected_season": -10000},
+        "chris": {"weekly": -2000, "monthly": -1000, "accrued": -3000, "projected_season": -10000},
     }
     for manager, values in expected.items():
         actual = payload["ledger"][manager]
@@ -141,8 +147,8 @@ def test_ledger_matches_the_mock_exactly(payload):
 
 def test_by_gameweek_is_the_per_gameweek_weekly_amount(payload):
     """§5's own example is [-500, -500] in sen, not a running total."""
-    assert payload["ledger"]["noel"]["by_gameweek"] == [-500, -500]
-    assert payload["ledger"]["soonlee"]["by_gameweek"] == [3500, 3500]
+    assert payload["ledger"]["noel"]["by_gameweek"] == [-1000, 1400]
+    assert payload["ledger"]["soonlee"]["by_gameweek"] == [4600, 4600]
 
 
 def test_standings_match_the_mock(payload):
@@ -188,7 +194,7 @@ def test_only_complete_months_are_listed(payload):
 def test_missed_deadline_is_flagged_and_still_charged(payload):
     gw2 = payload["gameweeks"][1]
     assert gw2["scores"]["chris"]["did_not_set"] is True
-    assert payload["ledger"]["chris"]["by_gameweek"][1] == -500
+    assert payload["ledger"]["chris"]["by_gameweek"][1] == -1000
 
 
 def test_checks_block_is_honest(payload):
@@ -207,6 +213,52 @@ def test_winners_is_an_array_so_a_split_pot_fits(payload):
 
 def test_payload_is_json_serialisable(payload):
     assert json.loads(json.dumps(payload))
+
+
+# --- what a gameweek paid, versus what it would pay today --------------------
+
+def test_the_weekly_row_names_second_place(payload):
+    """70/30 means second place is paid, so the row has to identify it or the
+    card hides a credit somebody is owed."""
+    gw1 = payload["gameweeks"][0]
+    assert gw1["winners"] == ["soonlee"]           # 72 pts
+    assert gw1["runners_up"] == ["jack"]           # 68 pts
+    assert gw1["winner_net"] == 4600
+    assert gw1["runner_up_net"] == 1400
+
+
+def test_a_tie_for_first_leaves_no_second_place_to_name(payload):
+    """The tied pair take both shares between them, so there is no runner-up."""
+    from superf.tiebreak import Ranking
+    assert Ranking(groups=[["a", "b"], ["c"]]).runners_up == []
+    assert Ranking(groups=[["a"], ["b", "c"]]).runners_up == ["b", "c"]
+    assert Ranking(groups=[["a"]]).runners_up == []
+
+
+def test_the_weekly_row_reports_what_that_gameweek_paid_not_todays_rate():
+    """A gameweek played before somebody joined settled a smaller pot, and the
+    snapshot of it is never recomputed (§3.8.6). Reporting the advertised
+    `stakes.weekly.net` against that row would print money nobody received."""
+    ninth = {"id": "newguy", "display_name": "New Guy", "short": "New",
+             "team_name": "Late Entry", "entry_id": 9999999}
+    roster = MANAGERS + [ninth]
+    played = {1: GW1_POINTS, 2: dict(GW2_POINTS, newguy=40)}
+    calendar = full_season(played, managers=roster, months={1: "AUG", 2: "AUG"})
+    settlement = settle(roster, calendar, BUCKETS, expected_gameweeks=38)
+    built = build_payload(
+        generated_at="2026-09-01T06:00:00Z", league_name="SuperF", league_id=310479,
+        managers=roster, teams=TEAMS, events=EVENTS, breaks=[], month_buckets=BUCKETS,
+        fixtures_by_gw={}, pl_table=[], gameweeks=calendar, settlement=settlement,
+        current={"season": "2026/27", "gameweek": 2, "next_gw": 3, "state": "final"},
+    )
+    gw1, gw2 = built["gameweeks"][0], built["gameweeks"][1]
+    # GW1 settled at N=8: RM80 pot, 70% less stake.
+    assert gw1["pot"] == 80 and gw1["winner_net"] == 4600
+    # GW2 settled at N=9: RM90 pot, so the same finish is worth more.
+    assert gw2["pot"] == 90 and gw2["winner_net"] == 5300
+    # And neither equals the advertised figure at today's size for the other row.
+    assert built["stakes"]["weekly"]["net"] == [53, 17]
+    assert gw1["winner_net"] != built["stakes"]["weekly"]["net"][0] * 100
 
 
 # --- the live artefact --------------------------------------------------------

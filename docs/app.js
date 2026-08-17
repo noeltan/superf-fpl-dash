@@ -657,11 +657,20 @@ class Dashboard {
       foot: "Blue side is owed money, red side owe money, and both sides always equal — every ringgit came out of the eight stakes. League keep nothing, and nothing move until May." };
 
     const weekly = {
-      sub: "Top score take the whole " + this.rmFlat(D.stakes.weekly.pot),
+      sub: "70/30 of " + this.rmFlat(D.stakes.weekly.pot) + " — top two get paid",
       rows: settledGWs.slice().reverse().map(g => {
         const w = g.winners[0];
+        // Second place is a paid place, so name it. A tie for first swallows it:
+        // the two winners take both shares between them.
+        const up = (g.runners_up || [])[0];
         return { gw:g.gw, winner: byId[w].display_name, ink: inkOf(w),
-          points: g.scores[w].points, prize: rm(D.stakes.weekly.net[0]),
+          // What this gameweek paid, not what today's league size would pay.
+          points: g.scores[w].points, prize: this.sen(g.winner_net),
+          hasSecond: !!up,
+          second: up ? byId[up].display_name : "",
+          secondInk: up ? inkOf(up) : "var(--ink-2)",
+          secondPoints: up ? g.scores[up].points : "",
+          secondPrize: up ? this.sen(g.runner_up_net) : "",
           chip: g.scores[w].chip ? g.scores[w].chip.toUpperCase() : "",
           hasChip: !!g.scores[w].chip,
           gwNote: g.note ? g.note.toUpperCase() : "", hasGWNote: !!g.note,
@@ -671,10 +680,10 @@ class Dashboard {
             : "",
           hasBonusNote: !!g.bonus_change,
           note: g.tiebreak ? g.tiebreak.text
-            : g.winners.length > 1 ? "Split " + g.winners.length + " ways"
+            : g.winners.length > 1 ? "Split " + g.winners.length + " ways — they take both shares"
             : "Everybody else pay RM" + D.stakes.weekly.stake };
       }),
-      foot: "Every gameweek cost RM10 — RM5 to the week, RM5 to the month. Tie? Goals first, then assists, then goals conceded, then cards. Official FPL rule, cannot argue."
+      foot: "Every gameweek cost RM15 — RM10 to the week, RM5 to the month. Week pay top two, 70/30. Tie? Goals first, then assists, then goals conceded, then cards. Official FPL rule, cannot argue."
     };
 
     const playedMonths = D.month_buckets.filter(mb => settledGWs.some(g => g.month === mb.month));
@@ -720,14 +729,14 @@ class Dashboard {
       toggleLabel: moneyOpen ? "Collapse" : "Expand",
       open: moneyOpen,
       pots: [
-        { name:"Weekly", stake:"RM" + st.weekly.stake + " × " + N, prize: rm(st.weekly.net[0]),
-          note:"Top score take everything, " + this.rmFlat(st.weekly.pot) + ", 38 times a season" },
+        { name:"Weekly", stake:"RM" + st.weekly.stake + " × " + N, prize: rm(st.weekly.net[0]) + " · " + rm(st.weekly.net[1]),
+          note:"70/30 of " + this.rmFlat(st.weekly.pot) + ", 38 times a season" },
         { name:"Monthly", stake:"RM" + st.monthly.stake_per_gw + " per gameweek", prize: rm(st.monthly.net[0]) + " · " + rm(st.monthly.net[1]),
           note:"70/30 of RM" + st.monthly.stake_per_gw + " × gameweeks × " + N + " — ten buckets, Aug all the way to May" },
         { name:"Season", stake:"RM" + st.season.stake + " × " + N, prize: rm(st.season.net[0]) + " · " + rm(st.season.net[1]) + " · " + rm(st.season.net[2]),
           note:"60/25/15 of " + this.rmFlat(st.season.pot) + ", only settle after GW38" }
       ],
-      oneLiner: "Every gameweek cost RM10 — RM5 to the week, RM5 to the month. Third place share stay above 1/" + N + " of the season pot, so podium never lose money.",
+      oneLiner: "Every gameweek cost RM15 — RM10 to the week, RM5 to the month. Last paid place stay above 1/" + N + " of the season pot, so podium never lose money.",
       staked: this.rmFlat(D.exposure.staked), best: rm(D.exposure.best), worst: rm(D.exposure.worst),
       zeroInk: (isLive || isProv) ? "var(--ink-muted)" : D.checks.zero_sum ? "var(--good)" : "var(--crit)",
       zeroLabel: (isLive || isProv) ? "Settles at full time"
