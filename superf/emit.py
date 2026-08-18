@@ -28,6 +28,7 @@ from .config import (
 )
 from .ledger import Gameweek, Settlement
 from .money import LedgerError, advertised_net, minimum_transfers, rm_to_sen, sen_to_rm
+from .tiebreak import ladder as tiebreak_ladder
 
 
 def _rm(sen: int) -> float | int:
@@ -64,6 +65,72 @@ def stakes_block(n: int, month_gameweeks: int) -> dict:
             "split": list(SEASON_SPLIT),
             "net": [_rm(v) for v in advertised_net(season_stake, n, SEASON_SPLIT)],
         },
+    }
+
+
+def rules_block(n: int, month_buckets, total_gameweeks: int = EXPECTED_GAMEWEEKS) -> dict:
+    """Everything the rules tab states, derived from N and the real calendar.
+
+    The tab explains the money to eight-to-twelve people who did not write it,
+    which makes it exactly the place a hardcoded figure would do the most
+    damage: it would read as authoritative and be wrong from the moment the
+    league changed size. So every number it shows is computed here, from the
+    same ``advertised_net`` the stakes block uses.
+    """
+    weekly_stake = rm_to_sen(WEEKLY_STAKE_RM)
+    season_stake = rm_to_sen(SEASON_STAKE_RM)
+
+    months = []
+    for bucket in month_buckets:
+        gameweeks = len(bucket["gameweeks"])
+        stake = rm_to_sen(MONTHLY_STAKE_PER_GW_RM * gameweeks)
+        months.append({
+            "month": bucket["month"],
+            "gameweeks": gameweeks,
+            "stake": _rm(stake),
+            "pot": _rm(stake * n),
+            "net": [_rm(v) for v in advertised_net(stake, n, MONTHLY_SPLIT)],
+        })
+
+    # The floor table (§3.2, generalised). Shown around the current league size
+    # so the reader can see which side of the line we are on and how far.
+    sizes = sorted({3, 4, 6, 7, 8, n, n + 1, 12})
+    floors = []
+    for size in sizes:
+        if size < 2:
+            continue
+        season_third = advertised_net(season_stake, size, SEASON_SPLIT)
+        weekly_second = advertised_net(weekly_stake, size, WEEKLY_SPLIT)
+        floors.append({
+            "n": size,
+            "is_us": size == n,
+            "season_third": _rm(season_third[2]) if len(season_third) > 2 else None,
+            "weekly_second": _rm(weekly_second[1]) if len(weekly_second) > 1 else None,
+        })
+
+    best_weekly = advertised_net(weekly_stake, n, WEEKLY_SPLIT)[0] * total_gameweeks
+    best_monthly = sum(
+        advertised_net(rm_to_sen(MONTHLY_STAKE_PER_GW_RM * len(b["gameweeks"])), n, MONTHLY_SPLIT)[0]
+        for b in month_buckets
+    )
+    best_season = advertised_net(season_stake, n, SEASON_SPLIT)[0]
+
+    return {
+        "gameweek_cost": WEEKLY_STAKE_RM + MONTHLY_STAKE_PER_GW_RM,
+        "weekly_stake": WEEKLY_STAKE_RM,
+        "monthly_stake_per_gw": MONTHLY_STAKE_PER_GW_RM,
+        "season_stake": SEASON_STAKE_RM,
+        "months": months,
+        "floors": floors,
+        "tiebreak": tiebreak_ladder(),
+        "best_breakdown": {
+            "weekly": _rm(best_weekly),
+            "monthly": _rm(best_monthly),
+            "season": _rm(best_season),
+        },
+        # N-1 payments clear any book; naive pairwise settlement is N(N-1)/2.
+        "max_payments": max(n - 1, 0),
+        "naive_payments": n * (n - 1) // 2,
     }
 
 
@@ -401,6 +468,8 @@ def build_payload(
         "tz": {"name": TZ_NAME, "offset": TZ_OFFSET_HOURS},
         "stakes": stakes_block(n, month_for_stakes),
         "exposure": exposure_block(n),
+        # Everything the rules tab states, derived rather than written down.
+        "rules": rules_block(n, month_buckets),
         "managers": [dict(m) for m in managers],
         "teams": {
             str(team_id): {

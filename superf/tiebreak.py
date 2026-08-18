@@ -60,6 +60,24 @@ class TiebreakStats:
 EMPTY = TiebreakStats()
 
 
+def ladder() -> list[dict]:
+    """The §3.5 ladder as label + direction, for anything that explains it.
+
+    The direction is read out of the sort key rather than written down again, so
+    flipping a sign in ``key`` changes what the dashboard tells people, instead
+    of leaving the two quietly disagreeing.
+    """
+    probe = TiebreakStats(goals=1, assists=1, conceded=1, cards=1).key
+    return [
+        {
+            "level": level,
+            "label": LEVEL_LABELS[level],
+            "direction": "most" if probe[level - 1] < 0 else "fewest",
+        }
+        for level in sorted(LEVEL_LABELS)
+    ]
+
+
 def starting_xi(picks_payload: Mapping) -> list[int]:
     """The final XI FPL settles on, after automatic substitutions.
 

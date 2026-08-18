@@ -266,7 +266,7 @@ class Dashboard {
       : isFinal ? "GW" + cur.gameweek + " settled · GW" + cur.next_gw + " next"
       : "GW" + cur.gameweek + " in progress";
 
-    const tabs = [["gw","Gameweek"],["season","Season & money"]].map(([k,label]) => ({
+    const tabs = [["gw","Gameweek"],["season","Season & money"],["rules","How it works"]].map(([k,label]) => ({
       label, onClick: () => this.setState({ tab:k }),
       bg: S.tab === k ? "var(--surface-1)" : "transparent",
       ink: S.tab === k ? "var(--ink-1)" : "var(--ink-2)",
@@ -550,6 +550,88 @@ class Dashboard {
       pred.toggleLabel = "How it works";
     }
 
+    /* ---- rules tab (§7.2F) — explains the money, never restates it ----
+     * Everything here reads out of D.rules, which build.py derives from N and
+     * the real calendar. Nothing is typed in: a thirteenth manager rewrites
+     * every figure on this tab without anyone touching copy. */
+    const R = D.rules;
+    const byPot = R.months.slice().sort((a, b) => a.pot - b.pot);
+    const monthlyLow = byPot[0], monthlyHigh = byPot[byPot.length - 1];
+    const potRow = (name, stake, pot, split, net, note) => ({
+      name, stake, pot: this.rmFlat(pot),
+      split: split.map(x => Math.round(x * 100) + "%").join(" / "),
+      pays: net.map(v => rm(v)).join(" · "), note
+    });
+    const rules = {
+      intro: "Every gameweek cost RM" + R.gameweek_cost + " — RM" + R.weekly_stake +
+        " to the week, RM" + R.monthly_stake_per_gw + " to the month. Plus RM" +
+        R.season_stake + " once for the season. Over " + D.checks.gameweeks_expected +
+        " gameweeks that come to " + this.rmFlat(D.exposure.staked) + " each.",
+      zeroSum: "League keep nothing. Every ringgit that leave one column land in somebody else column, " +
+        "which is why every table here add up to RM0. If it ever don't, the site refuse to publish " +
+        "instead of showing you a wrong number.",
+      pots: [
+        potRow("Weekly", "RM" + R.weekly_stake + " × " + N, D.stakes.weekly.pot,
+               D.stakes.weekly.split, D.stakes.weekly.net,
+               D.checks.gameweeks_expected + " times a season"),
+        // The monthly pot is not one number — it follows how many gameweeks the
+        // month has. Showing the current bucket here would read as "the"
+        // monthly figure, so the rules tab shows the range and the table below
+        // breaks it down month by month.
+        {
+          name: "Monthly", stake: "RM" + R.monthly_stake_per_gw + " per gameweek",
+          pot: this.rmFlat(monthlyLow.pot) + "–" + this.rmFlat(monthlyHigh.pot),
+          split: D.stakes.monthly.split.map(x => Math.round(x * 100) + "%").join(" / "),
+          pays: rm(monthlyLow.net[0]) + " … " + rm(monthlyHigh.net[0]),
+          note: R.months.length + " buckets, Aug to May — depend how many gameweeks"
+        },
+        potRow("Season", "RM" + R.season_stake + " × " + N, D.stakes.season.pot,
+               D.stakes.season.split, D.stakes.season.net, "Only settle after GW38")
+      ],
+      months: R.months.map(m => ({
+        name: this.monthName(m.month), gws: m.gameweeks,
+        stake: this.rmFlat(m.stake), pot: this.rmFlat(m.pot),
+        first: rm(m.net[0]), second: rm(m.net[1]), rest: rm(-m.stake)
+      })),
+      monthsNote: "Stake is per gameweek, not per month. December got " +
+        Math.max.apply(null, R.months.map(m => m.gameweeks)) + " gameweeks and August got " +
+        Math.min.apply(null, R.months.map(m => m.gameweeks)) +
+        " — flat monthly fee would make one August gameweek worth a few December ones for the same effort.",
+      tiebreak: R.tiebreak.map(t => ({
+        level: t.level, label: t.label.charAt(0).toUpperCase() + t.label.slice(1), who: t.direction
+      })).concat([{ level: R.tiebreak.length + 1, label: "Split the pot", who: "ours" }]),
+      floors: R.floors.map(f => ({
+        n: f.n,
+        seasonThird: rm(f.season_third), seasonInk: f.season_third < 0 ? "var(--crit)" : "var(--good)",
+        weeklySecond: rm(f.weekly_second), weeklyInk: f.weekly_second < 0 ? "var(--crit)" : "var(--good)",
+        mark: f.is_us ? "us" : "", isUs: f.is_us,
+        rowBg: f.is_us ? "var(--tint)" : "transparent"
+      })),
+      floorNote: "Any paid place only worth having while its share beat one stake. It get safer as we grow " +
+        "and break if we shrink. Build check every pot every run and stop rather than publish a podium that cost money.",
+      settleNote: N + " people settling one by one could be " + R.naive_payments +
+        " separate payments. Site work out the shortest set instead: at most " + R.max_payments +
+        ". Same answer every time it run, so nothing to negotiate.",
+      steps: [
+        "Each weekly pot, as soon as that gameweek final.",
+        "Each monthly pot, but only once every gameweek in that month final.",
+        "The season pot, only after GW" + D.checks.gameweeks_expected + ".",
+        "Your balance — those three added up, and checked to sum to RM0 across the league."
+      ],
+      best: this.rm(D.exposure.best), worst: this.rm(D.exposure.worst),
+      staked: this.rmFlat(D.exposure.staked),
+      bestNote: "Best case break down as " + this.rmFlat(R.best_breakdown.weekly) + " from the weekly pots, " +
+        this.rmFlat(R.best_breakdown.monthly) + " from the monthly, " + this.rmFlat(R.best_breakdown.season) +
+        " from the season. Nobody going to do that — it just show the shape: downside is capped and known " +
+        "from day one, upside is a few times bigger.",
+      terms: [
+        { term: "Provisional", meaning: "Live, mid-match, still can change. Bonus not confirmed until the match end, auto-subs and vice captain only apply when the whole gameweek close." },
+        { term: "Accrued", meaning: "Settled maths, already in the book. You owe or you are owed. Won't change unless a correction get posted, and corrections come in as their own visible row." },
+        { term: "Projected", meaning: "What something would pay if it end today. Deliberately kept OUT of your balance. Season pot sit here until GW38." },
+        { term: "Settled", meaning: "Actually paid. That happen once, in May." }
+      ]
+    };
+
     /* ---- season tab ---- */
     const L = D.ledger[you];
     const owes = L.accrued < 0;
@@ -829,10 +911,10 @@ class Dashboard {
       chrome: { dot: sm.dot, dotAnim: sm.anim, dotInk: sm.ink, stateText: sm.text, stateSub: stateSub,
                 themeLabel: S.theme === "dark" ? "Light" : "Dark" },
       tabs, banner,
-      isGW: S.tab === "gw", isSeason: S.tab === "season",
+      isGW: S.tab === "gw", isSeason: S.tab === "season", isRules: S.tab === "rules",
       showCountdown: !showLive, cd, brk,
       showLive, live, fx, cal, standings, pl, pred,
-      hero, pot, ledger, weekly, detail, stmt, settle, money, season,
+      hero, pot, ledger, weekly, detail, stmt, settle, money, season, rules,
       footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +
         " of " + D.checks.gameweeks_expected + " gameweeks in the calendar · " +

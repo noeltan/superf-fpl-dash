@@ -933,6 +933,151 @@ select,button{font:inherit}
 </div>
 </sc-if>
 
+
+<sc-if value="{{isRules}}" hint-placeholder-val="{{ false }}">
+
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px">
+    <div style="font-size:16px;font-weight:640;letter-spacing:-.01em">How the money works</div>
+    <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.6">Rules, not results — every figure here is worked out from the league size, so it stay correct when somebody join</div>
+    <div style="font-size:13.5px;color:var(--ink-2);margin-top:12px;line-height:1.65;max-width:70ch">{{rules.intro}}</div>
+    <div style="font-size:13.5px;color:var(--ink-2);margin-top:12px;line-height:1.65;max-width:70ch">{{rules.zeroSum}}</div>
+
+    <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px;margin-top:16px">
+      <sc-raw-thead><sc-raw-tr>
+        <sc-raw-th style="text-align:left;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Pot</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Stake</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Pot</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Split</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Pays</sc-raw-th>
+        <sc-raw-th style="text-align:left;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">How often</sc-raw-th>
+      </sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-for list="{{rules.pots}}" as="p" hint-placeholder-count="3">
+          <sc-raw-tr>
+            <sc-raw-td style="text-align:left;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:620">{{p.name}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)">{{p.stake}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:620">{{p.pot}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)">{{p.split}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--pos);font-weight:640">{{p.pays}}</sc-raw-td>
+            <sc-raw-td style="text-align:left;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-muted);font-size:12.5px">{{p.note}}</sc-raw-td>
+          </sc-raw-tr>
+        </sc-for>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </div>
+
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px">
+    <div style="font-size:16px;font-weight:640;letter-spacing:-.01em">Every month</div>
+    <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.6">Monthly stake is RM per gameweek, so the pot follow how the fixture list fall</div>
+    <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px;margin-top:14px">
+      <sc-raw-thead><sc-raw-tr>
+        <sc-raw-th style="text-align:left;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Month</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">GWs</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Your stake</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Pot</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">1st</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">2nd</sc-raw-th>
+        <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Everyone else</sc-raw-th>
+      </sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-for list="{{rules.months}}" as="m" hint-placeholder-count="10">
+          <sc-raw-tr>
+            <sc-raw-td style="text-align:left;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:560">{{m.name}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)">{{m.gws}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)">{{m.stake}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:620">{{m.pot}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--pos);font-weight:640">{{m.first}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--pos)">{{m.second}}</sc-raw-td>
+            <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-muted)">{{m.rest}}</sc-raw-td>
+          </sc-raw-tr>
+        </sc-for>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <div style="font-size:13.5px;color:var(--ink-2);margin-top:12px;line-height:1.65;max-width:70ch">{{rules.monthsNote}}</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px;margin-bottom:0">
+      <div style="font-size:16px;font-weight:640;letter-spacing:-.01em">Tie? Official FPL ladder</div>
+      <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.6">First difference win. All counted on your starting XI after auto-subs, raw count — captain don't double here</div>
+      <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px;min-width:0;margin-top:14px">
+        <sc-raw-tbody>
+          <sc-for list="{{rules.tiebreak}}" as="t" hint-placeholder-count="5">
+            <sc-raw-tr>
+              <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;width:28px;color:var(--ink-muted)">{{t.level}}</sc-raw-td>
+              <sc-raw-td style="text-align:left;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:560">{{t.label}}</sc-raw-td>
+              <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)">{{t.who}}</sc-raw-td>
+            </sc-raw-tr>
+          </sc-for>
+        </sc-raw-tbody>
+      </sc-raw-table>
+    </div>
+
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px;margin-bottom:0">
+      <div style="font-size:16px;font-weight:640;letter-spacing:-.01em">Nobody get paid and still lose money</div>
+      <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.6">What the last paid place take home, by league size</div>
+      <sc-raw-table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13.5px;min-width:0;margin-top:14px">
+        <sc-raw-thead><sc-raw-tr>
+          <sc-raw-th style="text-align:left;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Managers</sc-raw-th>
+          <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Season 3rd</sc-raw-th>
+          <sc-raw-th style="text-align:right;padding:0 8px 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--axis);white-space:nowrap">Weekly 2nd</sc-raw-th>
+        </sc-raw-tr></sc-raw-thead>
+        <sc-raw-tbody>
+          <sc-for list="{{rules.floors}}" as="f" hint-placeholder-count="7">
+            <sc-raw-tr>
+              <sc-raw-td style="text-align:left;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;background:{{f.rowBg}};font-weight:560">{{f.n}} {{f.mark}}</sc-raw-td>
+              <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;background:{{f.rowBg}};color:{{f.seasonInk}};font-weight:620">{{f.seasonThird}}</sc-raw-td>
+              <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;white-space:nowrap;background:{{f.rowBg}};color:{{f.weeklyInk}};font-weight:620">{{f.weeklySecond}}</sc-raw-td>
+            </sc-raw-tr>
+          </sc-for>
+        </sc-raw-tbody>
+      </sc-raw-table>
+      <div style="font-size:13.5px;color:var(--ink-2);margin-top:12px;line-height:1.65;max-width:70ch">{{rules.floorNote}}</div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px">
+    <div style="font-size:16px;font-weight:640;letter-spacing:-.01em">Settling up</div>
+    <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.6">Nothing paid during the season — every figure is an accrual until May</div>
+    <div style="margin-top:14px">
+      <sc-for list="{{rules.steps}}" as="step" hint-placeholder-count="4">
+        <div style="display:flex;gap:11px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--grid)">
+          <div style="font-size:13.5px;color:var(--ink-2);line-height:1.6">{{step}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="font-size:13.5px;color:var(--ink-2);margin-top:12px;line-height:1.65;max-width:70ch">{{rules.settleNote}}</div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:14px;margin-top:18px">
+      <div>
+        <div style="font-size:11px;font-weight:660;letter-spacing:.09em;color:var(--ink-muted)">YOU STAKE</div>
+        <div style="font-size:clamp(20px,5vw,26px);font-weight:650;font-variant-numeric:tabular-nums;margin-top:3px">{{rules.staked}}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:660;letter-spacing:.09em;color:var(--ink-muted)">BEST CASE</div>
+        <div style="font-size:clamp(20px,5vw,26px);font-weight:650;font-variant-numeric:tabular-nums;color:var(--pos);margin-top:3px">{{rules.best}}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:660;letter-spacing:.09em;color:var(--ink-muted)">WORST CASE</div>
+        <div style="font-size:clamp(20px,5vw,26px);font-weight:650;font-variant-numeric:tabular-nums;color:var(--neg);margin-top:3px">{{rules.worst}}</div>
+      </div>
+    </div>
+    <div style="font-size:13.5px;color:var(--ink-2);margin-top:12px;line-height:1.65;max-width:70ch">{{rules.bestNote}}</div>
+  </div>
+
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px">
+    <div style="font-size:16px;font-weight:640;letter-spacing:-.01em">The words we use</div>
+    <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.6">They mean different things, and the difference matter because none of it is money that already moved</div>
+    <sc-for list="{{rules.terms}}" as="t" hint-placeholder-count="4">
+      <div style="padding:11px 0;border-bottom:1px solid var(--grid)">
+        <div style="font-size:11.5px;font-weight:680;letter-spacing:.09em;text-transform:uppercase">{{t.term}}</div>
+        <div style="font-size:13.5px;color:var(--ink-2);margin-top:4px;line-height:1.6;max-width:70ch">{{t.meaning}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+</sc-if>
+
 <div style="max-width:1280px;margin:26px auto 0;padding:16px clamp(12px,3vw,24px) 0;border-top:1px solid var(--border);font-size:12px;color:var(--ink-muted);line-height:1.7">{{footer}}</div>
 
 

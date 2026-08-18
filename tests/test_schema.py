@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 
 from conftest import AUGUST, GW1_POINTS, GW2_POINTS, LEAGUE, full_season
-from superf.emit import build_payload, exposure_block, stakes_block
+from superf.emit import build_payload, exposure_block, rules_block, stakes_block
 from superf.ledger import settle
 
 MANAGERS = [
@@ -213,6 +213,71 @@ def test_winners_is_an_array_so_a_split_pot_fits(payload):
 
 def test_payload_is_json_serialisable(payload):
     assert json.loads(json.dumps(payload))
+
+
+# --- the rules tab ------------------------------------------------------------
+# It explains the money to people who did not write it, which makes it the worst
+# place for a hardcoded figure: authoritative-looking and wrong from the moment
+# the league changes size.
+
+BUCKETS_10 = [
+    {"month": "AUG", "gameweeks": [1, 2]},
+    {"month": "DEC", "gameweeks": list(range(13, 19))},
+]
+
+
+def test_rules_derive_every_month_from_the_real_calendar():
+    r = rules_block(12, BUCKETS_10)
+    assert [m["month"] for m in r["months"]] == ["AUG", "DEC"]
+    aug, dec = r["months"]
+    assert (aug["gameweeks"], aug["stake"], aug["pot"], aug["net"]) == (2, 10, 120, [74, 26])
+    assert (dec["gameweeks"], dec["stake"], dec["pot"], dec["net"]) == (6, 30, 360, [222, 78])
+
+
+def test_rules_agree_with_the_stakes_block_they_sit_beside():
+    """Two blocks describing the same pots must not be able to disagree."""
+    for n in (8, 9, 12, 20):
+        r = rules_block(n, BUCKETS_10)
+        stakes = stakes_block(n, 6)
+        assert r["weekly_stake"] == stakes["weekly"]["stake"]
+        assert r["season_stake"] == stakes["season"]["stake"]
+        december = next(m for m in r["months"] if m["gameweeks"] == 6)
+        assert december["pot"] == stakes["monthly"]["pot"]
+        assert december["net"] == stakes["monthly"]["net"]
+
+
+def test_rules_rescale_with_the_league():
+    small, large = rules_block(8, BUCKETS_10), rules_block(12, BUCKETS_10)
+    assert small["months"][0]["pot"] == 80 and large["months"][0]["pot"] == 120
+    assert small["max_payments"] == 7 and large["max_payments"] == 11
+    assert small["naive_payments"] == 28 and large["naive_payments"] == 66
+    # The stake per manager does not move with N; only the pot does.
+    assert small["gameweek_cost"] == large["gameweek_cost"] == 15
+
+
+def test_the_floor_table_marks_us_and_shows_both_sides_of_the_line():
+    r = rules_block(12, BUCKETS_10)
+    ours = [f for f in r["floors"] if f["is_us"]]
+    assert len(ours) == 1 and ours[0]["n"] == 12
+    assert all(f["season_third"] < 0 for f in r["floors"] if f["n"] <= 6)
+    assert all(f["season_third"] > 0 for f in r["floors"] if f["n"] >= 7)
+    assert next(f for f in r["floors"] if f["n"] == 3)["weekly_second"] < 0
+
+
+def test_the_ladder_reads_its_directions_off_the_sort_key():
+    """So flipping a sign in TiebreakStats.key changes what the tab says."""
+    r = rules_block(12, BUCKETS_10)
+    assert [(t["label"], t["direction"]) for t in r["tiebreak"]] == [
+        ("goals", "most"), ("assists", "most"),
+        ("goals conceded", "fewest"), ("cards", "fewest"),
+    ]
+
+
+def test_the_best_case_breakdown_sums_to_the_exposure_block(payload):
+    """The rules tab decomposes the same figure the hero shows."""
+    r = payload["rules"]
+    total = sum(r["best_breakdown"].values())
+    assert total == payload["exposure"]["best"]
 
 
 # --- what a gameweek paid, versus what it would pay today --------------------
