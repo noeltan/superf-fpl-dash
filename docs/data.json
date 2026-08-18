@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-17T22:26:35Z",
+ "generated_at": "2026-08-18T08:14:29Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -62,6 +62,187 @@
   "staked": 670,
   "best": 4838,
   "worst": -670
+ },
+ "rules": {
+  "gameweek_cost": 15,
+  "weekly_stake": 10,
+  "monthly_stake_per_gw": 5,
+  "season_stake": 100,
+  "months": [
+   {
+    "month": "AUG",
+    "gameweeks": 2,
+    "stake": 10,
+    "pot": 120,
+    "net": [
+     74,
+     26
+    ]
+   },
+   {
+    "month": "SEP",
+    "gameweeks": 3,
+    "stake": 15,
+    "pot": 180,
+    "net": [
+     111,
+     39
+    ]
+   },
+   {
+    "month": "OCT",
+    "gameweeks": 4,
+    "stake": 20,
+    "pot": 240,
+    "net": [
+     148,
+     52
+    ]
+   },
+   {
+    "month": "NOV",
+    "gameweeks": 3,
+    "stake": 15,
+    "pot": 180,
+    "net": [
+     111,
+     39
+    ]
+   },
+   {
+    "month": "DEC",
+    "gameweeks": 6,
+    "stake": 30,
+    "pot": 360,
+    "net": [
+     222,
+     78
+    ]
+   },
+   {
+    "month": "JAN",
+    "gameweeks": 5,
+    "stake": 25,
+    "pot": 300,
+    "net": [
+     185,
+     65
+    ]
+   },
+   {
+    "month": "FEB",
+    "gameweeks": 4,
+    "stake": 20,
+    "pot": 240,
+    "net": [
+     148,
+     52
+    ]
+   },
+   {
+    "month": "MAR",
+    "gameweeks": 3,
+    "stake": 15,
+    "pot": 180,
+    "net": [
+     111,
+     39
+    ]
+   },
+   {
+    "month": "APR",
+    "gameweeks": 3,
+    "stake": 15,
+    "pot": 180,
+    "net": [
+     111,
+     39
+    ]
+   },
+   {
+    "month": "MAY",
+    "gameweeks": 5,
+    "stake": 25,
+    "pot": 300,
+    "net": [
+     185,
+     65
+    ]
+   }
+  ],
+  "floors": [
+   {
+    "n": 3,
+    "is_us": false,
+    "season_third": -55,
+    "weekly_second": -1
+   },
+   {
+    "n": 4,
+    "is_us": false,
+    "season_third": -40,
+    "weekly_second": 2
+   },
+   {
+    "n": 6,
+    "is_us": false,
+    "season_third": -10,
+    "weekly_second": 8
+   },
+   {
+    "n": 7,
+    "is_us": false,
+    "season_third": 5,
+    "weekly_second": 11
+   },
+   {
+    "n": 8,
+    "is_us": false,
+    "season_third": 20,
+    "weekly_second": 14
+   },
+   {
+    "n": 12,
+    "is_us": true,
+    "season_third": 80,
+    "weekly_second": 26
+   },
+   {
+    "n": 13,
+    "is_us": false,
+    "season_third": 95,
+    "weekly_second": 29
+   }
+  ],
+  "tiebreak": [
+   {
+    "level": 1,
+    "label": "goals",
+    "direction": "most"
+   },
+   {
+    "level": 2,
+    "label": "assists",
+    "direction": "most"
+   },
+   {
+    "level": 3,
+    "label": "goals conceded",
+    "direction": "fewest"
+   },
+   {
+    "level": 4,
+    "label": "cards",
+    "direction": "fewest"
+   }
+  ],
+  "best_breakdown": {
+   "weekly": 2812,
+   "monthly": 1406,
+   "season": 620
+  },
+  "max_payments": 11,
+  "naive_payments": 66
  },
  "managers": [
   {

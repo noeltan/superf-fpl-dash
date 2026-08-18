@@ -190,6 +190,14 @@ entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 > disputes their total must be able to find the single row they disagree with
 > (§3.9.2) — a statement that does not reconcile is worse than none.
 
+**`rules` drives the "How it works" tab** and is derived, never written down:
+per-month stakes and pots from the real calendar, the paid-place floor table
+around the current league size, the tiebreak ladder with each level's direction
+read out of `TiebreakStats.key`, and the best-case breakdown. A thirteenth
+manager rewrites every figure on that tab without anyone touching copy — which
+is the point, because a tab that explains the money is the worst place for a
+hardcoded number to go stale.
+
 **`runners_up` is empty when a tie for first swallowed second place.** The tied
 managers take both paid shares between them, so there is no second place to name
 — the only reading that stays zero-sum (§3.5 level 5).

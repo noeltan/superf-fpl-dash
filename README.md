@@ -96,6 +96,7 @@ this is merged.
 | `superf/corrections.py` | §3.9.4 adjusting entries that never rewrite history |
 | `superf/backup.py` | CSV + Sheets, including the end-of-season settle-up |
 | `docs/runtime.js` | the template runtime the prototype needed and did not ship with |
+| `superf/emit.py` → `rules_block` | the "How it works" tab, derived from N so it cannot go stale |
 | `tools/gen_workflows.py` | regenerates both workflows from the real calendar |
 
 ### Decisions worth knowing
