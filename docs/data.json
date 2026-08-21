@@ -1,16 +1,16 @@
 {
- "generated_at": "2026-08-18T08:14:29Z",
+ "generated_at": "2026-08-21T21:41:01Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
   "currency": "RM",
-  "players": 12
+  "players": 13
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 0,
-  "next_gw": 1,
-  "state": "upcoming"
+  "gameweek": 1,
+  "next_gw": 2,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -19,48 +19,48 @@
  "stakes": {
   "weekly": {
    "stake": 10,
-   "pot": 120,
+   "pot": 130,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    74,
-    26
+    81,
+    29
    ]
   },
   "monthly": {
    "stake_per_gw": 5,
    "gameweeks": 2,
    "stake": 10,
-   "pot": 120,
+   "pot": 130,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    74,
-    26
+    81,
+    29
    ]
   },
   "season": {
    "stake": 100,
-   "pot": 1200,
+   "pot": 1300,
    "split": [
     0.6,
     0.25,
     0.15
    ],
    "net": [
-    620,
-    200,
-    80
+    680,
+    225,
+    95
    ]
   }
  },
  "exposure": {
   "staked": 670,
-  "best": 4838,
+  "best": 5297,
   "worst": -670
  },
  "rules": {
@@ -73,100 +73,100 @@
     "month": "AUG",
     "gameweeks": 2,
     "stake": 10,
-    "pot": 120,
+    "pot": 130,
     "net": [
-     74,
-     26
+     81,
+     29
     ]
    },
    {
     "month": "SEP",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 180,
+    "pot": 195,
     "net": [
-     111,
-     39
+     121.5,
+     43.5
     ]
    },
    {
     "month": "OCT",
     "gameweeks": 4,
     "stake": 20,
-    "pot": 240,
+    "pot": 260,
     "net": [
-     148,
-     52
+     162,
+     58
     ]
    },
    {
     "month": "NOV",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 180,
+    "pot": 195,
     "net": [
-     111,
-     39
+     121.5,
+     43.5
     ]
    },
    {
     "month": "DEC",
     "gameweeks": 6,
     "stake": 30,
-    "pot": 360,
+    "pot": 390,
     "net": [
-     222,
-     78
+     243,
+     87
     ]
    },
    {
     "month": "JAN",
     "gameweeks": 5,
     "stake": 25,
-    "pot": 300,
+    "pot": 325,
     "net": [
-     185,
-     65
+     202.5,
+     72.5
     ]
    },
    {
     "month": "FEB",
     "gameweeks": 4,
     "stake": 20,
-    "pot": 240,
+    "pot": 260,
     "net": [
-     148,
-     52
+     162,
+     58
     ]
    },
    {
     "month": "MAR",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 180,
+    "pot": 195,
     "net": [
-     111,
-     39
+     121.5,
+     43.5
     ]
    },
    {
     "month": "APR",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 180,
+    "pot": 195,
     "net": [
-     111,
-     39
+     121.5,
+     43.5
     ]
    },
    {
     "month": "MAY",
     "gameweeks": 5,
     "stake": 25,
-    "pot": 300,
+    "pot": 325,
     "net": [
-     185,
-     65
+     202.5,
+     72.5
     ]
    }
   ],
@@ -203,15 +203,21 @@
    },
    {
     "n": 12,
-    "is_us": true,
+    "is_us": false,
     "season_third": 80,
     "weekly_second": 26
    },
    {
     "n": 13,
-    "is_us": false,
+    "is_us": true,
     "season_third": 95,
     "weekly_second": 29
+   },
+   {
+    "n": 14,
+    "is_us": false,
+    "season_third": 110,
+    "weekly_second": 32
    }
   ],
   "tiebreak": [
@@ -237,12 +243,12 @@
    }
   ],
   "best_breakdown": {
-   "weekly": 2812,
-   "monthly": 1406,
-   "season": 620
+   "weekly": 3078,
+   "monthly": 1539,
+   "season": 680
   },
-  "max_payments": 11,
-  "naive_payments": 66
+  "max_payments": 12,
+  "naive_payments": 78
  },
  "managers": [
   {
@@ -256,7 +262,7 @@
    "id": "jack",
    "display_name": "Jack Siah",
    "short": "Jack",
-   "team_name": "Speedmaster",
+   "team_name": "Apple TV",
    "entry_id": 1427521
   },
   {
@@ -270,7 +276,7 @@
    "id": "weihun",
    "display_name": "Wei Hun Wong",
    "short": "Wei Hun",
-   "team_name": "Vini Jr's Chin",
+   "team_name": "Back To Back To Back",
    "entry_id": 4590653
   },
   {
@@ -298,7 +304,7 @@
    "id": "chris",
    "display_name": "Christopher Chin",
    "short": "Chris",
-   "team_name": "My Team",
+   "team_name": "ChriSpirit",
    "entry_id": 1641730
   },
   {
@@ -328,6 +334,13 @@
    "short": "Way Shoon",
    "team_name": "AyamFC",
    "entry_id": 5250642
+  },
+  {
+   "id": "robinhoho",
+   "display_name": "Robin Ho Ho",
+   "short": "Robin",
+   "team_name": "LetMeWin",
+   "entry_id": 6529703
   }
  ],
  "teams": {
@@ -760,11 +773,11 @@
     "ko": "2026-08-21T19:00:00Z",
     "dh": 2,
     "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 3,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 1
    },
    {
@@ -5778,12 +5791,12 @@
   "gameweeks": 2,
   "opens_gw": 1,
   "stake": 10,
-  "pot": 120,
+  "pot": 130,
   "net": [
-   74,
-   26
+   81,
+   29
   ],
-  "note": "August opens with GW1 \u2014 RM10 each, RM120 in the pot, 2 gameweeks to decide it."
+  "note": "August opens with GW1 \u2014 RM10 each, RM130 in the pot, 2 gameweeks to decide it."
  },
  "totals": {
   "noel": 0,
@@ -5797,7 +5810,8 @@
   "calvinfoo": 0,
   "shaikzahir": 0,
   "weichenlim": 0,
-  "wayshoonlim": 0
+  "wayshoonlim": 0,
+  "robinhoho": 0
  },
  "rank": [
   "noel",
@@ -5811,7 +5825,8 @@
   "calvinfoo",
   "shaikzahir",
   "weichenlim",
-  "wayshoonlim"
+  "wayshoonlim",
+  "robinhoho"
  ],
  "rank_prev": {},
  "behind": {
@@ -5826,7 +5841,8 @@
   "calvinfoo": 0,
   "shaikzahir": 0,
   "weichenlim": 0,
-  "wayshoonlim": 0
+  "wayshoonlim": 0,
+  "robinhoho": 0
  },
  "ledger": {
   "noel": {
@@ -5936,6 +5952,15 @@
    "delta_last_gw": 0,
    "by_gameweek": [],
    "statement": []
+  },
+  "robinhoho": {
+   "weekly": 0,
+   "monthly": 0,
+   "accrued": 0,
+   "projected_season": 0,
+   "delta_last_gw": 0,
+   "by_gameweek": [],
+   "statement": []
   }
  },
  "corrections": [],
@@ -5955,7 +5980,8 @@
   "calvinfoo": 0,
   "shaikzahir": 0,
   "weichenlim": 0,
-  "wayshoonlim": 0
+  "wayshoonlim": 0,
+  "robinhoho": 0
  },
  "weeks_won": {
   "noel": 0,
@@ -5969,7 +5995,8 @@
   "calvinfoo": 0,
   "shaikzahir": 0,
   "weichenlim": 0,
-  "wayshoonlim": 0
+  "wayshoonlim": 0,
+  "robinhoho": 0
  },
  "stats": {
   "avg_points": 0,
