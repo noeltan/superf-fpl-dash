@@ -266,7 +266,10 @@ class Dashboard {
       : isFinal ? "GW" + cur.gameweek + " settled · GW" + cur.next_gw + " next"
       : "GW" + cur.gameweek + " in progress";
 
-    const tabs = [["gw","Gameweek"],["season","Season & money"],["rules","How it works"]].map(([k,label]) => ({
+    // "Rules", not "How it works": the prediction card already has a "How it
+    // works" toggle explaining the model, and two controls with one label on
+    // one page is a coin-flip for anybody looking for the money rules.
+    const tabs = [["gw","Gameweek"],["season","Season & money"],["rules","Rules"]].map(([k,label]) => ({
       label, onClick: () => this.setState({ tab:k }),
       bg: S.tab === k ? "var(--surface-1)" : "transparent",
       ink: S.tab === k ? "var(--ink-1)" : "var(--ink-2)",
