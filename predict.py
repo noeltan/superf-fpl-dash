@@ -10,14 +10,23 @@ the gap between the deadline and the first kickoff — 90 minutes for GW1, less
 for some others. If the window has closed, publish nothing: a late prediction
 is worthless and it looks like cheating.
 
+There is a second, honest way to publish outside that window (§12.1 forbids a
+*late* call, not every call): if the gameweek is still in progress, call the
+finish from here. ``--mid-round`` reads the points already banked, projects only
+the fixtures that have not kicked off, and stamps the file ``mode:
+"mid_round"``. It is a different bet with different information, so it never
+rolls into the §12.3 record — the record advertises pre-kickoff calls and would
+mean nothing if a call made with six results in hand counted towards it.
+
 Modes:
     predict.py             call the upcoming gameweek (inside the window)
+    predict.py --mid-round call the rest of a gameweek already in progress
     predict.py --score     only score a finished gameweek into `result`/`record`
     predict.py --force     ignore the window guard (manual reruns, testing)
 
 Exit codes:
     0  published, scored, or deliberately did nothing
-    1  refused to publish (window closed, picks unavailable)
+    1  refused to publish (window closed, picks unavailable, nothing left to call)
     2  the API could not be reached
 """
 
@@ -30,7 +39,12 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from superf.claude_call import allowed_numbers, build_prompt, request_call
+from superf.claude_call import (
+    MID_ROUND_SYSTEM,
+    allowed_numbers,
+    build_prompt,
+    request_call,
+)
 from superf.config import (
     DATA_JSON,
     LEAGUE_ID,
@@ -146,15 +160,25 @@ def settle_outstanding(data: dict) -> dict:
     scored = score_prediction(published, row)
     if not scored.get("result"):
         return record
+
+    verdict = ("exact hit" if scored["result"]["exact_hit"]
+               else "podium hit" if scored["result"]["podium_hit"] else "missed")
+
+    # A mid-round call is marked so you can see whether it was right, but it is
+    # not the same bet as a pre-kickoff one and does not go on the same card.
+    if scored.get("mode") == "mid_round":
+        scored["record"] = record
+        write_prediction(scored)
+        log.info("scored GW%d mid-round call: %s (not counted in the record)",
+                 scored["gw"], verdict)
+        return record
+
     record = roll_record(record, scored["result"])
     scored["record"] = record
     write_prediction(scored)
     log.info(
         "scored GW%d: %s (record now %d exact of %d)",
-        scored["gw"],
-        "exact hit" if scored["result"]["exact_hit"]
-        else "podium hit" if scored["result"]["podium_hit"] else "missed",
-        record["exact"], record["played"],
+        scored["gw"], verdict, record["exact"], record["played"],
     )
     return record
 
@@ -192,6 +216,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--score", action="store_true", help="only score, do not call")
     parser.add_argument("--force", action="store_true", help="ignore the timing window")
+    parser.add_argument(
+        "--mid-round", action="store_true", dest="mid_round",
+        help="call the rest of a gameweek already in progress, from the points "
+             "already banked plus the fixtures still to kick off",
+    )
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--gw", type=int, help="override the target gameweek")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -236,30 +265,87 @@ def main() -> int:
         log.info("no gameweek is awaiting a call right now")
         return 0
 
-    existing = load_json(PREDICTION_JSON)
-    if existing and existing.get("gw") == gw and not args.force:
-        log.info("GW%d already has a published call", gw)
-        return 0
-
     gw_fixtures = fixtures_by_gw.get(gw, [])
-    opens, closes = window_for(deadline, gw_fixtures)
-    if not args.force:
-        if now < opens:
-            log.info("too early for GW%d — the window opens at %s", gw, iso_z(opens))
-            return 0
-        if now > closes:
+    # A fixture that has kicked off is settled information; one that has not is
+    # still a projection. Mid-round the two have to be kept apart all the way
+    # through, and this is the split everything below hangs off.
+    still_to_play = [f for f in gw_fixtures if not f.get("started")]
+
+    existing = load_json(PREDICTION_JSON)
+    if existing and existing.get("gw") == gw:
+        # A mid-round call must never bury the pre-kickoff one: that call was
+        # made blind and is the one the record is about.
+        if args.mid_round and existing.get("mode") != "mid_round":
             log.error(
-                "GW%d window closed at %s and it is now %s — publishing nothing. "
-                "A late prediction is worthless and it looks like cheating (§12.1).",
-                gw, iso_z(closes), iso_z(now),
+                "GW%d already has a pre-kickoff call — refusing to overwrite it "
+                "with a mid-round one. That call was made without information "
+                "and is the one §12.3 scores.", gw,
             )
             return 1
+        # Mid-round is only ever run deliberately, and the state it describes
+        # moves with every kickoff, so re-running it republishes.
+        if not args.force and not args.mid_round:
+            log.info("GW%d already has a published call", gw)
+            return 0
+
+    if args.mid_round:
+        if not gw_fixtures:
+            log.error("GW%d has no fixtures to call", gw)
+            return 1
+        if all(f.get("finished") for f in gw_fixtures):
+            log.error("GW%d is over — there is nothing left to call (§12.3 scores "
+                      "it instead)", gw)
+            return 1
+        if not still_to_play:
+            log.error(
+                "every GW%d match has kicked off — a call now would be a "
+                "commentary, not a prediction. Publishing nothing.", gw,
+            )
+            return 1
+        log.info(
+            "GW%d mid-round: %d of %d matches kicked off, %d still to come",
+            gw, len(gw_fixtures) - len(still_to_play), len(gw_fixtures),
+            len(still_to_play),
+        )
+    else:
+        opens, closes = window_for(deadline, gw_fixtures)
+        if not args.force:
+            if now < opens:
+                log.info("too early for GW%d — the window opens at %s", gw, iso_z(opens))
+                return 0
+            if now > closes:
+                log.error(
+                    "GW%d window closed at %s and it is now %s — publishing nothing. "
+                    "A late prediction is worthless and it looks like cheating (§12.1). "
+                    "If the gameweek is still running, --mid-round calls the rest of it.",
+                    gw, iso_z(closes), iso_z(now),
+                )
+                return 1
 
     # --- squads ---------------------------------------------------------------
     managers = data["managers"]
     elements = {int(e["id"]): e for e in bootstrap["elements"]}
     teams = {int(t["id"]): t for t in bootstrap["teams"]}
-    by_team = fixtures_by_team(gw_fixtures)
+    prompt_fixtures = still_to_play if args.mid_round else gw_fixtures
+    by_team = fixtures_by_team(prompt_fixtures)
+
+    # Points already on the board, mid-round only. Pairing this with a by_team
+    # built from the unplayed fixtures is what stops a player being counted
+    # both as scored and as projected.
+    scored_so_far = None
+    if args.mid_round:
+        try:
+            live = fetcher.event_live(gw, final=False) or {}
+        except FetchError as exc:
+            log.error("live scores unavailable: %s", exc)
+            return 2
+        scored_so_far = {
+            int(row["id"]): float(row.get("stats", {}).get("total_points", 0) or 0)
+            for row in live.get("elements", [])
+        }
+        if not scored_so_far:
+            log.error("GW%d live feed is empty — nothing banked to call from", gw)
+            return 1
 
     projections = []
     squads: dict[str, list[dict]] = {}
@@ -276,35 +362,51 @@ def main() -> int:
             )
             return 1
         projection = project_manager(
-            manager["id"], picks, elements, by_team, teams
+            manager["id"], picks, elements, by_team, teams, scored_so_far
         )
         projections.append(projection)
+        # Mid-round, only the players who can still add anything are worth
+        # putting in front of the model.
+        listed = [p for p in projection.players if p.fixtures] if args.mid_round \
+            else projection.players
         squads[manager["id"]] = [
-            {"name": p.name, "team": p.team} for p in projection.players[:11]
+            {"name": p.name, "team": p.team} for p in listed[:11]
         ]
 
     contract_projections = [p.to_contract() for p in projections]
     shortlist = swing_candidates(projections)
     names = {m["id"]: m["display_name"] for m in managers}
 
+    mid_round = {
+        "as_of": iso_z(now),
+        "played": len(gw_fixtures) - len(still_to_play),
+        "remaining": len(still_to_play),
+        "total": len(gw_fixtures),
+    } if args.mid_round else None
+
     prompt = build_prompt(
         gw=gw,
         deadline=iso_z(deadline),
         projections=contract_projections,
         squads=squads,
-        fixtures=gw_fixtures,
+        fixtures=prompt_fixtures,
         teams=teams,
         managers=managers,
         swing_shortlist=shortlist,
         record=record,
+        mid_round=mid_round,
     )
     call, model = request_call(
         prompt=prompt,
-        allowed=allowed_numbers(contract_projections, gw, gw_fixtures, len(managers)),
+        allowed=allowed_numbers(
+            contract_projections, gw, prompt_fixtures, len(managers)
+        ),
         manager_ids={m["id"] for m in managers},
         swing_names={c["name"] for c in shortlist},
         projections=contract_projections,
         names=names,
+        system_extra=MID_ROUND_SYSTEM if args.mid_round else "",
+        swing_shortlist=shortlist,
     )
     fallback = call.pop("_fallback", False)
 
@@ -312,6 +414,8 @@ def main() -> int:
         "gw": gw,
         "generated_at": iso_z(now),
         "model": model,
+        # Absent on a §12.1 call, so an old file keeps meaning what it meant.
+        **({"mode": "mid_round", "mid_round": mid_round} if args.mid_round else {}),
         "projections": sorted(contract_projections, key=lambda p: -p["xp"]),
         "call": call,
         "result": None,
@@ -319,8 +423,9 @@ def main() -> int:
     }
     write_prediction(prediction)
     log.info(
-        "published GW%d call: 1st %s, 2nd %s%s (%s)",
-        gw, call["first"]["manager"], call["second"]["manager"],
+        "published GW%d %scall: 1st %s, 2nd %s%s (%s)",
+        gw, "mid-round " if args.mid_round else "",
+        call["first"]["manager"], call["second"]["manager"],
         " [projection fallback]" if fallback else "", fetcher.summary(),
     )
     return 0

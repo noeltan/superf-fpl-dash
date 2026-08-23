@@ -148,6 +148,42 @@ removing the dev-state switcher (as its own handoff note instructed), two fixes:
 - two table cells render a dash for a manager who was not in the league for an
   earlier gameweek, rather than `undefined`.
 
+Since then the chrome has been worked on, which did touch the markup:
+
+**Three things it forgot on every reload** — which manager you are, who you
+compare against, and the theme — now live in `localStorage` under
+`superf.prefs`, and the tab lives in the URL fragment (`#season`, `#rules`) so
+it survives a reload, links, and the back button. Preferences only: nothing
+stored changes what the page *says*, a remembered manager is checked against the
+current roster before it is trusted, and every access is guarded because storage
+throws outright in a locked-down browser. A one-liner in `<head>` reads the
+theme back before first paint, so a remembered dark theme does not arrive as a
+white flash.
+
+**The tabs are a tablist**, not three buttons: left/right/Home/End move between
+them, only the selected one is in the tab order, and the panel is labelled by
+its tab. Alongside it, the page grew an `<h1>`, `header`/`main`/`footer`
+landmarks, a skip link, `scope="col"` on 52 column headers, labels on the four
+pickers, a focus ring — every control is inline-styled with `border:none` and
+half of them had lost the browser's — and a `prefers-reduced-motion` rule, since
+the live dot pulses for as long as a match is on.
+
+**Focus survives a re-render.** The whole tree is replaced on every state
+change, so focus landed on `<body>` after every click; `data-focus-key` marks
+the controls that come back.
+
+**Three statements that were wrong on the day.** `isPre` means "nothing has
+settled", which is not "no football has been played" — the two come apart for
+the three days GW1 is on, and the pill read `LIVE · GW1 not played` while GW1
+was being played. The hero said "first deadline of the season" over GW2's
+deadline for the same reason, and the league table's subtitle would have said it
+opens with the first whistle while showing finished rounds. Each now asks the
+question it means.
+
+**One dead control removed**: with no prediction published, the card rendered a
+button labelled "How it works" wired to a no-op — which is exactly what the page
+showed all pre-season.
+
 ## Where this disagrees with the spec
 
 `SCHEMA.md` lists all of them with reasoning. The two that change money:

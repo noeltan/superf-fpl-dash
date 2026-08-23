@@ -13,6 +13,10 @@
  *   sc-camel-on-change    addEventListener('change', handler)
  *   hint-*                authoring hints, ignored
  *
+ * `sc-camel-on-*` is generic — `sc-camel-on-keydown` binds keydown — and one
+ * attribute of this runtime's own, `data-focus-key`, survives a re-render:
+ * see render() below.
+ *
  * Table parts are authored as sc-raw-* precisely so the HTML parser does not
  * apply table scoping rules to the template; they become real elements here.
  */
@@ -117,9 +121,19 @@ function renderNode(node, scope, parent) {
 
 /* Full re-render. At eight managers this is cheap, and it keeps the view a pure
  * function of renderVals() — the property the prototype was written against.
- * Focus is preserved so the You/Compare pickers survive the 30s tick. */
+ *
+ * The cost of replacing the whole tree is that focus lands on <body> after
+ * every interaction, so a keyboard user who toggles the theme is returned to
+ * the top of the page and a screen reader loses its place. Any element
+ * carrying `data-focus-key` gets its focus back, which covers the controls
+ * that cause a render in the first place; the select fallback below keeps the
+ * You/Compare pickers alive through the unprompted 30s tick even if nobody
+ * remembered to key them.
+ */
 export function render(root, template, values) {
   const active = document.activeElement;
+  const inRoot = active && root.contains(active);
+  const focusKey = inRoot ? active.getAttribute("data-focus-key") : null;
   const selects = Array.from(root.querySelectorAll("select"));
   const focusedIndex = selects.indexOf(active);
 
@@ -127,7 +141,10 @@ export function render(root, template, values) {
   template.content.childNodes.forEach((node) => renderNode(node, values, next));
   root.replaceChildren(next);
 
-  if (focusedIndex >= 0) {
+  const keyed = focusKey && root.querySelector(`[data-focus-key="${CSS.escape(focusKey)}"]`);
+  if (keyed) {
+    keyed.focus();
+  } else if (focusedIndex >= 0) {
     const restored = root.querySelectorAll("select")[focusedIndex];
     if (restored) restored.focus();
   }

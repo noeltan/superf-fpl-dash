@@ -480,3 +480,314 @@ def test_record_rolls_forward_only_on_hits():
     assert hit == {"played": 5, "exact": 2, "podium": 3, "pair": 1}
     miss = roll_record(base, {"exact_hit": False, "podium_hit": False, "pair_hit": False})
     assert miss == {"played": 5, "exact": 1, "podium": 2, "pair": 1}
+
+
+# --- the run itself ----------------------------------------------------------
+# Everything above tests a function. The GW1 call failed on none of it: it died
+# on `Fetcher.entry_picks() got an unexpected keyword argument 'final'`, a call
+# main() makes once per manager and no test had ever executed. The window is
+# ~50 minutes wide and does not come back, so the run has to be exercised end
+# to end, with the API and the model both stubbed out.
+
+import inspect  # noqa: E402
+import json  # noqa: E402
+
+import predict  # noqa: E402
+from superf.fpl import Fetcher  # noqa: E402
+
+RUN_DEADLINE = "2026-08-21T17:30:00Z"
+RUN_KICKOFF = "2026-08-21T19:00:00Z"
+IN_WINDOW = parse_utc("2026-08-21T17:45:00Z")
+
+RUN_MANAGERS = [
+    {"id": "noel", "entry_id": 1652821, "display_name": "Noel"},
+    {"id": "jack", "entry_id": 1427521, "display_name": "Jack"},
+]
+
+
+class StubFetcher:
+    """The FPL API, reduced to what main() asks it for.
+
+    ``fixture_states`` describes the round: one entry per fixture, each either
+    "todo", "live" or "done". The default is a single fixture nobody has
+    kicked off, which is the §12.1 case.
+    """
+
+    def __init__(self, *, offline=False, picks=None, fixture_states=("todo",),
+                 live_points=None):
+        self.offline = offline
+        self.picks_calls = []
+        self.live_calls = []
+        self._picks = picks_payload() if picks is None else picks
+        self._states = list(fixture_states)
+        self._live_points = live_points or {}
+
+    def bootstrap(self):
+        return {
+            "events": [{"id": 1, "deadline_time": RUN_DEADLINE}],
+            "elements": list(ELEMENTS.values()),
+            "teams": [{"id": i, "short_name": t["short_name"]} for i, t in TEAMS.items()],
+        }
+
+    def fixtures(self):
+        # Team 1 plays team 2 in the first fixture, team 3 in any later one, so
+        # a part-played round leaves some of the squad still to come.
+        out = []
+        for index, state in enumerate(self._states):
+            out.append({
+                "id": index + 1, "event": 1,
+                "started": state in ("live", "done"),
+                "finished": state == "done",
+                "kickoff_time": RUN_KICKOFF,
+                "team_h": 1 if index == 0 else 3,
+                "team_a": 2 if index == 0 else 1,
+                "team_h_difficulty": 3, "team_a_difficulty": 3,
+            })
+        return out
+
+    def entry_picks(self, entry_id, gw, **kwargs):
+        self.picks_calls.append((entry_id, gw, kwargs))
+        return self._picks
+
+    def event_live(self, gw, **kwargs):
+        self.live_calls.append((gw, kwargs))
+        return {"elements": [
+            {"id": element, "stats": {"total_points": points}}
+            for element, points in self._live_points.items()
+        ]}
+
+    def summary(self):
+        return "stubbed"
+
+
+@pytest.fixture
+def run(monkeypatch, tmp_path):
+    """main() pointed at a throwaway docs/ with two managers and one fixture."""
+    monkeypatch.setattr(predict, "DATA_JSON", tmp_path / "data.json")
+    monkeypatch.setattr(predict, "PREDICTION_JSON", tmp_path / "prediction.json")
+    monkeypatch.setattr(predict, "PREDICTIONS", tmp_path / "predictions")
+    (tmp_path / "data.json").write_text(json.dumps({
+        "managers": RUN_MANAGERS, "gameweeks": [],
+    }))
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setattr(predict, "datetime", _FrozenClock)
+    monkeypatch.setattr(sys, "argv", ["predict.py"])
+
+    made = {}
+
+    def build(**states):
+        stub = StubFetcher(**states)
+        monkeypatch.setattr(predict, "Fetcher", lambda **kwargs: stub)
+        made["stub"] = stub
+        return stub
+
+    stub = build()
+    return _Run(stub, tmp_path, build, monkeypatch)
+
+
+class _Run:
+    def __init__(self, stub, tmp_path, build, monkeypatch):
+        self.stub, self.tmp_path, self.build = stub, tmp_path, build
+        self._monkeypatch = monkeypatch
+
+    def __iter__(self):  # so `stub, tmp_path = run` keeps working
+        return iter((self.stub, self.tmp_path))
+
+    def argv(self, *flags):
+        self._monkeypatch.setattr(sys, "argv", ["predict.py", *flags])
+
+    def published(self):
+        return json.loads((self.tmp_path / "prediction.json").read_text())
+
+
+class _FrozenClock(datetime):
+    """`datetime.now(tz)` inside the window; everything else unchanged."""
+
+    @classmethod
+    def now(cls, tz=None):
+        return IN_WINDOW
+
+
+def test_the_run_publishes_a_call_inside_the_window(run):
+    stub, tmp_path = run
+    assert predict.main() == 0
+
+    published = json.loads((tmp_path / "prediction.json").read_text())
+    assert published["gw"] == 1
+    assert {published["call"]["first"]["manager"],
+            published["call"]["second"]["manager"]} == {"noel", "jack"}
+    # Archived under docs/predictions/ as well, so a rerun cannot erase history.
+    assert json.loads((tmp_path / "predictions" / "gw01.json").read_text()) == published
+
+
+def test_the_run_asks_for_picks_the_fetcher_can_actually_serve(run):
+    """The kwargs main() passes must exist on the real Fetcher, not just the stub."""
+    stub, _ = run
+    predict.main()
+
+    assert [entry_id for entry_id, _, _ in stub.picks_calls] == [
+        m["entry_id"] for m in RUN_MANAGERS
+    ]
+    for _, gw, kwargs in stub.picks_calls:
+        assert gw == 1
+        inspect.signature(Fetcher.entry_picks).bind(Fetcher, 1652821, gw, **kwargs)
+
+
+def test_in_window_picks_are_never_written_to_the_cache(tmp_path):
+    """They are the submitted squad, not the one that scored: cached, they can
+    be revalidated with a 304 and frozen into an immutable snapshot (§4.2)."""
+    fetcher = Fetcher(cache_dir=tmp_path / "cache", raw_dir=tmp_path / "raw")
+    body, meta = fetcher._cache_paths("x")
+    calls = []
+
+    class Response:
+        status_code = 200
+        headers = {"ETag": "W/\"abc\""}
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"picks": []}
+
+    def get(url, **kwargs):
+        calls.append(url)
+        return Response()
+
+    fetcher._session.get = get
+
+    fetcher.entry_picks(1652821, 1, final=False)
+    assert not any(Path(p).exists() for p in (tmp_path / "cache").glob("*"))
+
+    fetcher.entry_picks(1652821, 1, final=True)
+    assert list((tmp_path / "cache").glob("*.json"))
+
+
+# --- calling a gameweek already in progress ----------------------------------
+# A mid-round call is a different bet from a §12.1 one: half the information is
+# already settled. The three things that have to hold are that banked and
+# projected points are never confused, that it cannot bury a pre-kickoff call,
+# and that it never counts towards the record §12.3 advertises.
+
+RUN_LIVE = {1: 6.0, 2: 9.0, 3: 4.0, 4: 2.0}
+
+
+def test_banked_and_projected_are_carried_separately():
+    """`xp` is two kinds of number added together, so both halves are published."""
+    # Team 1 has played (no fixture left); teams 2 and 3 are still to come.
+    remaining = {2: [(3, True)], 3: [(4, False)]}
+    projection = project_manager("noel", picks_payload(), ELEMENTS, remaining, TEAMS,
+                                 RUN_LIVE)
+    contract = projection.to_contract()
+
+    assert contract["banked"] == pytest.approx(
+        RUN_LIVE[1] + RUN_LIVE[2] * 2 + RUN_LIVE[3], abs=0.05
+    )  # element 4 is benched, element 2 is captain
+    assert contract["remaining"] > 0
+    assert contract["xp"] == pytest.approx(
+        contract["banked"] + contract["remaining"], abs=0.11
+    )
+
+
+def test_a_played_fixture_is_banked_once_and_not_projected_again():
+    """The caller must restrict fixtures_by_team in step with scored_so_far —
+    the whole point is that no player is counted as scored and projected."""
+    everything_left = project_manager("noel", picks_payload(), ELEMENTS, BY_TEAM,
+                                      TEAMS, RUN_LIVE)
+    nothing_left = project_manager("noel", picks_payload(), ELEMENTS, {}, TEAMS,
+                                   RUN_LIVE)
+    assert nothing_left.remaining == 0
+    assert nothing_left.xp == pytest.approx(nothing_left.banked)
+    assert everything_left.banked == pytest.approx(nothing_left.banked)
+
+
+def test_the_swing_shortlist_drops_players_with_no_fixture_left():
+    """A player whose match is over cannot swing the pot."""
+    a = project_manager("a", picks_payload(), ELEMENTS, {2: [(3, True)]}, TEAMS, RUN_LIVE)
+    b = project_manager("b", picks_payload(), ELEMENTS, {2: [(3, True)]}, TEAMS, RUN_LIVE)
+    names = {c["name"] for c in swing_candidates([a, b])}
+    assert {"Star", "Mid"} <= names  # both team 2, still to play
+    assert "Keeper" not in names     # team 1, already played
+
+
+def test_a_mid_round_call_publishes_and_says_so(run):
+    run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.argv("--mid-round")
+    assert predict.main() == 0
+
+    published = run.published()
+    assert published["mode"] == "mid_round"
+    assert published["mid_round"] == {
+        "as_of": published["generated_at"], "played": 1, "remaining": 1, "total": 2
+    }
+    for projection in published["projections"]:
+        assert "banked" in projection and "remaining" in projection
+
+
+def test_the_live_feed_is_read_but_never_cached(run):
+    """Same hazard as in-window picks: build.py freezes this URL into raw/."""
+    stub = run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.argv("--mid-round")
+    predict.main()
+
+    assert stub.live_calls == [(1, {"final": False})]
+    inspect.signature(Fetcher.event_live).bind(Fetcher, 1, final=False)
+
+
+def test_nothing_left_to_call_is_a_refusal_not_a_commentary(run):
+    run.build(fixture_states=("live", "done"), live_points=RUN_LIVE)
+    run.argv("--mid-round")
+    assert predict.main() == 1
+    assert not (run.tmp_path / "prediction.json").exists()
+
+
+def test_a_finished_gameweek_is_not_called_at_all(run):
+    """target_gameweek() gets there first: a round that is over is not awaiting
+    a call, so this is a deliberate no-op rather than a refusal."""
+    run.build(fixture_states=("done", "done"), live_points=RUN_LIVE)
+    run.argv("--mid-round")
+    assert predict.main() == 0
+    assert not (run.tmp_path / "prediction.json").exists()
+
+
+def test_a_finished_gameweek_named_explicitly_is_refused(run):
+    """--gw walks past that check, so the mid-round guard has to hold on its own."""
+    run.build(fixture_states=("done", "done"), live_points=RUN_LIVE)
+    run.argv("--mid-round", "--gw", "1")
+    assert predict.main() == 1
+
+
+def test_a_mid_round_call_will_not_overwrite_a_pre_kickoff_one(run):
+    run.build(fixture_states=("todo", "todo"))
+    run.argv()
+    assert predict.main() == 0
+    blind = run.published()
+    assert "mode" not in blind
+
+    run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.argv("--mid-round")
+    assert predict.main() == 1
+    assert run.published() == blind
+
+
+def test_a_mid_round_call_is_scored_but_never_counted(run, monkeypatch):
+    """§12.3's record is about calls made blind. One made with six results in
+    hand would inflate it and mean nothing."""
+    run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.argv("--mid-round")
+    predict.main()
+
+    settled = {"gameweeks": [{
+        "gw": 1, "winners": ["jack"],
+        "scores": {"noel": {"points": 40, "active": True},
+                   "jack": {"points": 90, "active": True}},
+    }]}
+    record = predict.settle_outstanding(settled)
+
+    scored = run.published()
+    assert scored["result"]["actual_first"] == "jack"
+    assert record == EMPTY_RECORD_FOR_TEST
+    assert scored["record"] == EMPTY_RECORD_FOR_TEST
+
+
+EMPTY_RECORD_FOR_TEST = {"played": 0, "exact": 0, "podium": 0, "pair": 0}
