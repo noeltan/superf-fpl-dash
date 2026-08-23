@@ -77,8 +77,13 @@ class Fetcher:
             time.sleep(REQUEST_DELAY_SECONDS - elapsed)
         self._last_request = time.monotonic()
 
-    def get(self, path: str, *, allow_404: bool = False) -> Any:
-        """GET an endpoint, preferring the HTTP cache and falling back to it."""
+    def get(self, path: str, *, allow_404: bool = False, store: bool = True) -> Any:
+        """GET an endpoint, preferring the HTTP cache and falling back to it.
+
+        ``store=False`` reads the cache but never writes it: the answer is
+        known to be provisional, so it must not be left on disk where a later
+        caller would take it for the settled one.
+        """
         url = f"{FPL_BASE}{path}"
         body_path, meta_path = self._cache_paths(url)
 
@@ -126,9 +131,10 @@ class Fetcher:
 
                 response.raise_for_status()
                 payload = response.json()
-                body_path.write_text(json.dumps(payload))
-                if response.headers.get("ETag"):
-                    meta_path.write_text(json.dumps({"etag": response.headers["ETag"]}))
+                if store:
+                    body_path.write_text(json.dumps(payload))
+                    if response.headers.get("ETag"):
+                        meta_path.write_text(json.dumps({"etag": response.headers["ETag"]}))
                 return payload
             except (requests.RequestException, json.JSONDecodeError) as exc:
                 last_error = exc
@@ -171,9 +177,25 @@ class Fetcher:
     def entry_history(self, entry_id: int) -> dict | None:
         return self.get(f"/entry/{entry_id}/history/", allow_404=True)
 
-    def entry_picks(self, entry_id: int, gw: int) -> dict | None:
-        """Squad and multipliers. Returns None before the deadline passes."""
-        return self.get(f"/entry/{entry_id}/event/{gw}/picks/", allow_404=True)
+    def entry_picks(self, entry_id: int, gw: int, *, final: bool = True) -> dict | None:
+        """Squad and multipliers. Returns None before the deadline passes.
+
+        ``final`` says whether the gameweek has stopped moving. Between the
+        deadline and the last whistle this endpoint answers with the squad as
+        submitted; auto-subs and a fallback captaincy are applied afterwards,
+        so the two readings name different players and only the second one is
+        the squad that scored.
+
+        That makes the in-window reading (``final=False``, which is only
+        predict.py) too dangerous to cache. It is the same URL the snapshot
+        builder reads, and the ETag FPL returns is the one for the submitted
+        picks — so a cached provisional copy can be revalidated with a 304 and
+        frozen into an immutable snapshot as if it were the settled XI. It is
+        never written to disk for that reason.
+        """
+        return self.get(
+            f"/entry/{entry_id}/event/{gw}/picks/", allow_404=True, store=final
+        )
 
     def event_live(self, gw: int) -> dict | None:
         """Per-player stats for a gameweek. Empty before kickoff."""

@@ -173,7 +173,7 @@ def gameweek_snapshot(
     picks = {}
     for manager in managers:
         entry_id = int(manager["entry_id"])
-        payload = fetcher.entry_picks(entry_id, gw)
+        payload = fetcher.entry_picks(entry_id, gw, final=True)
         if payload and payload.get("picks"):
             picks[entry_id] = payload
     live = fetcher.event_live(gw) or {}

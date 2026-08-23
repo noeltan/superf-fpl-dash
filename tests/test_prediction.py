@@ -480,3 +480,136 @@ def test_record_rolls_forward_only_on_hits():
     assert hit == {"played": 5, "exact": 2, "podium": 3, "pair": 1}
     miss = roll_record(base, {"exact_hit": False, "podium_hit": False, "pair_hit": False})
     assert miss == {"played": 5, "exact": 1, "podium": 2, "pair": 1}
+
+
+# --- the run itself ----------------------------------------------------------
+# Everything above tests a function. The GW1 call failed on none of it: it died
+# on `Fetcher.entry_picks() got an unexpected keyword argument 'final'`, a call
+# main() makes once per manager and no test had ever executed. The window is
+# ~50 minutes wide and does not come back, so the run has to be exercised end
+# to end, with the API and the model both stubbed out.
+
+import inspect  # noqa: E402
+import json  # noqa: E402
+
+import predict  # noqa: E402
+from superf.fpl import Fetcher  # noqa: E402
+
+RUN_DEADLINE = "2026-08-21T17:30:00Z"
+RUN_KICKOFF = "2026-08-21T19:00:00Z"
+IN_WINDOW = parse_utc("2026-08-21T17:45:00Z")
+
+RUN_MANAGERS = [
+    {"id": "noel", "entry_id": 1652821, "display_name": "Noel"},
+    {"id": "jack", "entry_id": 1427521, "display_name": "Jack"},
+]
+
+
+class StubFetcher:
+    """The FPL API, reduced to what main() asks it for."""
+
+    def __init__(self, *, offline=False, picks=None):
+        self.offline = offline
+        self.picks_calls = []
+        self._picks = picks_payload() if picks is None else picks
+
+    def bootstrap(self):
+        return {
+            "events": [{"id": 1, "deadline_time": RUN_DEADLINE}],
+            "elements": list(ELEMENTS.values()),
+            "teams": [{"id": i, "short_name": t["short_name"]} for i, t in TEAMS.items()],
+        }
+
+    def fixtures(self):
+        return [{
+            "id": 1, "event": 1, "finished": False, "kickoff_time": RUN_KICKOFF,
+            "team_h": 1, "team_a": 2, "team_h_difficulty": 3, "team_a_difficulty": 3,
+        }]
+
+    def entry_picks(self, entry_id, gw, **kwargs):
+        self.picks_calls.append((entry_id, gw, kwargs))
+        return self._picks
+
+    def summary(self):
+        return "stubbed"
+
+
+@pytest.fixture
+def run(monkeypatch, tmp_path):
+    """main() pointed at a throwaway docs/ with two managers and one fixture."""
+    monkeypatch.setattr(predict, "DATA_JSON", tmp_path / "data.json")
+    monkeypatch.setattr(predict, "PREDICTION_JSON", tmp_path / "prediction.json")
+    monkeypatch.setattr(predict, "PREDICTIONS", tmp_path / "predictions")
+    (tmp_path / "data.json").write_text(json.dumps({
+        "managers": RUN_MANAGERS, "gameweeks": [],
+    }))
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setattr(predict, "datetime", _FrozenClock)
+    monkeypatch.setattr(sys, "argv", ["predict.py"])
+
+    stub = StubFetcher()
+    monkeypatch.setattr(predict, "Fetcher", lambda **kwargs: stub)
+    return stub, tmp_path
+
+
+class _FrozenClock(datetime):
+    """`datetime.now(tz)` inside the window; everything else unchanged."""
+
+    @classmethod
+    def now(cls, tz=None):
+        return IN_WINDOW
+
+
+def test_the_run_publishes_a_call_inside_the_window(run):
+    stub, tmp_path = run
+    assert predict.main() == 0
+
+    published = json.loads((tmp_path / "prediction.json").read_text())
+    assert published["gw"] == 1
+    assert {published["call"]["first"]["manager"],
+            published["call"]["second"]["manager"]} == {"noel", "jack"}
+    # Archived under docs/predictions/ as well, so a rerun cannot erase history.
+    assert json.loads((tmp_path / "predictions" / "gw01.json").read_text()) == published
+
+
+def test_the_run_asks_for_picks_the_fetcher_can_actually_serve(run):
+    """The kwargs main() passes must exist on the real Fetcher, not just the stub."""
+    stub, _ = run
+    predict.main()
+
+    assert [entry_id for entry_id, _, _ in stub.picks_calls] == [
+        m["entry_id"] for m in RUN_MANAGERS
+    ]
+    for _, gw, kwargs in stub.picks_calls:
+        assert gw == 1
+        inspect.signature(Fetcher.entry_picks).bind(Fetcher, 1652821, gw, **kwargs)
+
+
+def test_in_window_picks_are_never_written_to_the_cache(tmp_path):
+    """They are the submitted squad, not the one that scored: cached, they can
+    be revalidated with a 304 and frozen into an immutable snapshot (§4.2)."""
+    fetcher = Fetcher(cache_dir=tmp_path / "cache", raw_dir=tmp_path / "raw")
+    body, meta = fetcher._cache_paths("x")
+    calls = []
+
+    class Response:
+        status_code = 200
+        headers = {"ETag": "W/\"abc\""}
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"picks": []}
+
+    def get(url, **kwargs):
+        calls.append(url)
+        return Response()
+
+    fetcher._session.get = get
+
+    fetcher.entry_picks(1652821, 1, final=False)
+    assert not any(Path(p).exists() for p in (tmp_path / "cache").glob("*"))
+
+    fetcher.entry_picks(1652821, 1, final=True)
+    assert list((tmp_path / "cache").glob("*.json"))
