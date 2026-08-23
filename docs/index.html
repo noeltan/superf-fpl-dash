@@ -208,7 +208,12 @@ select,button{font:inherit}
                   <span style="border-bottom:1px solid var(--warn);padding-bottom:1px">{{r.points}}</span>
                 </sc-raw-td>
                 <sc-raw-td style="text-align:left;padding:8px;border-bottom:1px solid var(--grid)">
-                  <div style="font-weight:{{r.weight}};color:{{r.ink}}">{{r.name}}</div>
+                  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                    <div style="font-weight:{{r.weight}};color:{{r.ink}}">{{r.name}}</div>
+                    <sc-if value="{{r.hasChip}}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:9.5px;font-weight:700;letter-spacing:.07em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:1px 4px;white-space:nowrap">{{r.chip}}</span>
+                    </sc-if>
+                  </div>
                   <div style="font-size:11.5px;color:var(--ink-muted)">{{r.sub}}</div>
                 </sc-raw-td>
                 <sc-raw-td style="text-align:right;padding:8px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;color:var(--ink-2)">{{r.played}}</sc-raw-td>
@@ -466,7 +471,14 @@ select,button{font:inherit}
           <sc-raw-tbody>
             <sc-for list="{{pred.projections}}" as="p" hint-placeholder-count="8">
               <sc-raw-tr style="background:{{p.rowBg}}">
-                <sc-raw-td style="text-align:left;padding:7px;border-bottom:1px solid var(--grid);color:{{p.ink}};font-weight:{{p.weight}}">{{p.name}}</sc-raw-td>
+                <sc-raw-td style="text-align:left;padding:7px;border-bottom:1px solid var(--grid);color:{{p.ink}};font-weight:{{p.weight}}">
+                  <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
+                    <span>{{p.name}}</span>
+                    <sc-if value="{{p.hasChip}}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:9.5px;font-weight:700;letter-spacing:.07em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:1px 4px;white-space:nowrap">{{p.chip}}</span>
+                    </sc-if>
+                  </span>
+                </sc-raw-td>
                 <sc-raw-td style="text-align:right;padding:7px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;font-weight:620">{{p.xp}}</sc-raw-td>
                 <sc-if value="{{pred.midRound}}" hint-placeholder-val="{{ false }}">
                   <sc-raw-td style="text-align:right;padding:7px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums">{{p.banked}}</sc-raw-td>

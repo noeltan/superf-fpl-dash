@@ -79,6 +79,13 @@ class ManagerProjection:
             "hits": self.hits,
             "concentration": self.concentration,
         }
+        # Only when one is played, so the §12.4 shape is unchanged for the
+        # ordinary week. `squad` rides along because it is the thing a bench
+        # boost actually changes — fifteen players scoring instead of eleven —
+        # and neither the model nor the reader can infer it from the total.
+        if self.chip:
+            contract["chip"] = self.chip
+            contract["squad"] = len(self.players)
         if self.banked is not None:
             contract["banked"] = round(self.banked, 1)
             contract["remaining"] = round(self.remaining, 1)

@@ -83,6 +83,22 @@ CALL_TOOL = {
     },
 }
 
+CHIP_NAMES = {
+    "bboost": "bench boost — all fifteen players score, not eleven",
+    "3xc": "triple captain — the captain counts three times, not twice",
+    "freehit": "free hit — a one-week squad, reverting next gameweek",
+    "wildcard": "wildcard — a rebuilt squad with no transfer hits",
+    "manager": "assistant manager",
+}
+
+
+def chip_label(code: str | None) -> str:
+    """FPL's chip codes are not readable; never invent one that is not played."""
+    if not code:
+        return ""
+    return CHIP_NAMES.get(code, code)
+
+
 MID_ROUND_SYSTEM = """
 This gameweek is already in progress, so you are not calling it from scratch —
 you are calling who finishes 1st and 2nd *from here*.
@@ -111,8 +127,10 @@ Your job is the judgment a formula cannot do:
 - structural risk: concentration on one club, one fixture, or one kickoff
 - captaincy divergence: who went differential and what it costs if it fails
 - the swing factor: the single player most likely to decide the pot
+- chips: who played one, and what it does to the comparison
 
 Pick the swing player from the shortlist provided; do not name anyone else.
+Never say a manager played a chip unless the projections say so.
 
 Tone: confident and specific. Never hedge into uselessness ("it could be
 anyone") and never sound falsely certain — that is what the confidence bands
@@ -149,6 +167,10 @@ def allowed_numbers(
         # and are the figures worth talking about when half the round is done.
         add(projection.get("banked"))
         add(projection.get("remaining"))
+        # A bench boost puts fifteen on the field; the model has to be able to
+        # say so. Squad sizes at or below N are already allowed by the loop
+        # over places below.
+        add(projection.get("squad"))
     add(gw)
     for place in range(0, manager_count + 1):
         add(place)
@@ -208,14 +230,36 @@ def build_prompt(
             f" (banked {projection['banked']} + remaining {projection['remaining']})"
             if "banked" in projection else ""
         )
+        chip = (
+            f", CHIP: {chip_label(projection['chip'])}, "
+            f"{projection['squad']} players counting"
+            if projection.get("chip") else ""
+        )
         lines.append(
             f"  {manager} (id: {projection['manager']}) — xP {projection['xp']}{split}, "
             f"captain {projection['captain']} xP {projection['captain_xp']}, "
             f"hits {projection['hits']}, "
             f"{projection['concentration']['players']} x {projection['concentration']['club']}"
+            f"{chip}"
         )
 
-    lines += ["", "SQUADS (starting XI, highest projected first):"]
+    played = [p for p in projections if p.get("chip")]
+    if played:
+        lines += [
+            "",
+            "CHIPS PLAYED THIS GAMEWEEK — this is structural, not a detail. A "
+            "manager on a bench boost is scoring from a larger squad than "
+            "everyone else, so their total is not comparable to an unboosted "
+            "one player for player, and they have more players left to play:",
+        ]
+        for projection in played:
+            lines.append(
+                f"  {names.get(projection['manager'], projection['manager'])} — "
+                f"{chip_label(projection['chip'])} ({projection['squad']} players)"
+            )
+
+    lines += ["", "SQUADS (every player who counts, highest projected first — "
+              "fifteen for a bench boost, eleven otherwise):"]
     for manager_id, players in squads.items():
         manager = names.get(manager_id, manager_id)
         listed = ", ".join(

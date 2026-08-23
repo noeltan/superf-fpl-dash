@@ -288,6 +288,14 @@ class Dashboard {
   state = { tab:"gw", you:null, fxGW:null, theme:"light", detailRange:"all", vw:1200, potView:"chart", ledgerView:"chart",
             showProj:false, moneyOpen:null, tick:0, liveSince:Date.now() };
 
+  /* FPL's chip codes are not words anybody says out loud. Unknown codes pass
+   * through rather than being swallowed — a chip nobody has heard of still
+   * needs to show up next to the score it is inflating. */
+  chipLabel(code){
+    return code ? ({ bboost:"BENCH BOOST", "3xc":"TRIPLE CAPTAIN", freehit:"FREE HIT",
+                     wildcard:"WILDCARD", manager:"ASSISTANT MGR" }[code] || code.toUpperCase()) : "";
+  }
+
   /* ---------- formatting only — no money maths ---------- */
   andList(names){
     if (names.length < 3) return names.join(" and ");
@@ -578,7 +586,8 @@ class Dashboard {
           points: m.live_points, name: byId[m.id].display_name,
           sub: "incl. +" + m.provisional_bonus_included + " provisional bonus" +
                (m.subs_pending ? " · " + m.subs_pending + " sub pending" : ""),
-          played: m.played + "/11", inPlay: m.in_play, toPlay: m.to_play,
+          played: m.played + "/" + (m.squad || 11), inPlay: m.in_play, toPlay: m.to_play,
+          chip: this.chipLabel(m.chip), hasChip: !!m.chip,
           toPlayInk: m.to_play >= 3 ? "var(--ink-1)" : "var(--ink-2)",
           toPlayWeight: m.to_play >= 3 ? 620 : 450,
           captain: m.captain.name, captainPts: m.captain.points + " ×" + m.captain.multiplier,
@@ -676,6 +685,7 @@ class Dashboard {
         showProj: S.showProj,
         projections: P.projections.map(p => ({
           name: byId[p.manager].display_name, xp: p.xp.toFixed(1), captain: p.captain,
+          chip: this.chipLabel(p.chip), hasChip: !!p.chip,
           banked: p.banked === undefined ? "" : p.banked.toFixed(1),
           remaining: p.remaining === undefined ? "" : p.remaining.toFixed(1),
           captainXp: p.captain_xp.toFixed(1), hits: p.hits ? "\u2212" + p.hits : "0",
@@ -686,6 +696,9 @@ class Dashboard {
         projFoot: (mid ? "Banked is already on the board and cannot change; to come is " +
           "the projection over players whose match has not kicked off. xP is the two added " +
           "together. " : "") +
+          (P.projections.some(p => p.chip)
+            ? "A bench boost scores all fifteen players instead of eleven, so a boosted " +
+              "total is not comparable to an unboosted one player for player. " : "") +
           "xP comes from code, not from the model: chance of playing × minutes, expected goal involvement adjusted for fixture, clean sheet chance for defenders, form, captain multiplier, minus hits. The model only rank and talk — it never make up a number."
       };
     } else {
