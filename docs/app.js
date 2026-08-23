@@ -21,11 +21,10 @@ import * as liveFeed from "./live.js";
 
 const POLL_INTERVAL_MS = 60000;
 
-/* Three things the page used to forget on every reload: which of the eight
- * managers you are, who you compare against, and whether you asked for the
- * dark theme. Eight people read this all season on the same phone, so being
- * asked to find yourself in a dropdown again every visit is the single
- * cheapest thing to fix.
+/* Two things the page used to forget on every reload: which of the
+ * managers you are, and whether you asked for the dark theme. The league reads
+ * this all season on the same phone, so being asked to find yourself in a
+ * dropdown again every visit is the single cheapest thing to fix.
  *
  * Preferences only — no money, nothing derived, nothing that would change what
  * the page says. Storage throws in a locked-down browser, so every access is
@@ -53,7 +52,7 @@ function savePrefs(patch) {
 
 /* The tab lives in the URL so it survives a reload and can be linked to. It is
  * the only piece of state worth a history entry: "look at how it works" is a
- * thing people send each other, "look at me compared to Jack" is not. */
+ * thing people send each other, "look at the season tab" is not. */
 const TABS = ["gw", "season", "rules"];
 
 function tabFromHash() {
@@ -119,14 +118,9 @@ class Dashboard {
     const preferred = known.has(prefs.you)
       ? data.managers.find((m) => m.id === prefs.you)
       : fallback;
-    const other =
-      known.has(prefs.cmp) && prefs.cmp !== preferred.id
-        ? data.managers.find((m) => m.id === prefs.cmp)
-        : data.managers.find((m) => m.id !== preferred.id) || preferred;
     this.state = {
       tab: tabFromHash() || "gw",
       you: preferred.id,
-      cmp: other.id,
       fxGW: data.current.state === "final" || data.current.state === "upcoming"
         ? data.current.next_gw
         : data.current.gameweek,
@@ -178,13 +172,12 @@ class Dashboard {
     this.setState({ tab });
   }
 
+  /* Light unless somebody asked for dark and we remembered it. The page
+   * deliberately does not follow prefers-color-scheme, and the stylesheet has
+   * no media query for it either, so the two cannot drift apart. */
   detectTheme() {
-    const attribute = document.documentElement.getAttribute("data-theme");
-    if (attribute) return attribute;
-    return window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
+    return document.documentElement.getAttribute("data-theme") === "dark"
+      ? "dark" : "light";
   }
 
   /* The countdown re-renders every 30s, every second while live so the
@@ -261,7 +254,7 @@ class Dashboard {
     }
   }
 
-  state = { tab:"gw", you:null, cmp:null, fxGW:null, theme:"light", detailRange:"all", vw:1200, potView:"chart", ledgerView:"chart",
+  state = { tab:"gw", you:null, fxGW:null, theme:"light", detailRange:"all", vw:1200, potView:"chart", ledgerView:"chart",
             showProj:false, moneyOpen:null, tick:0, liveSince:Date.now() };
 
   /* ---------- formatting only — no money maths ---------- */
@@ -311,18 +304,17 @@ class Dashboard {
       { month:"\u2014", gameweeks:0, opens_gw:0, stake:0, pot:0, net:[0,0], note:"" };
     const you = byId[S.you] ? S.you : D.managers[0].id;
     D._you = you;   // read by the live month-pot callout
-    const cmp = byId[S.cmp] ? S.cmp : D.managers[1].id;
     const isLive = cur.state === "live", isProv = cur.state === "provisional";
     const isFinal = cur.state === "final";
     const isPre = !D.gameweeks.length;   // nothing settled yet — the designed empty state
     const settledGWs = D.gameweeks;
     const lastGW = settledGWs.length ? settledGWs[settledGWs.length - 1] : null;
 
-    const fillOf = id => id === you ? "var(--accent)" : id === cmp ? "var(--compare)" : "var(--dim)";
-    const inkOf  = id => id === you ? "var(--accent)" : id === cmp ? "var(--compare)" : "var(--ink-2)";
-    const wOf    = id => (id === you || id === cmp) ? 620 : 450;
+    const fillOf = id => id === you ? "var(--accent)" : "var(--dim)";
+    const inkOf  = id => id === you ? "var(--accent)" : "var(--ink-2)";
+    const wOf    = id => id === you ? 620 : 450;
     const rowBgOf = id => id === you ? "var(--tint)" : "transparent";
-    const markOf = id => id === you ? "var(--accent)" : id === cmp ? "var(--compare)" : "transparent";
+    const markOf = id => id === you ? "var(--accent)" : "transparent";
     const name = id => byId[id] ? byId[id].short : id;
 
     /* ---- chrome ---- */
@@ -1021,18 +1013,14 @@ class Dashboard {
       emptyNote: "No money moved yet. First weekly pot settle after GW1 on " +
         this.dayKey(D.events[0].deadline) + ", then August's RM80 monthly pot two gameweeks after that.",
       foot: settledGWs.length >= 6
-        ? "" : "Season race chart only comes out after six gameweeks settled — two lines got nothing to show, waste space only."
+        ? "" : "Season race chart only comes out after six gameweeks settled — nothing to plot yet, waste space only."
     };
 
     return {
       league: D.league, managerOpts: D.managers.map(m => ({ id:m.id, name:m.display_name })),
-      you, cmp,
+      you,
       onYou: e => { const v = e.target.value;
-        const cmp = v === S.cmp ? D.managers.find(m => m.id !== v).id : S.cmp;
-        savePrefs({ you:v, cmp }); this.setState({ you:v, cmp }); },
-      onCmp: e => { const v = e.target.value;
-        const you = v === S.you ? D.managers.find(m => m.id !== v).id : S.you;
-        savePrefs({ you, cmp:v }); this.setState({ cmp:v, you }); },
+        savePrefs({ you:v }); this.setState({ you:v }); },
       toggleTheme: () => { const theme = S.theme === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", theme);
         savePrefs({ theme }); this.setState({ theme }); },
