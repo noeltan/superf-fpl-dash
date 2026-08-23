@@ -126,9 +126,9 @@ function renderNode(node, scope, parent) {
  * every interaction, so a keyboard user who toggles the theme is returned to
  * the top of the page and a screen reader loses its place. Any element
  * carrying `data-focus-key` gets its focus back, which covers the controls
- * that cause a render in the first place; the select fallback below keeps the
- * You/Compare pickers alive through the unprompted 30s tick even if nobody
- * remembered to key them.
+ * that cause a render in the first place; the select fallback below keeps a
+ * focused picker alive through the unprompted tick even if nobody remembered
+ * to key it. Neither may move the viewport — see preventScroll below.
  */
 export function render(root, template, values) {
   const active = document.activeElement;
@@ -141,11 +141,15 @@ export function render(root, template, values) {
   template.content.childNodes.forEach((node) => renderNode(node, values, next));
   root.replaceChildren(next);
 
+  // preventScroll is the whole ballgame. focus() scrolls its target into view by
+  // default, and this runs on every render — once a second while a gameweek is
+  // live. Touch any control in the page body, scroll away, and the next tick
+  // drags you back to it: scrolling looks broken rather than merely jumpy.
   const keyed = focusKey && root.querySelector(`[data-focus-key="${CSS.escape(focusKey)}"]`);
   if (keyed) {
-    keyed.focus();
+    keyed.focus({ preventScroll: true });
   } else if (focusedIndex >= 0) {
     const restored = root.querySelectorAll("select")[focusedIndex];
-    if (restored) restored.focus();
+    if (restored) restored.focus({ preventScroll: true });
   }
 }
