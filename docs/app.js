@@ -265,6 +265,11 @@ class Dashboard {
             showProj:false, moneyOpen:null, tick:0, liveSince:Date.now() };
 
   /* ---------- formatting only — no money maths ---------- */
+  andList(names){
+    if (names.length < 3) return names.join(" and ");
+    return names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
+  }
+
   rm(v){
     if (v === null || v === undefined) return "—";
     const a = Math.abs(v);
@@ -418,7 +423,12 @@ class Dashboard {
       const hasScore = lf ? lf.hs !== null : f.hs !== null;
       const hs = lf ? lf.hs : f.hs, as = lf ? lf.as : f.as;
       const inPlay = lf ? (lf.started && !lf.finished && lf.minutes > 0) : false;
+      const done = lf ? lf.finished : false;
       g.rows.push({
+        // What the match ticker used to carry. It listed the same ten matches
+        // in the same order right above this card, so it is here instead.
+        state: done ? "full time" : inPlay ? lf.minutes + "'" : "",
+        stateInk: inPlay ? "var(--crit)" : "var(--ink-muted)",
         home: T[f.h].name, away: T[f.a].name, dh: f.dh, da: f.da,
         dhBg: "var(--f" + f.dh + ")", dhInk: "var(--f" + f.dh + "t)",
         daBg: "var(--f" + f.da + ")", daInk: "var(--f" + f.da + "t)",
@@ -435,7 +445,9 @@ class Dashboard {
     });
     const fx = {
       title: "GW" + fxGW + " fixtures",
-      sub: (liveJoin ? "Live scores · " : "") + "grouped by Malaysian day · " + fxRows.length + " matches",
+      sub: (F && F.gw === fxGW
+              ? "Live · " + F.matches_in_play + " in play · "
+              : "") + "grouped by Malaysian day · " + fxRows.length + " matches",
       gw: String(fxGW),
       onGW: e => this.setState({ fxGW: Number(e.target.value) }),
       options: Object.keys(D.fixtures).map(k => ({ v:k, label:"GW" + k + (Number(k) === cur.next_gw ? " · next" : "") })),
@@ -467,8 +479,19 @@ class Dashboard {
       sub: isPre ? N + " managers signed up" : "Overall points after GW" + D.settled.through_gw +
         (isLive || isProv ? " — settled figures, GW" + cur.gameweek + " is live above" : ""),
       empty: isPre, hasRows: !isPre,
-      emptyNote: "Standings only fill up after GW1 final. First RM" + D.stakes.weekly.pot +
-        " weekly pot settle same night, so don't forget to set team ah.",
+      /* "Nobody has scored yet" is written for pre-season, and stops being
+       * true the moment a ball is kicked — mid-GW1 the live table directly
+       * above this card is showing real points. This card is the book of
+       * record and only moves when a gameweek goes final, so say that instead
+       * of contradicting the table above it. */
+      emptyTitle: isLive || isProv ? "GW" + cur.gameweek + " is still being played"
+        : "Nobody has scored yet",
+      emptyNote: isLive || isProv
+        ? "The live table above has the running numbers. This one is the book of record — " +
+          "it only fills in once the gameweek goes final and the RM" + D.stakes.weekly.pot +
+          " weekly pot settles, because provisional bonus can still move who gets paid."
+        : "Standings only fill up after GW1 final. First RM" + D.stakes.weekly.pot +
+          " weekly pot settle same night, so don't forget to set team ah.",
       signups: D.managers.map(m => ({ name:m.display_name, team:m.team_name, ink:inkOf(m.id), weight:wOf(m.id) })),
       head: [ {label:"#",align:"left"}, {label:"Manager",align:"left"}, {label:"GW" + (lastGW ? lastGW.gw : ""),align:"right"},
               {label:"Total",align:"right"}, {label:"Behind",align:"right"}, {label:"★ Top 3",align:"right"}, {label:"Accrued",align:"right"} ],
@@ -549,19 +572,6 @@ class Dashboard {
           note: prov ? "Bonus can still move after the whistle and flip the pot. If it happen, this page will name names and keep it there forever — no arguing after that."
                      : "Nothing settle until every fixture says finished. Pot is shown only, not paid yet."
         },
-        tickerSub: prov ? "All ten finished, awaiting confirmation" : F.matches_in_play + " in play · " +
-          F.fixtures.filter(f => f.finished).length + " finished",
-        ticker: F.fixtures.map(f => {
-          const started = f.started, done = f.finished;
-          const inPlay = started && !done;
-          return {
-            home: T[f.h].short, away: T[f.a].short,
-            score: f.hs === null ? "–" : f.hs + " – " + f.as,
-            state: done ? "full time" : inPlay ? f.minutes + "'" : this.hhmm((D.fixtures[String(F.gw)].find(x => x.h === f.h) || {}).ko || F.generated_at) + " MYT",
-            stateInk: done ? "var(--ink-muted)" : inPlay ? "var(--crit)" : "var(--ink-muted)",
-            hInk: "var(--ink-1)", aInk: "var(--ink-1)", hWeight: 450, aWeight: 450
-          };
-        }),
         caps: (() => {
           const byPlayer = {};
           F.managers.forEach(m => {
@@ -632,7 +642,9 @@ class Dashboard {
             confRule: confRule(P.call.second.confidence), confInk: confInk(P.call.second.confidence), ink: inkOf(P.call.second.manager) }
         ],
         swing: { name: P.call.swing_player.name,
-          owners: "Owned by " + P.call.swing_player.owned_by.map(id => byId[id].short).join(" and "),
+          // " and " between every name reads fine for two owners and badly for
+          // eight, which is what a genuinely shared swing player looks like.
+          owners: "Owned by " + this.andList(P.call.swing_player.owned_by.map(id => byId[id].short)),
           why: P.call.swing_player.why },
         reasoning: P.call.reasoning,
         agrees: P.call.agrees_with_projection

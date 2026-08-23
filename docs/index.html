@@ -239,18 +239,6 @@ select,button{font:inherit}
           <div style="font-size:13.5px;color:var(--ink-2);margin-top:8px">{{live.pot.margin}}</div>
           <div style="margin-top:14px;padding:11px 13px;background:var(--tint-warn);border-radius:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)">{{live.pot.note}}</div>
         </div>
-        <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
-          <div style="font-size:14.5px;font-weight:640;margin-bottom:3px">Match ticker</div>
-          <div style="font-size:12.5px;color:var(--ink-muted);margin-bottom:12px">{{live.tickerSub}}</div>
-          <sc-for list="{{live.ticker}}" as="f" hint-placeholder-count="6">
-            <div style="display:grid;grid-template-columns:1fr minmax(54px,62px) 1fr;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--grid)">
-              <div style="text-align:right;font-size:13px;color:{{f.hInk}};font-weight:{{f.hWeight}}">{{f.home}}</div>
-              <div style="text-align:center;font-size:13.5px;font-weight:640;font-variant-numeric:tabular-nums;background:var(--surface-2);border-radius:6px;padding:2px 0">{{f.score}}</div>
-              <div style="text-align:left;font-size:13px;color:{{f.aInk}};font-weight:{{f.aWeight}}">{{f.away}}</div>
-            </div>
-            <div style="text-align:center;font-size:11px;color:{{f.stateInk}};font-variant-numeric:tabular-nums;padding:2px 0 6px">{{f.state}}</div>
-          </sc-for>
-        </div>
       </div>
     </div>
 
@@ -316,7 +304,12 @@ select,button{font:inherit}
                 <span style="font-size:13.5px">{{r.home}}</span>
                 <span title="difficulty {{r.dh}}" style="width:20px;height:20px;border-radius:5px;font-size:11px;font-weight:660;display:inline-flex;align-items:center;justify-content:center;flex:none;font-variant-numeric:tabular-nums;background:{{r.dhBg}};color:{{r.dhInk}}">{{r.dh}}</span>
               </div>
-              <div style="text-align:center;font-variant-numeric:tabular-nums;background:{{r.midBg}};border-radius:6px;padding:3px 0;font-size:{{r.midSize}};font-weight:{{r.midWeight}};color:{{r.midInk}}">{{r.mid}}</div>
+              <div>
+                <div style="text-align:center;font-variant-numeric:tabular-nums;background:{{r.midBg}};border-radius:6px;padding:3px 0;font-size:{{r.midSize}};font-weight:{{r.midWeight}};color:{{r.midInk}}">{{r.mid}}</div>
+                <sc-if value="{{r.state}}" hint-placeholder-val="{{ false }}">
+                  <div style="text-align:center;font-size:10.5px;letter-spacing:.04em;margin-top:3px;color:{{r.stateInk}};font-variant-numeric:tabular-nums">{{r.state}}</div>
+                </sc-if>
+              </div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span title="difficulty {{r.da}}" style="width:20px;height:20px;border-radius:5px;font-size:11px;font-weight:660;display:inline-flex;align-items:center;justify-content:center;flex:none;font-variant-numeric:tabular-nums;background:{{r.daBg}};color:{{r.daInk}}">{{r.da}}</span>
                 <span style="font-size:13.5px">{{r.away}}</span>
@@ -362,7 +355,7 @@ select,button{font:inherit}
               </div>
             </sc-for>
             <div style="margin-top:14px;padding:14px;background:var(--surface-2);border-radius:10px;font-size:13px;line-height:1.6;color:var(--ink-2)">
-              <b style="color:var(--ink-1);display:block;margin-bottom:4px">Nobody has scored yet</b>
+              <b style="color:var(--ink-1);display:block;margin-bottom:4px">{{standings.emptyTitle}}</b>
               {{standings.emptyNote}}
             </div>
           </div>
