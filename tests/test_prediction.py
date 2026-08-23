@@ -13,6 +13,7 @@ from predict import actual_order, roll_record, score_prediction, window_for
 from superf.claude_call import (
     MAX_TOKENS,
     allowed_numbers,
+    build_prompt,
     find_violations,
     request_call,
     validate,
@@ -791,3 +792,85 @@ def test_a_mid_round_call_is_scored_but_never_counted(run, monkeypatch):
 
 
 EMPTY_RECORD_FOR_TEST = {"played": 0, "exact": 0, "podium": 0, "pair": 0}
+
+
+# --- chips -------------------------------------------------------------------
+# Three of thirteen played a bench boost in GW1. The arithmetic was already
+# right — `multiplier > 0` counts all fifteen — but nothing downstream said so,
+# so the model called the gameweek without knowing, and the live table divided
+# by eleven.
+
+def bboost_payload(hits=0):
+    """The same four picks, with the bench counting too."""
+    payload = picks_payload(hits=hits, chip="bboost")
+    for pick in payload["picks"]:
+        if pick["multiplier"] == 0:
+            pick["multiplier"] = 1
+    return payload
+
+
+def test_a_bench_boost_scores_the_whole_squad():
+    """The claim project_manager's docstring makes, pinned down."""
+    normal = project_manager("noel", picks_payload(), ELEMENTS, BY_TEAM, TEAMS)
+    boosted = project_manager("noel", bboost_payload(), ELEMENTS, BY_TEAM, TEAMS)
+
+    assert len(normal.players) == 3          # element 4 is benched
+    assert len(boosted.players) == 4         # and now it is not
+    assert boosted.xp > normal.xp
+    assert boosted.xp - normal.xp == pytest.approx(
+        project_player(ELEMENTS[4], 4, False), abs=0.05
+    )
+
+
+def test_a_bench_boost_banks_the_bench_too():
+    scored = {1: 6.0, 2: 9.0, 3: 4.0, 4: 5.0}
+    normal = project_manager("noel", picks_payload(), ELEMENTS, {}, TEAMS, scored)
+    boosted = project_manager("noel", bboost_payload(), ELEMENTS, {}, TEAMS, scored)
+    assert boosted.banked - normal.banked == pytest.approx(scored[4], abs=0.05)
+
+
+def test_the_contract_carries_the_chip_and_the_squad_it_implies():
+    contract = project_manager(
+        "noel", bboost_payload(), ELEMENTS, BY_TEAM, TEAMS
+    ).to_contract()
+    assert contract["chip"] == "bboost"
+    assert contract["squad"] == 4  # every counting pick in this fixture
+    # …and an ordinary week is untouched, which §12.4 pins separately.
+    assert "chip" not in project_manager(
+        "noel", picks_payload(), ELEMENTS, BY_TEAM, TEAMS
+    ).to_contract()
+
+
+def test_the_prompt_says_who_played_what_and_how_big_their_squad_is():
+    boosted = dict(PROJECTIONS[0], chip="bboost", squad=15)
+    prompt = build_prompt(
+        gw=1, deadline="2026-08-21T17:30:00Z",
+        projections=[boosted, PROJECTIONS[1]], squads={}, fixtures=FIXTURES,
+        teams={1: {"short_name": "ARS"}, 2: {"short_name": "MCI"}},
+        managers=[{"id": "noel", "display_name": "Noel"},
+                  {"id": "jack", "display_name": "Jack"}],
+        swing_shortlist=[], record={},
+    )
+    assert "CHIPS PLAYED THIS GAMEWEEK" in prompt
+    assert "bench boost" in prompt
+    assert "15 players counting" in prompt
+    # Jack played nothing and must not be described as though he had.
+    jack_line = next(l for l in prompt.splitlines() if "id: jack" in l)
+    assert "CHIP" not in jack_line
+
+
+def test_fifteen_is_quotable_when_somebody_is_boosted():
+    boosted = dict(PROJECTIONS[0], chip="bboost", squad=15)
+    allowed = allowed_numbers([boosted, PROJECTIONS[1]], 1, FIXTURES, 8)
+    assert not find_violations("Noel has 15 players scoring.", allowed)
+    # Without a boost in play it is not a number the projection produced.
+    assert find_violations("Noel has 15 players scoring.", ALLOWED) == ["15"]
+
+
+def test_a_boosted_squad_is_sent_to_the_model_whole(run):
+    """It used to be sliced to eleven, which hid four scoring players from the
+    model for exactly the managers whose squad was the story."""
+    run.build(fixture_states=("todo", "todo"), picks=bboost_payload())
+    run.argv()
+    assert predict.main() == 0
+    assert run.published()["projections"][0]["squad"] == 4

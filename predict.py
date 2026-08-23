@@ -366,12 +366,13 @@ def main() -> int:
         )
         projections.append(projection)
         # Mid-round, only the players who can still add anything are worth
-        # putting in front of the model.
+        # putting in front of the model. Never truncate to eleven: a bench
+        # boost counts fifteen, and silently dropping four of them showed the
+        # model the wrong squad for exactly the managers whose squad is the
+        # interesting thing about the gameweek.
         listed = [p for p in projection.players if p.fixtures] if args.mid_round \
             else projection.players
-        squads[manager["id"]] = [
-            {"name": p.name, "team": p.team} for p in listed[:11]
-        ]
+        squads[manager["id"]] = [{"name": p.name, "team": p.team} for p in listed]
 
     contract_projections = [p.to_contract() for p in projections]
     shortlist = swing_candidates(projections)

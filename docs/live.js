@@ -201,6 +201,11 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
       played,
       in_play: inPlay,
       to_play: toPlay,
+      // A bench boost scores fifteen, so "played 4 of 11" is wrong for three
+      // of the thirteen this week. The counter above already only counts
+      // picks with a multiplier, so this is the squad that is actually live.
+      squad: played + inPlay + toPlay,
+      chip: picks.active_chip || null,
       captain,
       subs_pending: subsPending,
       live_rank: 0,
