@@ -21,6 +21,46 @@ import * as liveFeed from "./live.js";
 
 const POLL_INTERVAL_MS = 60000;
 
+/* Three things the page used to forget on every reload: which of the eight
+ * managers you are, who you compare against, and whether you asked for the
+ * dark theme. Eight people read this all season on the same phone, so being
+ * asked to find yourself in a dropdown again every visit is the single
+ * cheapest thing to fix.
+ *
+ * Preferences only — no money, nothing derived, nothing that would change what
+ * the page says. Storage throws in a locked-down browser, so every access is
+ * guarded and a failure just means the old behaviour.
+ *
+ * The key is also read by a one-liner in index.html's <head>, which restores
+ * the theme before first paint. Changing the shape means changing both. */
+const PREFS_KEY = "superf.prefs";
+
+function loadPrefs() {
+  try {
+    return JSON.parse(localStorage.getItem(PREFS_KEY) || "{}") || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function savePrefs(patch) {
+  try {
+    localStorage.setItem(PREFS_KEY, JSON.stringify({ ...loadPrefs(), ...patch }));
+  } catch (error) {
+    /* private mode, or storage disabled — the session still works */
+  }
+}
+
+/* The tab lives in the URL so it survives a reload and can be linked to. It is
+ * the only piece of state worth a history entry: "look at how it works" is a
+ * thing people send each other, "look at me compared to Jack" is not. */
+const TABS = ["gw", "season", "rules"];
+
+function tabFromHash() {
+  const hash = location.hash.replace(/^#/, "");
+  return TABS.includes(hash) ? hash : null;
+}
+
 class Dashboard {
   constructor(root, template) {
     this.root = root;
@@ -71,10 +111,20 @@ class Dashboard {
       this.prediction = null;
     }
 
-    const preferred = data.managers.find((m) => m.id === "noel") || data.managers[0];
-    const other = data.managers.find((m) => m.id !== preferred.id) || preferred;
+    // A remembered manager is checked against the current roster before it is
+    // trusted: somebody who left the league must not go on being "you".
+    const prefs = loadPrefs();
+    const known = new Set(data.managers.map((m) => m.id));
+    const fallback = data.managers.find((m) => m.id === "noel") || data.managers[0];
+    const preferred = known.has(prefs.you)
+      ? data.managers.find((m) => m.id === prefs.you)
+      : fallback;
+    const other =
+      known.has(prefs.cmp) && prefs.cmp !== preferred.id
+        ? data.managers.find((m) => m.id === prefs.cmp)
+        : data.managers.find((m) => m.id !== preferred.id) || preferred;
     this.state = {
-      tab: "gw",
+      tab: tabFromHash() || "gw",
       you: preferred.id,
       cmp: other.id,
       fxGW: data.current.state === "final" || data.current.state === "upcoming"
@@ -97,6 +147,7 @@ class Dashboard {
     this.render();
     this.startClock();
     this.watchViewport();
+    this.watchHistory();
     this.startLive();
   }
 
@@ -108,6 +159,23 @@ class Dashboard {
       const width = window.innerWidth;
       if (Math.abs(width - this.state.vw) > 8) this.setState({ vw: width });
     });
+  }
+
+  /* Back and forward move between tabs. A fragment navigation fires popstate
+   * as well as hashchange, so one listener covers both the buttons and a hash
+   * typed into the bar. An unrecognised fragment (#panel, from the skip link)
+   * is somebody jumping within the page, not changing tab — leave it alone. */
+  watchHistory() {
+    window.addEventListener("popstate", () => {
+      const tab = tabFromHash();
+      if (tab) this.setState({ tab });
+      else if (!location.hash) this.setState({ tab: "gw" });
+    });
+  }
+
+  goTab(tab) {
+    if (tabFromHash() !== tab) history.pushState({ tab }, "", "#" + tab);
+    this.setState({ tab });
   }
 
   detectTheme() {
@@ -261,13 +329,37 @@ class Dashboard {
       locked:      { text:"LOCKED",      dot:"var(--warn)",  ink:"var(--warn-ink)", anim:"none" }
     };
     const sm = stateMap[cur.state];
-    const stateSub = isPre ? "GW1 not played"
-      : cur.state === "locked" ? "GW" + cur.next_gw + " locked · first kickoff soon"
+    /* isPre is "nothing has settled", which is not "no football has been
+     * played" — the two come apart for the three days GW1 is actually on, and
+     * the pill was reading LIVE next to "GW1 not played". State first, then
+     * the empty-book copy. */
+    const stateSub = cur.state === "locked" ? "GW" + cur.next_gw + " locked · first kickoff soon"
+      : cur.state === "live" ? "GW" + cur.gameweek + " in progress"
+      : isPre ? "GW1 not played"
       : isFinal ? "GW" + cur.gameweek + " settled · GW" + cur.next_gw + " next"
       : "GW" + cur.gameweek + " in progress";
 
-    const tabs = [["gw","Gameweek"],["season","Season & money"],["rules","How it works"]].map(([k,label]) => ({
-      label, onClick: () => this.setState({ tab:k }),
+    /* A tablist, not three buttons: left/right move between tabs and only the
+     * selected one is in the tab order, which is what a screen reader and a
+     * keyboard both expect of something shaped like this. */
+    const tabLabels = { gw:"Gameweek", season:"Season & money", rules:"How it works" };
+    const tabs = TABS.map(k => ({
+      key: k, label: tabLabels[k],
+      selected: S.tab === k, tabindex: S.tab === k ? 0 : -1,
+      onClick: () => this.goTab(k),
+      onKeydown: e => {
+        const step = { ArrowRight:1, ArrowLeft:-1 }[e.key];
+        const next = step !== undefined
+          ? TABS[(TABS.indexOf(k) + step + TABS.length) % TABS.length]
+          : e.key === "Home" ? TABS[0]
+          : e.key === "End" ? TABS[TABS.length - 1] : null;
+        if (!next) return;
+        e.preventDefault();
+        this.goTab(next);
+        // setState renders synchronously, so the new tab exists to focus.
+        const moved = this.root.querySelector('[data-focus-key="tab-' + next + '"]');
+        if (moved) moved.focus();
+      },
       bg: S.tab === k ? "var(--surface-1)" : "transparent",
       ink: S.tab === k ? "var(--ink-1)" : "var(--ink-2)",
       weight: S.tab === k ? 620 : 520,
@@ -298,7 +390,7 @@ class Dashboard {
       big,
       myt: this.dayKey(nextEv.deadline) + ", " + this.hhmm(nextEv.deadline),
       utc: nextEv.deadline.slice(11,16),
-      note: isPre
+      note: nextEv.gw === 1
         ? "First deadline of the season, lock at 01:30 Saturday morning here. Set your team Friday night lah, don't sleep first then cry after."
         : "Malaysia time first, UTC after. Every kickoff this round lands between 19:30 and 03:00 our side — so ya, some of us watching at 3am again."
     };
@@ -402,7 +494,7 @@ class Dashboard {
     /* ---- PL table ---- */
     const formBg = { W:"var(--good)", D:"var(--ink-muted)", L:"var(--crit)" };
     const pl = {
-      sub: isPre ? "Opens with the first whistle" : "Derived from " + D.pl_table[0].p + " finished rounds",
+      sub: D.pl_table.length ? "Derived from " + D.pl_table[0].p + " finished rounds" : "Opens with the first whistle",
       empty: D.pl_table.length === 0, hasRows: D.pl_table.length > 0,
       emptyNote: "Nobody kick ball yet. Table only shows up after GW1 finish — FPL API don't give one, so we build it from results ourselves. First up: Arsenal v Coventry City, " +
         this.dayKey(D.fixtures["1"][0].ko) + " at " + this.hhmm(D.fixtures["1"][0].ko) + " Malaysia time.",
@@ -496,6 +588,7 @@ class Dashboard {
     const confRule = c => c === "high" ? "var(--good)" : c === "medium" ? "var(--accent)" : "var(--axis)";
     const confInk  = c => c === "high" ? "var(--good)" : c === "medium" ? "var(--accent)" : "var(--ink-muted)";
     let pred = { empty:true, hasCall:false, title:"Weekly prediction", sub:"", record:"", toggleLabel:"",
+                 showToggle:false, expanded:false,
                  onToggle:()=>{}, emptyNote:"", verdict:{show:false}, calls:[], swing:{}, reasoning:"",
                  agrees:"", showProj:false, projections:[], projFoot:"" };
     if (P) {
@@ -509,6 +602,7 @@ class Dashboard {
                 " · podium " + P.record.podium + " of " + P.record.played +
                 " · pair " + P.record.pair + " of " + P.record.played,
         toggleLabel: S.showProj ? "Hide projections" : "Show projections",
+        showToggle: true, expanded: S.showProj,
         onToggle: () => this.setState({ showProj: !S.showProj }),
         verdict: res ? {
           show:true,
@@ -547,7 +641,6 @@ class Dashboard {
       pred.sub = "Runs at deadline + 5 minutes";
       pred.emptyNote = "Nobody can see squads before the deadline, so the first call only comes out in the 90-minute window between the GW1 deadline and first kickoff. Every call gets marked after — record shows here whether it looks good or looks stupid.";
       pred.record = "No calls yet";
-      pred.toggleLabel = "How it works";
     }
 
     /* ---- rules tab (§7.2F) — explains the money, never restates it ----
@@ -774,7 +867,8 @@ class Dashboard {
     const detail = {
       rangeOptions: [{ v:"all", label:"All " + settledGWs.length + " GWs" }]
         .concat(playedMonths.map(mb => ({ v:mb.month, label:this.monthName(mb.month) })))
-        .map(o => ({ label:o.label, onClick:() => this.setState({ detailRange:o.v }),
+        .map(o => ({ label:o.label, key:o.v, selected: range === o.v,
+          onClick:() => this.setState({ detailRange:o.v }),
           bg: range === o.v ? "var(--ink-1)" : "var(--surface-1)",
           ink: range === o.v ? "var(--plane)" : "var(--ink-2)",
           border: range === o.v ? "var(--ink-1)" : "var(--border)" })),
@@ -809,6 +903,7 @@ class Dashboard {
       sub: "Read straight from the stakes, so when somebody new join the numbers fix themselves",
       onToggle: () => this.setState({ moneyOpen: !moneyOpen }),
       toggleLabel: moneyOpen ? "Collapse" : "Expand",
+      expanded: moneyOpen,
       open: moneyOpen,
       pots: [
         { name:"Weekly", stake:"RM" + st.weekly.stake + " × " + N, prize: rm(st.weekly.net[0]) + " · " + rm(st.weekly.net[1]),
@@ -903,15 +998,21 @@ class Dashboard {
     return {
       league: D.league, managerOpts: D.managers.map(m => ({ id:m.id, name:m.display_name })),
       you, cmp,
-      onYou: e => { const v = e.target.value; this.setState({ you:v, cmp: v === S.cmp ? D.managers.find(m => m.id !== v).id : S.cmp }); },
-      onCmp: e => { const v = e.target.value; this.setState({ cmp:v, you: v === S.you ? D.managers.find(m => m.id !== v).id : S.you }); },
-      toggleTheme: () => { const dark = S.theme === "dark";
-        document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
-        this.setState({ theme: dark ? "light" : "dark" }); },
+      onYou: e => { const v = e.target.value;
+        const cmp = v === S.cmp ? D.managers.find(m => m.id !== v).id : S.cmp;
+        savePrefs({ you:v, cmp }); this.setState({ you:v, cmp }); },
+      onCmp: e => { const v = e.target.value;
+        const you = v === S.you ? D.managers.find(m => m.id !== v).id : S.you;
+        savePrefs({ you, cmp:v }); this.setState({ cmp:v, you }); },
+      toggleTheme: () => { const theme = S.theme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", theme);
+        savePrefs({ theme }); this.setState({ theme }); },
       chrome: { dot: sm.dot, dotAnim: sm.anim, dotInk: sm.ink, stateText: sm.text, stateSub: stateSub,
-                themeLabel: S.theme === "dark" ? "Light" : "Dark" },
+                themeLabel: S.theme === "dark" ? "Light" : "Dark",
+                themeAria: S.theme === "dark" ? "Switch to the light theme" : "Switch to the dark theme" },
       tabs, banner,
       isGW: S.tab === "gw", isSeason: S.tab === "season", isRules: S.tab === "rules",
+      activeTabId: "tab-" + S.tab,
       showCountdown: !showLive, cd, brk,
       showLive, live, fx, cal, standings, pl, pred,
       hero, pot, ledger, weekly, detail, stmt, settle, money, season, rules,
