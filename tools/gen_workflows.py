@@ -169,6 +169,10 @@ on:
         description: "Ignore the timing window"
         type: boolean
         default: false
+      mid_round:
+        description: "Call the rest of a gameweek already in progress"
+        type: boolean
+        default: false
 
 concurrency:
   group: publish
@@ -196,7 +200,8 @@ jobs:
         run: |
           python predict.py -v \\
             ${{{{ inputs.gw && format('--gw {{0}}', inputs.gw) || '' }}}} \\
-            ${{{{ inputs.force && '--force' || '' }}}}
+            ${{{{ inputs.force && '--force' || '' }}}} \\
+            ${{{{ inputs.mid_round && '--mid-round' || '' }}}}
 
       - name: Commit
         run: |

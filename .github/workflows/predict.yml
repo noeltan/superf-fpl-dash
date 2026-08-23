@@ -25,18 +25,18 @@ on:
     - cron: "35 17 18 9 *"
     - cron: "50 17 18 9 *"
     - cron: "10 18 18 9 *"
-    - cron: "35 12 10 10 *"
-    - cron: "50 12 10 10 *"
-    - cron: "10 13 10 10 *"
-    - cron: "35 12 17 10 *"
-    - cron: "50 12 17 10 *"
-    - cron: "10 13 17 10 *"
-    - cron: "35 12 24 10 *"
-    - cron: "50 12 24 10 *"
-    - cron: "10 13 24 10 *"
-    - cron: "35 13 31 10 *"
-    - cron: "50 13 31 10 *"
-    - cron: "10 14 31 10 *"
+    - cron: "5 10 10 10 *"
+    - cron: "20 10 10 10 *"
+    - cron: "40 10 10 10 *"
+    - cron: "5 10 17 10 *"
+    - cron: "20 10 17 10 *"
+    - cron: "40 10 17 10 *"
+    - cron: "35 17 23 10 *"
+    - cron: "50 17 23 10 *"
+    - cron: "10 18 23 10 *"
+    - cron: "5 11 31 10 *"
+    - cron: "20 11 31 10 *"
+    - cron: "40 11 31 10 *"
     - cron: "35 13 7 11 *"
     - cron: "50 13 7 11 *"
     - cron: "10 14 7 11 *"
@@ -133,6 +133,10 @@ on:
         description: "Ignore the timing window"
         type: boolean
         default: false
+      mid_round:
+        description: "Call the rest of a gameweek already in progress"
+        type: boolean
+        default: false
 
 concurrency:
   group: publish
@@ -160,7 +164,8 @@ jobs:
         run: |
           python predict.py -v \
             ${{ inputs.gw && format('--gw {0}', inputs.gw) || '' }} \
-            ${{ inputs.force && '--force' || '' }}
+            ${{ inputs.force && '--force' || '' }} \
+            ${{ inputs.mid_round && '--mid-round' || '' }}
 
       - name: Commit
         run: |

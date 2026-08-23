@@ -588,19 +588,31 @@ class Dashboard {
     const confRule = c => c === "high" ? "var(--good)" : c === "medium" ? "var(--accent)" : "var(--axis)";
     const confInk  = c => c === "high" ? "var(--good)" : c === "medium" ? "var(--accent)" : "var(--ink-muted)";
     let pred = { empty:true, hasCall:false, title:"Weekly prediction", sub:"", record:"", toggleLabel:"",
-                 showToggle:false, expanded:false,
+                 showToggle:false, expanded:false, midRound:null, tag:"",
                  onToggle:()=>{}, emptyNote:"", verdict:{show:false}, calls:[], swing:{}, reasoning:"",
                  agrees:"", showProj:false, projections:[], projFoot:"" };
     if (P) {
       const res = P.result;
+      /* A mid-round call is a different bet: half the round was already on the
+       * board when it was made. The card has to say so, and the record beside
+       * it is about blind calls only — see predict.py's settle_outstanding. */
+      const mid = P.mode === "mid_round" ? P.mid_round : null;
       pred = {
         empty:false, hasCall:true,
-        title: "GW" + P.gw + " call" + (res ? " — verdict" : ""),
-        sub: res ? "Published " + this.dateShort(P.generated_at) + ", scored once the gameweek went final"
-                 : "Published " + this.hhmm(P.generated_at) + " MYT, five minutes after the deadline and before the first kickoff",
-        record: "Called correctly " + P.record.exact + " of " + P.record.played +
-                " · podium " + P.record.podium + " of " + P.record.played +
-                " · pair " + P.record.pair + " of " + P.record.played,
+        midRound: mid,
+        tag: mid ? "MID-ROUND" : "",
+        title: "GW" + P.gw + " call" + (mid ? " — from here" : "") + (res ? " — verdict" : ""),
+        sub: mid
+          ? "Called " + this.hhmm(P.generated_at) + " MYT with " + mid.remaining + " of " +
+            mid.total + " matches still to kick off — made with " + mid.played +
+            " already played, so it is not a blind call and does not count towards the record"
+          : res ? "Published " + this.dateShort(P.generated_at) + ", scored once the gameweek went final"
+                : "Published " + this.hhmm(P.generated_at) + " MYT, five minutes after the deadline and before the first kickoff",
+        record: P.record.played
+          ? "Called correctly " + P.record.exact + " of " + P.record.played +
+            " · podium " + P.record.podium + " of " + P.record.played +
+            " · pair " + P.record.pair + " of " + P.record.played
+          : "No blind calls scored yet",
         toggleLabel: S.showProj ? "Hide projections" : "Show projections",
         showToggle: true, expanded: S.showProj,
         onToggle: () => this.setState({ showProj: !S.showProj }),
@@ -629,12 +641,17 @@ class Dashboard {
         showProj: S.showProj,
         projections: P.projections.map(p => ({
           name: byId[p.manager].display_name, xp: p.xp.toFixed(1), captain: p.captain,
+          banked: p.banked === undefined ? "" : p.banked.toFixed(1),
+          remaining: p.remaining === undefined ? "" : p.remaining.toFixed(1),
           captainXp: p.captain_xp.toFixed(1), hits: p.hits ? "\u2212" + p.hits : "0",
           hitsInk: p.hits ? "var(--crit)" : "var(--ink-muted)",
           conc: p.concentration.players + " × " + p.concentration.club,
           ink: inkOf(p.manager), weight: wOf(p.manager), rowBg: rowBgOf(p.manager)
         })),
-        projFoot: "xP comes from code, not from the model: chance of playing × minutes, expected goal involvement adjusted for fixture, clean sheet chance for defenders, form, captain multiplier, minus hits. The model only rank and talk — it never make up a number."
+        projFoot: (mid ? "Banked is already on the board and cannot change; to come is " +
+          "the projection over players whose match has not kicked off. xP is the two added " +
+          "together. " : "") +
+          "xP comes from code, not from the model: chance of playing × minutes, expected goal involvement adjusted for fixture, clean sheet chance for defenders, form, captain multiplier, minus hits. The model only rank and talk — it never make up a number."
       };
     } else {
       pred.title = "Weekly prediction";

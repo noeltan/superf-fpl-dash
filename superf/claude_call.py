@@ -83,6 +83,21 @@ CALL_TOOL = {
     },
 }
 
+MID_ROUND_SYSTEM = """
+This gameweek is already in progress, so you are not calling it from scratch —
+you are calling who finishes 1st and 2nd *from here*.
+
+Each manager's xP is two different things added together: `banked`, which is
+points already on the board and cannot change, and `remaining`, which is the
+projection over their players whose matches have not kicked off yet. A lead
+made of banked points is worth more than the same lead made of projection. Say
+which kind of lead you are looking at.
+
+The swing shortlist only contains players who are still to play, because nobody
+else can swing anything now. Do not describe a finished match as if it were
+still to come.
+"""
+
 SYSTEM = """You are calling the weekly winner for an eight-person Malaysian FPL money league.
 
 The projections you are given are produced by code. They are the only numbers
@@ -130,6 +145,10 @@ def allowed_numbers(
         add(projection["captain_xp"])
         add(projection["hits"])
         add(projection["concentration"]["players"])
+        # Mid-round only: the two halves of xp are quotable in their own right,
+        # and are the figures worth talking about when half the round is done.
+        add(projection.get("banked"))
+        add(projection.get("remaining"))
     add(gw)
     for place in range(0, manager_count + 1):
         add(place)
@@ -165,18 +184,32 @@ def build_prompt(
     managers: Sequence[Mapping],
     swing_shortlist: Sequence[Mapping],
     record: Mapping,
+    mid_round: Mapping | None = None,
 ) -> str:
     names = {m["id"]: m["display_name"] for m in managers}
     lines = [
         f"Gameweek {gw}. Deadline {deadline}. League of {len(managers)} managers.",
         "Weekly pot pays the top two, 70/30 — second place is worth having.",
+    ]
+    if mid_round:
+        lines += [
+            "",
+            f"THIS GAMEWEEK IS IN PROGRESS. As of {mid_round['as_of']}, "
+            f"{mid_round['played']} of {mid_round['total']} matches have kicked off and "
+            f"{mid_round['remaining']} have not. You are calling the finish from here.",
+        ]
+    lines += [
         "",
         "PROJECTIONS (from code — these are the only numbers you may quote):",
     ]
     for projection in sorted(projections, key=lambda p: -p["xp"]):
         manager = names.get(projection["manager"], projection["manager"])
+        split = (
+            f" (banked {projection['banked']} + remaining {projection['remaining']})"
+            if "banked" in projection else ""
+        )
         lines.append(
-            f"  {manager} (id: {projection['manager']}) — xP {projection['xp']}, "
+            f"  {manager} (id: {projection['manager']}) — xP {projection['xp']}{split}, "
             f"captain {projection['captain']} xP {projection['captain_xp']}, "
             f"hits {projection['hits']}, "
             f"{projection['concentration']['players']} x {projection['concentration']['club']}"
@@ -190,7 +223,8 @@ def build_prompt(
         )
         lines.append(f"  {manager}: {listed}")
 
-    lines += ["", "FIXTURES this gameweek (kickoffs in UTC; Malaysia is UTC+8):"]
+    heading = ("FIXTURES STILL TO KICK OFF" if mid_round else "FIXTURES this gameweek")
+    lines += ["", heading + " (kickoffs in UTC; Malaysia is UTC+8):"]
     for fixture in fixtures:
         home = teams.get(int(fixture["team_h"]), {}).get("short_name", "?")
         away = teams.get(int(fixture["team_a"]), {}).get("short_name", "?")
@@ -199,7 +233,8 @@ def build_prompt(
             f"difficulty {fixture.get('team_h_difficulty')}/{fixture.get('team_a_difficulty')}"
         )
 
-    lines += ["", "SWING SHORTLIST (pick one; owned by more than one manager):"]
+    lines += ["", "SWING SHORTLIST (pick one; owned by more than one manager"
+              + ("; all still to play):" if mid_round else "):")]
     for candidate in swing_shortlist:
         owners = ", ".join(names.get(o, o) for o in candidate["owned_by"])
         captained = ", ".join(names.get(o, o) for o in candidate["captained_by"]) or "nobody"
@@ -216,24 +251,41 @@ def build_prompt(
 
     lines += [
         "",
-        "Call 1st and 2nd. Use manager ids exactly as given in parentheses.",
+        ("Call who finishes 1st and 2nd from here."
+         if mid_round else "Call 1st and 2nd.")
+        + " Use manager ids exactly as given in parentheses.",
     ]
     return "\n".join(lines)
 
 
-def deterministic_fallback(projections: Sequence[Mapping], names: Mapping[str, str]) -> dict:
-    """Used when the model is unavailable or will not stay inside its numbers."""
+def deterministic_fallback(
+    projections: Sequence[Mapping],
+    names: Mapping[str, str],
+    swing_shortlist: Sequence[Mapping] = (),
+) -> dict:
+    """Used when the model is unavailable or will not stay inside its numbers.
+
+    The swing player comes off the shortlist when there is one, because the
+    shortlist is the only thing that knows who is still to play — mid-round,
+    the projected leader's captain may have finished hours ago.
+    """
     ordered = sorted(projections, key=lambda p: -p["xp"])
     first, second = ordered[0], ordered[1]
+    top_swing = swing_shortlist[0] if swing_shortlist else None
+    swing = {
+        "name": top_swing["name"],
+        "owned_by": list(top_swing["owned_by"]),
+        "why": "the most shared player still to play",
+    } if top_swing else {
+        "name": first["captain"],
+        "owned_by": [first["manager"]],
+        "why": "captained by the projected leader",
+    }
     return {
         "first": {"manager": first["manager"], "confidence": "low"},
         "second": {"manager": second["manager"], "confidence": "low"},
         "agrees_with_projection": True,
-        "swing_player": {
-            "name": first["captain"],
-            "owned_by": [first["manager"]],
-            "why": "captained by the projected leader",
-        },
+        "swing_player": swing,
         "reasoning": (
             f"No model call this week, so this is the projection ranking as it stands: "
             f"{names.get(first['manager'], first['manager'])} ahead of "
@@ -252,22 +304,27 @@ def request_call(
     swing_names: set[str],
     projections: Sequence[Mapping],
     names: Mapping[str, str],
+    system_extra: str = "",
+    swing_shortlist: Sequence[Mapping] = (),
 ) -> tuple[dict, str | None]:
     """Return ``(call, model_id)``. Falls back deterministically on any failure."""
+    def fallback() -> tuple[dict, None]:
+        return deterministic_fallback(projections, names, swing_shortlist), None
+
     api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     model = os.environ.get("ANTHROPIC_MODEL", "").strip()
     if not api_key:
         log.warning("ANTHROPIC_API_KEY not set — publishing the projection ranking")
-        return deterministic_fallback(projections, names), None
+        return fallback()
     if not model:
         log.warning("ANTHROPIC_MODEL not set — publishing the projection ranking")
-        return deterministic_fallback(projections, names), None
+        return fallback()
 
     try:
         import anthropic  # type: ignore
     except ImportError:
         log.warning("anthropic SDK not installed — publishing the projection ranking")
-        return deterministic_fallback(projections, names), None
+        return fallback()
 
     client = anthropic.Anthropic(api_key=api_key)
     messages = [{"role": "user", "content": prompt}]
@@ -277,14 +334,14 @@ def request_call(
             response = client.messages.create(
                 model=model,
                 max_tokens=MAX_TOKENS,
-                system=SYSTEM,
+                system=SYSTEM + system_extra,
                 tools=[CALL_TOOL],
                 tool_choice={"type": "tool", "name": "publish_call"},
                 messages=messages,
             )
         except Exception as exc:  # noqa: BLE001 — never fail the run on the model
             log.warning("model call failed: %s", exc)
-            return deterministic_fallback(projections, names), None
+            return fallback()
 
         stop = getattr(response, "stop_reason", None)
         block = next((b for b in response.content if getattr(b, "type", "") == "tool_use"), None)
@@ -293,7 +350,7 @@ def request_call(
             # that ran out of budget mid-call. Both look like success to code
             # that indexes content[0], so say which one it was.
             log.warning("model returned no tool call (stop_reason=%s)", stop)
-            return deterministic_fallback(projections, names), None
+            return fallback()
 
         call = dict(block.input)
         problems = validate(call, allowed, manager_ids, swing_names)
@@ -327,7 +384,7 @@ def request_call(
                 },
             ]
 
-    return deterministic_fallback(projections, names), None
+    return fallback()
 
 
 def validate(

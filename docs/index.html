@@ -402,7 +402,12 @@ select,button{font:inherit}
   <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);margin-bottom:18px">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px">
       <div>
-        <div style="font-size:14.5px;font-weight:640">{{pred.title}}</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="font-size:14.5px;font-weight:640">{{pred.title}}</div>
+          <sc-if value="{{pred.tag}}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:10px;font-weight:680;letter-spacing:.09em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:2px 5px">{{pred.tag}}</span>
+          </sc-if>
+        </div>
         <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">{{pred.sub}}</div>
       </div>
       <div style="display:flex;align-items:center;gap:9px">
@@ -456,6 +461,10 @@ select,button{font:inherit}
             <sc-raw-tr>
               <sc-raw-th scope="col" style="text-align:left;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">Manager</sc-raw-th>
               <sc-raw-th scope="col" style="text-align:right;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">xP</sc-raw-th>
+              <sc-if value="{{pred.midRound}}" hint-placeholder-val="{{ false }}">
+                <sc-raw-th scope="col" style="text-align:right;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">Banked</sc-raw-th>
+                <sc-raw-th scope="col" style="text-align:right;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">To come</sc-raw-th>
+              </sc-if>
               <sc-raw-th scope="col" style="text-align:left;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">Captain</sc-raw-th>
               <sc-raw-th scope="col" style="text-align:right;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">Captain xP</sc-raw-th>
               <sc-raw-th scope="col" style="text-align:right;font-weight:560;color:var(--ink-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:0 7px 8px;border-bottom:1px solid var(--grid)">Hits</sc-raw-th>
@@ -467,6 +476,10 @@ select,button{font:inherit}
               <sc-raw-tr style="background:{{p.rowBg}}">
                 <sc-raw-td style="text-align:left;padding:7px;border-bottom:1px solid var(--grid);color:{{p.ink}};font-weight:{{p.weight}}">{{p.name}}</sc-raw-td>
                 <sc-raw-td style="text-align:right;padding:7px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;font-weight:620">{{p.xp}}</sc-raw-td>
+                <sc-if value="{{pred.midRound}}" hint-placeholder-val="{{ false }}">
+                  <sc-raw-td style="text-align:right;padding:7px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums">{{p.banked}}</sc-raw-td>
+                  <sc-raw-td style="text-align:right;padding:7px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;color:var(--ink-2)">{{p.remaining}}</sc-raw-td>
+                </sc-if>
                 <sc-raw-td style="text-align:left;padding:7px;border-bottom:1px solid var(--grid)">{{p.captain}}</sc-raw-td>
                 <sc-raw-td style="text-align:right;padding:7px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;color:var(--ink-2)">{{p.captainXp}}</sc-raw-td>
                 <sc-raw-td style="text-align:right;padding:7px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums;color:{{p.hitsInk}}">{{p.hits}}</sc-raw-td>

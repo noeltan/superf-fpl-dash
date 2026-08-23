@@ -176,7 +176,7 @@ def gameweek_snapshot(
         payload = fetcher.entry_picks(entry_id, gw, final=True)
         if payload and payload.get("picks"):
             picks[entry_id] = payload
-    live = fetcher.event_live(gw) or {}
+    live = fetcher.event_live(gw, final=True) or {}
 
     record = snapshot_mod.build(
         gw=gw, captured_at=iso_z(now), managers=managers, fixtures=fixtures,

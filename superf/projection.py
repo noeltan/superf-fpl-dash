@@ -41,9 +41,10 @@ class PlayerProjection:
     name: str
     team: int
     position: int
-    xp: float
+    xp: float          # over the fixtures still to come
     p_plays: float
-    fixtures: int = 1
+    fixtures: int = 1  # how many of those there are — 0 once a team has played
+    scored: float = 0.0  # points already banked this gameweek, mid-round only
 
 
 @dataclass
@@ -56,10 +57,21 @@ class ManagerProjection:
     concentration: dict
     chip: str | None = None
     players: list[PlayerProjection] = field(default_factory=list)
+    # Set only for a mid-round call, where `xp` is banked + remaining rather
+    # than a projection of the whole gameweek. None means "the whole gameweek
+    # is still to come", which is the §12.1 case and the default.
+    banked: float | None = None
+    remaining: float = 0.0
 
     def to_contract(self) -> dict:
-        """The §12.4 `projections[]` shape."""
-        return {
+        """The §12.4 `projections[]` shape, plus the mid-round decomposition.
+
+        A mid-round `xp` is two different kinds of number added together —
+        points that are already on the board and points that are still a guess.
+        Publishing the total alone would hide which is which, so both parts are
+        carried and both are quotable.
+        """
+        contract = {
             "manager": self.manager,
             "xp": round(self.xp, 1),
             "captain": self.captain,
@@ -67,6 +79,10 @@ class ManagerProjection:
             "hits": self.hits,
             "concentration": self.concentration,
         }
+        if self.banked is not None:
+            contract["banked"] = round(self.banked, 1)
+            contract["remaining"] = round(self.remaining, 1)
+        return contract
 
 
 def p_plays(element: Mapping) -> float:
@@ -155,14 +171,24 @@ def project_manager(
     elements: Mapping[int, Mapping],
     fixtures_by_team: Mapping[int, Sequence[tuple[int | None, bool]]],
     teams: Mapping[int, Mapping],
+    scored_so_far: Mapping[int, float] | None = None,
 ) -> ManagerProjection:
-    """xP for one manager's gameweek, plus the framing Layer 2 needs."""
+    """xP for one manager's gameweek, plus the framing Layer 2 needs.
+
+    ``scored_so_far`` maps element id to points already banked this gameweek.
+    Pass it — together with a ``fixtures_by_team`` restricted to the fixtures
+    that have not kicked off — to project the *rest* of a gameweek in progress
+    rather than the whole of one. The two have to move together: banked points
+    for a team whose fixture is still in the mapping would be counted twice.
+    """
     picks = picks_payload.get("picks", []) or []
     history = picks_payload.get("entry_history", {}) or {}
     hits = int(history.get("event_transfers_cost", 0) or 0)
     chip = picks_payload.get("active_chip")
 
     total = 0.0
+    banked_total = 0.0
+    remaining_total = 0.0
     captain_name, captain_xp = "-", 0.0
     club_counts: dict[int, int] = {}
     players: list[PlayerProjection] = []
@@ -179,6 +205,9 @@ def project_manager(
 
         matches = list(fixtures_by_team.get(team_id, []))
         player_xp = sum(project_player(element, d, home) for d, home in matches)
+        scored = 0.0 if scored_so_far is None else float(
+            scored_so_far.get(int(pick["element"]), 0.0)
+        )
 
         players.append(
             PlayerProjection(
@@ -189,12 +218,15 @@ def project_manager(
                 xp=player_xp,
                 p_plays=p_plays(element),
                 fixtures=len(matches),
+                scored=scored,
             )
         )
-        total += player_xp * multiplier
+        banked_total += scored * multiplier
+        remaining_total += player_xp * multiplier
+        total += (scored + player_xp) * multiplier
         if multiplier >= 2:
             captain_name = element.get("web_name", "?")
-            captain_xp = player_xp
+            captain_xp = scored + player_xp
 
     concentration = {"club": "-", "players": 0}
     if club_counts:
@@ -213,6 +245,8 @@ def project_manager(
         concentration=concentration,
         chip=chip,
         players=sorted(players, key=lambda p: -p.xp),
+        banked=None if scored_so_far is None else banked_total - hits,
+        remaining=remaining_total,
     )
 
 
@@ -241,12 +275,13 @@ def swing_candidates(projections: Sequence[ManagerProjection], limit: int = 6) -
             record = owners.setdefault(
                 player.element,
                 {"name": player.name, "team": player.team, "owned_by": [],
-                 "xp": round(player.xp, 1), "captained_by": []},
+                 "xp": round(player.xp, 1), "fixtures": player.fixtures,
+                 "captained_by": []},
             )
             record["owned_by"].append(projection.manager)
             if player.name == projection.captain:
                 record["captained_by"].append(projection.manager)
 
-    shared = [r for r in owners.values() if len(r["owned_by"]) > 1]
+    shared = [r for r in owners.values() if len(r["owned_by"]) > 1 and r["fixtures"]]
     shared.sort(key=lambda r: (-(len(r["captained_by"]) * 2 + len(r["owned_by"])), -r["xp"]))
     return shared[:limit]

@@ -197,9 +197,14 @@ class Fetcher:
             f"/entry/{entry_id}/event/{gw}/picks/", allow_404=True, store=final
         )
 
-    def event_live(self, gw: int) -> dict | None:
-        """Per-player stats for a gameweek. Empty before kickoff."""
-        return self.get(f"/event/{gw}/live/", allow_404=True)
+    def event_live(self, gw: int, *, final: bool = True) -> dict | None:
+        """Per-player stats for a gameweek. Empty before kickoff.
+
+        ``final`` carries the same meaning as on :meth:`entry_picks`, for the
+        same reason: mid-round these numbers move every few minutes, bonus is
+        provisional, and the snapshot builder reads the same URL.
+        """
+        return self.get(f"/event/{gw}/live/", allow_404=True, store=final)
 
     def summary(self) -> str:
         return (
