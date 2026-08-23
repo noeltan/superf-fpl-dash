@@ -17,7 +17,7 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   --surface-1:#fcfcfb; --surface-2:#f3f2ee; --plane:#f9f9f7;
   --ink-1:#0b0b0b; --ink-2:#52514e; --ink-muted:#898781;
   --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.11);
-  --accent:#2a78d6; --compare:#eb6834; --dim:#c3c2b7;
+  --accent:#2a78d6; --dim:#c3c2b7;
   --pos:#2a78d6; --neg:#e34948;
   --good:#006300; --warn:#fab219; --crit:#d03b3b; --warn-ink:#8a5c00;
   --s100:#cde2fb; --s250:#86b6ef; --s400:#3987e5; --s550:#1c5cab; --s700:#0d366b;
@@ -26,26 +26,15 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   --f3:#eceae4; --f3t:#52514e; --f4:#f6c0bf; --f4t:#0b0b0b;
   --f5:#d03b3b; --f5t:#ffffff;
 }
-@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){
-  color-scheme:dark;
-  --surface-1:#1a1a19; --surface-2:#242422; --plane:#0d0d0d;
-  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-muted:#898781;
-  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,0.12);
-  --accent:#3987e5; --compare:#d95926; --dim:#4a4a47;
-  --pos:#3987e5; --neg:#e66767;
-  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --warn-ink:#fab219;
-  --s100:#184f95; --s250:#1c5cab; --s400:#2a78d6; --s550:#5598e7; --s700:#9ec5f4;
-  --tint:rgba(57,135,229,0.13); --tint-warn:rgba(250,178,25,0.13);
-  --f1:#5598e7; --f1t:#0b0b0b; --f2:#1c5cab; --f2t:#ffffff;
-  --f3:#383835; --f3t:#c3c2b7; --f4:#7d3030; --f4t:#ffffff;
-  --f5:#e66767; --f5t:#0b0b0b;
-}}
+/* Light is the default, deliberately: this is read on a phone in daylight and
+   half the league never touches the toggle. The dark palette applies only when
+   somebody asks for it, and that choice is remembered. */
 :root[data-theme="dark"]{
   color-scheme:dark;
   --surface-1:#1a1a19; --surface-2:#242422; --plane:#0d0d0d;
   --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-muted:#898781;
   --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,0.12);
-  --accent:#3987e5; --compare:#d95926; --dim:#4a4a47;
+  --accent:#3987e5; --dim:#4a4a47;
   --pos:#3987e5; --neg:#e66767;
   --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --warn-ink:#fab219;
   --s100:#184f95; --s250:#1c5cab; --s400:#2a78d6; --s550:#5598e7; --s700:#9ec5f4;
@@ -109,13 +98,6 @@ select,button{font:inherit}
       <span style="width:9px;height:9px;border-radius:2px;background:var(--accent);flex:none"></span>
       <span>You</span>
       <sc-raw-select value="{{you}}" sc-camel-on-change="{{onYou}}" aria-label="Your manager" data-focus-key="you" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12.5px">
-        <sc-for list="{{managerOpts}}" as="m" hint-placeholder-count="8"><option value="{{m.id}}">{{m.name}}</option></sc-for>
-      </sc-raw-select>
-      </span>
-      <span style="display:inline-flex;align-items:center;gap:6px;margin-left:2px">
-      <span style="width:9px;height:9px;border-radius:2px;background:var(--compare);flex:none"></span>
-      <span>Compare</span>
-      <sc-raw-select value="{{cmp}}" sc-camel-on-change="{{onCmp}}" aria-label="Manager to compare against" data-focus-key="cmp" style="color:var(--ink-1);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12.5px">
         <sc-for list="{{managerOpts}}" as="m" hint-placeholder-count="8"><option value="{{m.id}}">{{m.name}}</option></sc-for>
       </sc-raw-select>
       </span>
