@@ -56,7 +56,21 @@ select,button{font:inherit}
    ring is the only thing a keyboard user has and half of them lose it. */
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 
-/* The header is eight controls deep and sticky, so tabbing to the numbers
+/* The chrome used to be one sticky block 253px tall — a third of a phone
+   screen permanently spent on a masthead. Only the tab strip is worth pinning,
+   so it is its own sticky element and a sibling of the masthead rather than a
+   child: `position:sticky` is confined to its parent's box, so nesting it
+   would have unpinned it the moment the masthead scrolled away. */
+.tabbar{position:sticky;top:0;z-index:30;background:var(--plane);
+  border-bottom:1px solid var(--border)}
+
+/* Every label wrapped to two lines at phone widths, which is what made the
+   strip 96px tall on its own. They stay on one line and share the width. */
+.tab{border:none;cursor:pointer;border-radius:8px;white-space:nowrap;
+  flex:1 1 auto;min-width:0;text-align:center;
+  padding:10px clamp(9px,3.2vw,18px);font-size:clamp(12.5px,3.4vw,14px)}
+
+/* The header is eight controls deep, so tabbing to the numbers
    means tabbing past all of them on every page load. */
 .skip{position:absolute;left:-9999px;top:0;z-index:40;background:var(--surface-1);
   color:var(--ink-1);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px}
@@ -81,7 +95,7 @@ select,button{font:inherit}
 
 <a class="skip" href="#panel">Skip to the numbers</a>
 
-<header style="position:sticky;top:0;z-index:30;background:var(--plane);border-bottom:1px solid var(--border)">
+<header style="background:var(--plane)">
   <div style="max-width:1280px;margin:0 auto;padding:12px clamp(12px,3vw,24px);display:flex;align-items:center;gap:16px;flex-wrap:wrap">
     <div style="display:flex;align-items:baseline;gap:10px">
       <h1 style="margin:0;font-size:21px;font-weight:670;letter-spacing:-.025em">SuperF</h1>
@@ -104,15 +118,18 @@ select,button{font:inherit}
     </div>
     <button sc-camel-on-click="{{toggleTheme}}" aria-label="{{chrome.themeAria}}" data-focus-key="theme" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer">{{chrome.themeLabel}}</button>
   </div>
-  <div style="max-width:1280px;margin:0 auto;padding:0 clamp(12px,3vw,24px) 12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-    <div role="tablist" aria-label="Dashboard sections" style="display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:11px">
+</header>
+
+<div class="tabbar">
+  <div style="max-width:1280px;margin:0 auto;padding:8px clamp(12px,3vw,24px);display:flex;align-items:center;gap:14px">
+    <div role="tablist" aria-label="Dashboard sections" style="display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:11px;max-width:100%;flex:1 1 auto">
       <sc-for list="{{tabs}}" as="t" hint-placeholder-count="2">
-        <button role="tab" id="tab-{{t.key}}" aria-controls="panel" aria-selected="{{t.selected}}" tabindex="{{t.tabindex}}" data-focus-key="tab-{{t.key}}" sc-camel-on-click="{{t.onClick}}" sc-camel-on-keydown="{{t.onKeydown}}" style="border:none;cursor:pointer;padding:10px 18px;border-radius:8px;font-size:14px;background:{{t.bg}};color:{{t.ink}};font-weight:{{t.weight}};box-shadow:{{t.shadow}}">{{t.label}}</button>
+        <button class="tab" role="tab" id="tab-{{t.key}}" aria-controls="panel" aria-selected="{{t.selected}}" tabindex="{{t.tabindex}}" data-focus-key="tab-{{t.key}}" sc-camel-on-click="{{t.onClick}}" sc-camel-on-keydown="{{t.onKeydown}}" style="background:{{t.bg}};color:{{t.ink}};font-weight:{{t.weight}};box-shadow:{{t.shadow}}">{{t.label}}</button>
       </sc-for>
     </div>
-    <div style="flex:1;min-width:12px"></div>
-    </div>
-</header>
+    <div style="flex:0 1 40%;min-width:0"></div>
+  </div>
+</div>
 
 <main id="panel" role="tabpanel" aria-labelledby="{{activeTabId}}" tabindex="-1" style="max-width:1280px;margin:0 auto;padding:16px clamp(12px,3vw,24px) 72px">
 
