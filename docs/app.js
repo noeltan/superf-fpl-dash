@@ -21,6 +21,18 @@ import * as liveFeed from "./live.js";
 
 const POLL_INTERVAL_MS = 60000;
 
+/* How long a clock-driven render may be held back for an open dropdown.
+ *
+ * A native select popup belongs to its <select>: replace the element and the
+ * list vanishes, mid-tap, with no event to tell us it happened. There is also
+ * no way to ask whether the list is showing, so the proxy is "a <select> has
+ * focus" — which stays true after the popup is dismissed by clicking the
+ * control again or pressing Escape. Hence a cap: a reader who tabs to a picker
+ * and wanders off must not freeze the live scores for ever. Twenty seconds is
+ * far longer than choosing one of thirteen names takes, and far shorter than
+ * anyone would stare at a stalled score. */
+const DROPDOWN_HOLD_MS = 20000;
+
 /* Two things the page used to forget on every reload: which of the
  * managers you are, and whether you asked for the dark theme. The league reads
  * this all season on the same phone, so being asked to find yourself in a
@@ -72,13 +84,32 @@ class Dashboard {
     this._pollTimer = null;
   }
 
-  setState(patch) {
+  /* Renders come from two places and must be treated differently while a
+   * dropdown is open: the reader's own actions always render, the clock waits
+   * its turn. A live gameweek re-renders once a second, so before this the
+   * manager picker and the gameweek picker were being torn out from under the
+   * finger within a second of being tapped. */
+  setState(patch, passive = false) {
     Object.assign(this.state, patch);
+    if (passive && this.dropdownHolding()) return;
     this.render();
+  }
+
+  dropdownHolding() {
+    const active = document.activeElement;
+    const focused =
+      !!active && active.tagName === "SELECT" && this.root.contains(active);
+    if (!focused) {
+      this._heldSince = 0;
+      return false;
+    }
+    this._heldSince = this._heldSince || Date.now();
+    return Date.now() - this._heldSince <= DROPDOWN_HOLD_MS;
   }
 
   render() {
     if (!this.data) return;
+    this._heldSince = 0;
     render(this.root, this.template, this.renderVals());
   }
 
@@ -186,7 +217,7 @@ class Dashboard {
     let ticks = 0;
     setInterval(() => {
       ticks += 1;
-      if (this.live || ticks % 30 === 0) this.setState({ tick: ticks });
+      if (this.live || ticks % 30 === 0) this.setState({ tick: ticks }, true);
     }, 1000);
   }
 
@@ -245,12 +276,12 @@ class Dashboard {
     if (assembled) {
       assembled._dev_age_seconds = 0;
       this.live = assembled;
-      this.setState({ liveSince: Date.now() });
+      this.setState({ liveSince: Date.now() }, true);
     } else if (this.live) {
       // The gameweek went Final between polls — data.json owns it from here.
       this.live = null;
       this._picks = null;
-      this.render();
+      this.setState({}, true);
     }
   }
 
