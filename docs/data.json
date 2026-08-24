@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-21T21:41:01Z",
+ "generated_at": "2026-08-24T22:22:49Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -10,7 +10,7 @@
   "season": "2026/27",
   "gameweek": 1,
   "next_gw": 2,
-  "state": "live"
+  "state": "provisional"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -786,11 +786,11 @@
     "ko": "2026-08-22T11:30:00Z",
     "dh": 4,
     "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 4
    },
    {
@@ -799,11 +799,11 @@
     "ko": "2026-08-22T14:00:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 3
    },
    {
@@ -812,11 +812,11 @@
     "ko": "2026-08-22T14:00:00Z",
     "dh": 2,
     "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 5
    },
    {
@@ -825,11 +825,11 @@
     "ko": "2026-08-22T14:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 6
    },
    {
@@ -838,11 +838,11 @@
     "ko": "2026-08-22T16:30:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 3,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 2
    },
    {
@@ -851,11 +851,11 @@
     "ko": "2026-08-23T13:00:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 4,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 7
    },
    {
@@ -864,11 +864,11 @@
     "ko": "2026-08-23T13:00:00Z",
     "dh": 3,
     "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 8
    },
    {
@@ -877,11 +877,11 @@
     "ko": "2026-08-23T15:30:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 9
    },
    {
@@ -890,11 +890,11 @@
     "ko": "2026-08-24T19:00:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 3,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 10
    }
   ],
