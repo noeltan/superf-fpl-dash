@@ -21,6 +21,7 @@ after GW38). Never "won" or "collected".
 
 ```
 data/2026-27/raw/gw-NN.json   IMMUTABLE pruned FPL snapshot — the source of truth
+data/2026-27/raw/gw-NN.projection.json  what the projection knew at the deadline
 data/2026-27/corrections.json append-only adjusting entries (§3.9.4)
 data/2026-27/data.json        derived ledger, rebuildable from the two above
 docs/                         GitHub Pages — the published copy and the page
@@ -60,6 +61,7 @@ python predict.py --score  # score a finished gameweek into result/record
 python -m pytest -q        # the ledger maths
 
 python build.py --offline  # rebuild from raw/ snapshots, API switched off
+python tools/backtest.py   # mark the projection against every settled gameweek
 ```
 
 Serve the page locally with `python -m http.server -d docs 8000`.
@@ -91,6 +93,8 @@ this is merged.
 | `superf/pltable.py` | the league table, derived from finished fixtures |
 | `superf/projection.py` | §12.2 Layer 1 — deterministic xP |
 | `superf/claude_call.py` | §12.2 Layer 2 — and the guard on what it may quote |
+| `superf/scoring.py` | how good the xP ranking was — Spearman, pairwise, §12.3's three |
+| `tools/backtest.py` | replays the frozen inputs and marks the model against results |
 | `superf/emit.py` | assembles `data.json` to the contract in `SCHEMA.md` |
 | `superf/snapshot.py` | §4.2 pruned immutable snapshots, and §11.4 bonus flips |
 | `superf/corrections.py` | §3.9.4 adjusting entries that never rewrite history |
@@ -131,6 +135,19 @@ allowed set, retried once, then falls back to the projection ranking.
 **Every statement must reconcile to the accrued balance.** The emitter asserts
 it row by row. Under deferred settlement a total nobody can decompose is a total
 nobody will pay without an argument (§3.9.2).
+
+**The projection records what it knew, not just what it said.** `raw/gw-NN.json`
+freezes what *happened*; it cannot say whether the projection was any good,
+because the per-90 rates, availability, form and price it read all move daily
+and the API offers no way back. So every call also freezes its own inputs, and
+`tools/backtest.py` replays them through today's code and marks the ranking
+against the settled result — with FPL's own `ep_next` scored alongside as the
+control, because a projection that cannot beat the number the API gives away
+free is not earning its place. Without this, "the prediction feels off" and
+"the prediction is off" are the same sentence. `now_cost` and
+`points_per_game` are frozen even though nothing reads them yet: they are what
+a prior would be anchored on, and the point of writing them now is that the
+next model inherits a history instead of starting from scratch.
 
 **Corrections are appended, never applied in place.** An adjusting entry carries
 its own reason and must itself sum to zero; the original row stays visible

@@ -53,6 +53,7 @@ from superf.config import (
     load_manager_overrides,
 )
 from superf.fpl import Fetcher, FetchError
+from superf import snapshot as snapshot_mod
 from superf.fplcal import iso_z, parse_utc
 from superf.projection import fixtures_by_team, project_manager, swing_candidates
 
@@ -349,6 +350,7 @@ def main() -> int:
 
     projections = []
     squads: dict[str, list[dict]] = {}
+    raw_picks: dict[str, dict] = {}
     for manager in managers:
         try:
             picks = fetcher.entry_picks(manager["entry_id"], gw, final=False)
@@ -361,6 +363,7 @@ def main() -> int:
                 "partial field", gw, manager["id"],
             )
             return 1
+        raw_picks[manager["id"]] = picks
         projection = project_manager(
             manager["id"], picks, elements, by_team, teams, scored_so_far
         )
@@ -422,6 +425,21 @@ def main() -> int:
         "result": None,
         "record": record,
     }
+    # Freeze what the projection knew, before anything else can move. A call
+    # that is not replayable can never be shown to have been good or bad, only
+    # remembered fondly — see tools/backtest.py.
+    snapshot_mod.write_projection_inputs(snapshot_mod.build_projection_inputs(
+        gw=gw,
+        captured_at=iso_z(now),
+        mode="mid_round" if args.mid_round else "pre_kickoff",
+        deadline=iso_z(deadline),
+        elements=elements,
+        teams=teams,
+        fixtures=prompt_fixtures,
+        picks=raw_picks,
+        scored_so_far=scored_so_far,
+    ))
+
     write_prediction(prediction)
     log.info(
         "published GW%d %scall: 1st %s, 2nd %s%s (%s)",
