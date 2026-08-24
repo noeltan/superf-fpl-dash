@@ -1,7 +1,14 @@
-"""Derive the Premier League table from finished fixtures.
+"""Derive the Premier League table from full-time fixtures.
 
 §4: "the FPL API does not publish a Premier League table. It must be derived
 from finished fixtures. That is real work, not a freebie."
+
+"Finished" here means the final whistle: ``finished_provisional`` counts. What
+FPL is still confirming after the whistle is bonus and auto-subs (§11.4), and
+neither can change a match result — but the ``finished`` flag waits on them, so
+a table gated on it goes missing for the hours (sometimes the whole night) a
+round sits provisional, showing "opens with the first whistle" over ten played
+matches. The ledger keeps its stricter gate; this table is display, not money.
 
 Ordering is the league's own: points, then goal difference, then goals scored,
 then club name. (The real competition separates a dead heat at the top with a
@@ -35,7 +42,7 @@ def build_table(
     played = [
         f
         for f in fixtures
-        if f.get("finished")
+        if (f.get("finished") or f.get("finished_provisional"))
         and f.get("team_h_score") is not None
         and f.get("team_a_score") is not None
     ]

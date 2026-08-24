@@ -141,6 +141,28 @@ def test_unfinished_fixtures_are_ignored():
     assert all(row["p"] == 0 for row in table)
 
 
+def test_a_provisional_fixture_is_full_time_and_counts():
+    """§11.4 — after the whistle FPL confirms bonus, not the score. A round can
+    sit ``finished_provisional`` for hours (GW1 sat overnight), and the table
+    must not read "opens with the first whistle" over ten played matches."""
+    fixtures = [
+        fixture(team_h=1, team_a=2, team_h_score=2, team_a_score=0, started=True,
+                finished=False, finished_provisional=True),
+    ]
+    table = build_table(fixtures, TEAMS)
+    arsenal = next(r for r in table if r["team"] == 1)
+    assert (arsenal["p"], arsenal["w"], arsenal["pts"]) == (1, 1, 3)
+
+
+def test_an_in_play_fixture_with_a_score_does_not_count():
+    """Started and scoring is not full time — a live 2-0 can still become 2-2."""
+    fixtures = [
+        fixture(team_h=1, team_a=2, team_h_score=2, team_a_score=0, started=True,
+                finished=False, finished_provisional=False),
+    ]
+    assert build_table(fixtures, TEAMS) == []
+
+
 def test_preseason_table_is_empty_so_the_view_can_say_so_deliberately():
     """§9.6 — pre-season is a real state that will be seen.
 

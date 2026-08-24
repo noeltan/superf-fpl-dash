@@ -86,7 +86,9 @@ export async function fetchFixtures(gw) {
 
 function fixtureState(fixture) {
   if (!fixture) return "played"; // a blank gameweek: nothing is coming
-  if (fixture.finished) return "played";
+  // finished_provisional is the final whistle; finished waits on confirmed
+  // bonus. For "has this player's match been played" the whistle is the fact.
+  if (fixture.finished || fixture.finished_provisional) return "played";
   if (fixture.started) return "in_play";
   return "to_play";
 }
@@ -257,6 +259,7 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
       minutes: f.minutes || 0,
       started: !!f.started,
       finished: !!f.finished,
+      finished_provisional: !!f.finished_provisional,
       bps_top3: bpsTop.get(f.id) || [],
     })),
     managers,
@@ -313,8 +316,17 @@ function monthPot(data, gw, liveManagers) {
  * live to show. Picks are frozen after the deadline, so they are fetched once
  * and cached by the caller. */
 export async function poll({ data, gw, fixtures, picksByManager, bootstrap }) {
-  if (!fixtures.length || !inMatchWindow(fixtures)) return null;
+  if (!fixtures.length) return null;
   if (fixtures.every((f) => f.finished)) return null; // Final — data.json owns it now
+
+  // §11.1's provisional tail: every match is at full time but FPL has not
+  // confirmed bonus, so nothing has settled and data.json has no scores to
+  // show. The §11.2 window has usually closed by then — GW1's sat overnight —
+  // and going dark for it left the page with no scores anywhere. Keep
+  // assembling: this is exactly when confirmed bonus can still flip the pot
+  // (§11.4), and the tail ends the moment every fixture reads finished.
+  const provisionalTail = fixtures.every((f) => f.finished_provisional);
+  if (!provisionalTail && !inMatchWindow(fixtures)) return null;
 
   const live = await api(`/api/event/${gw}/live/`);
   return assemble({

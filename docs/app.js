@@ -236,16 +236,38 @@ class Dashboard {
     const data = this.data;
     const gw = data.current.state === "final" ? data.current.next_gw : data.current.gameweek;
     if (!gw) return;
+    // The proxy already answered that every fixture is finished: the gameweek
+    // is Final upstream and the next data.json build owns it. Stop asking.
+    if (this._liveDoneGw === gw) return;
 
     // Free gate first: data.json already carries every kickoff time, so a week
     // with no football in progress costs no requests at all. Everything below
-    // this line only runs when a match plausibly is on.
-    if (!liveFeed.worthPolling(data.fixtures[gw] || data.fixtures[String(gw)])) return;
+    // this line only runs when a match plausibly is on — or when the published
+    // state says the round started and has not settled, which outlives the
+    // kickoff window: the provisional tail (all whistles gone, bonus not
+    // confirmed) lasted overnight for GW1, and the live table is the only
+    // place the page can show scores until the build settles the round.
+    const inWindow = liveFeed.worthPolling(data.fixtures[gw] || data.fixtures[String(gw)]);
+    const unsettled = data.current.state === "live" || data.current.state === "provisional";
+    if (!inWindow) {
+      if (!unsettled) return;
+      // Out-of-window polling can run for hours, and bonus confirmation is not
+      // a once-a-minute event. Every fifth poll is plenty.
+      if (Date.now() - (this._tailPolledAt || 0) < 5 * POLL_INTERVAL_MS) return;
+      this._tailPolledAt = Date.now();
+    }
 
     // Then one request to confirm it against the real calendar, before the
     // expensive part. Kickoffs move.
     const fixtures = await liveFeed.fetchFixtures(gw);
-    if (!fixtures.length || !liveFeed.inMatchWindow(fixtures)) return;
+    if (!fixtures.length) return;
+    if (fixtures.every((f) => f.finished)) {
+      this._liveDoneGw = gw;
+      if (this.live) { this.live = null; this._picks = null; this.setState({}, true); }
+      return;
+    }
+    const tail = fixtures.every((f) => f.finished_provisional);
+    if (!tail && !liveFeed.inMatchWindow(fixtures)) return;
 
     if (!this._bootstrap) this._bootstrap = await liveFeed.fetchBootstrap();
     if (!this._picks) {
@@ -371,6 +393,10 @@ class Dashboard {
      * the empty-book copy. */
     const stateSub = cur.state === "locked" ? "GW" + cur.next_gw + " locked · first kickoff soon"
       : cur.state === "live" ? "GW" + cur.gameweek + " in progress"
+      /* Provisional before isPre: with GW1 the two overlap ("all played, not
+       * settled" is also "nothing settled yet") and the pill was reading
+       * PROVISIONAL · GW1 not played over ten finished matches. */
+      : isProv ? "GW" + cur.gameweek + " played · bonus pending"
       : isPre ? "GW1 not played"
       : isFinal ? "GW" + cur.gameweek + " settled · GW" + cur.next_gw + " next"
       : "GW" + cur.gameweek + " in progress";
@@ -453,8 +479,8 @@ class Dashboard {
       const lf = liveJoin ? liveJoin[i] : null;
       const hasScore = lf ? lf.hs !== null : f.hs !== null;
       const hs = lf ? lf.hs : f.hs, as = lf ? lf.as : f.as;
-      const inPlay = lf ? (lf.started && !lf.finished && lf.minutes > 0) : false;
-      const done = lf ? lf.finished : false;
+      const done = lf ? (lf.finished || lf.finished_provisional) : false;
+      const inPlay = lf ? (lf.started && !done && lf.minutes > 0) : false;
       g.rows.push({
         // What the match ticker used to carry. It listed the same ten matches
         // in the same order right above this card, so it is here instead.
@@ -515,7 +541,8 @@ class Dashboard {
        * above this card is showing real points. This card is the book of
        * record and only moves when a gameweek goes final, so say that instead
        * of contradicting the table above it. */
-      emptyTitle: isLive || isProv ? "GW" + cur.gameweek + " is still being played"
+      emptyTitle: isProv ? "GW" + cur.gameweek + " played — waiting for FPL to confirm"
+        : isLive ? "GW" + cur.gameweek + " is still being played"
         : "Nobody has scored yet",
       emptyNote: isLive || isProv
         ? "The live table above has the running numbers. This one is the book of record — " +
@@ -548,7 +575,7 @@ class Dashboard {
     /* ---- PL table ---- */
     const formBg = { W:"var(--good)", D:"var(--ink-muted)", L:"var(--crit)" };
     const pl = {
-      sub: D.pl_table.length ? "Derived from " + D.pl_table[0].p + " finished rounds" : "Opens with the first whistle",
+      sub: D.pl_table.length ? "Derived from " + D.pl_table[0].p + " round" + (D.pl_table[0].p === 1 ? "" : "s") + " of full-time results" : "Opens with the first whistle",
       empty: D.pl_table.length === 0, hasRows: D.pl_table.length > 0,
       emptyNote: "Nobody kick ball yet. Table only shows up after GW1 finish — FPL API don't give one, so we build it from results ourselves. First up: Arsenal v Coventry City, " +
         this.dayKey(D.fixtures["1"][0].ko) + " at " + this.hhmm(D.fixtures["1"][0].ko) + " Malaysia time.",
