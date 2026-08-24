@@ -254,3 +254,136 @@ def write_season(
 def load_season(root: Path | None = None) -> dict | None:
     path = season_path(root)
     return json.loads(path.read_text()) if path.exists() else None
+
+
+# --- projection inputs (§12.2 Layer 1) ---------------------------------------
+# The result snapshots above freeze what *happened*. They cannot answer whether
+# the projection was any good, because they do not contain what it knew: the
+# per-90 rates, availability, form and price as they stood at the deadline.
+# Those move every day and the API offers no way back, so a projection that is
+# not recorded at the moment it runs can never be scored or improved against —
+# only argued about. This is that record.
+#
+# `now_cost` and `points_per_game` are frozen despite the current model
+# ignoring both. They are exactly what a prior would be anchored on, and the
+# whole point of writing this file is that the next model gets a history to be
+# judged against rather than starting from the next gameweek.
+
+PROJECTION_FIELDS = (
+    "web_name", "team", "element_type", "status",
+    "chance_of_playing_next_round", "form", "points_per_game", "ep_next",
+    "expected_goals_per_90", "expected_assists_per_90",
+    "expected_goals_conceded_per_90", "saves_per_90", "minutes", "starts",
+    "now_cost",
+)
+
+FIXTURE_FIELDS = (
+    "id", "event", "team_h", "team_a", "team_h_difficulty", "team_a_difficulty",
+    "kickoff_time", "started", "finished",
+)
+
+
+def projection_path(gw: int, mode: str = "pre_kickoff", root: Path | None = None) -> Path:
+    """Pre-kickoff calls are immutable; mid-round ones describe a moving state.
+
+    Same split as the provisional pot leader above, for the same reason: one is
+    a record, the other is an observation that can legitimately be retaken.
+    """
+    suffix = ".projection" if mode == "pre_kickoff" else ".projection.mid"
+    return (root or RAW) / f"gw-{gw:02d}{suffix}.json"
+
+
+def build_projection_inputs(
+    *,
+    gw: int,
+    captured_at: str,
+    mode: str,
+    deadline: str,
+    elements: Mapping[int, Mapping],
+    teams: Mapping[int, Mapping],
+    fixtures: Sequence[Mapping],
+    picks: Mapping[str, Mapping],
+    scored_so_far: Mapping[int, float] | None = None,
+) -> dict:
+    """Everything project_manager() reads, and nothing else."""
+    owned = {
+        int(pick["element"])
+        for payload in picks.values()
+        for pick in (payload or {}).get("picks", [])
+    }
+    return {
+        "gw": int(gw),
+        "captured_at": captured_at,
+        "mode": mode,
+        "deadline": deadline,
+        "elements": {
+            str(element_id): {
+                field: (elements[element_id] or {}).get(field)
+                for field in PROJECTION_FIELDS
+            }
+            for element_id in sorted(owned)
+            if element_id in elements
+        },
+        "teams": {
+            str(team_id): {"short_name": (team or {}).get("short_name")}
+            for team_id, team in teams.items()
+        },
+        "fixtures": [
+            {field: fixture.get(field) for field in FIXTURE_FIELDS}
+            for fixture in fixtures
+        ],
+        "picks": {
+            manager: {
+                "active_chip": (payload or {}).get("active_chip"),
+                "entry_history": {
+                    "event_transfers_cost":
+                        ((payload or {}).get("entry_history") or {})
+                        .get("event_transfers_cost", 0)
+                },
+                "picks": [
+                    {
+                        "element": int(p["element"]),
+                        "multiplier": int(p.get("multiplier", 0) or 0),
+                    }
+                    for p in (payload or {}).get("picks", [])
+                ],
+            }
+            for manager, payload in picks.items()
+        },
+        "scored_so_far": (
+            {str(k): v for k, v in scored_so_far.items()}
+            if scored_so_far is not None else None
+        ),
+    }
+
+
+def write_projection_inputs(record: Mapping, root: Path | None = None) -> Path:
+    """Pre-kickoff is written once; mid-round is refreshed on each republish."""
+    path = projection_path(int(record["gw"]), record["mode"], root)
+    if record["mode"] == "pre_kickoff" and path.exists():
+        return path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n")
+    log.info("froze GW%d projection inputs (%d bytes)", record["gw"], path.stat().st_size)
+    return path
+
+
+def load_projection_inputs(
+    gw: int, mode: str = "pre_kickoff", root: Path | None = None
+) -> dict | None:
+    path = projection_path(gw, mode, root)
+    return json.loads(path.read_text()) if path.exists() else None
+
+
+def replay_projection_inputs(record: Mapping) -> tuple[dict, dict, list, dict, dict]:
+    """Unpack a frozen record back into the arguments project_manager() takes."""
+    elements = {int(k): v for k, v in record["elements"].items()}
+    teams = {int(k): v for k, v in record["teams"].items()}
+    scored = record.get("scored_so_far")
+    return (
+        elements,
+        teams,
+        list(record["fixtures"]),
+        dict(record["picks"]),
+        {int(k): float(v) for k, v in scored.items()} if scored else None,
+    )

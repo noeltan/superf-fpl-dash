@@ -874,3 +874,47 @@ def test_a_boosted_squad_is_sent_to_the_model_whole(run):
     run.argv()
     assert predict.main() == 0
     assert run.published()["projections"][0]["squad"] == 4
+
+
+def test_a_published_call_freezes_what_the_projection_knew(run, tmp_path, monkeypatch):
+    """A call that cannot be replayed can never be scored — tools/backtest.py."""
+    from superf import snapshot as snapshot_mod
+    raw = tmp_path / "raw"
+    monkeypatch.setattr(snapshot_mod, "RAW", raw)
+
+    run.build(fixture_states=("todo", "todo"))
+    run.argv()
+    assert predict.main() == 0
+
+    frozen = snapshot_mod.load_projection_inputs(1, root=raw)
+    assert frozen["mode"] == "pre_kickoff"
+    assert frozen["gw"] == 1
+    assert set(frozen["picks"]) == {m["id"] for m in RUN_MANAGERS}
+    assert frozen["elements"], "no players frozen"
+    assert frozen["scored_so_far"] is None
+
+    # And it replays to exactly what was published.
+    from superf.projection import fixtures_by_team, project_manager
+    elements, teams, fixtures, picks, scored = snapshot_mod.replay_projection_inputs(frozen)
+    by_team = fixtures_by_team(fixtures)
+    replayed = {
+        m: project_manager(m, p, elements, by_team, teams, scored).to_contract()
+        for m, p in picks.items()
+    }
+    assert replayed == {p["manager"]: p for p in run.published()["projections"]}
+
+
+def test_a_mid_round_call_freezes_its_banked_points_too(run, tmp_path, monkeypatch):
+    from superf import snapshot as snapshot_mod
+    raw = tmp_path / "raw"
+    monkeypatch.setattr(snapshot_mod, "RAW", raw)
+
+    run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.argv("--mid-round")
+    assert predict.main() == 0
+
+    frozen = snapshot_mod.load_projection_inputs(1, "mid_round", root=raw)
+    assert frozen["mode"] == "mid_round"
+    assert frozen["scored_so_far"]
+    # Only the fixtures still to come, matching what the call was made from.
+    assert [f["started"] for f in frozen["fixtures"]] == [False]
