@@ -633,7 +633,14 @@ select,button{font:inherit}
         </sc-for>
       </div>
     </div>
+  </div>
+  </sc-if>
 
+  <!-- The pot and the weekly list stand on their own: a round at full time
+       with bonus pending has a pot standing to show even though nothing has
+       settled, and the empty state above is what covers the accrued balance. -->
+  <sc-if value="{{season.showPots}}" hint-placeholder-val="{{ true }}">
+  <div>
     <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:clamp(17px,4.5vw,24px) clamp(14px,4vw,26px);margin-bottom:18px">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px">
         <div>
@@ -713,6 +720,7 @@ select,button{font:inherit}
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px;margin-bottom:18px">
+      <sc-if value="{{season.hasData}}" hint-placeholder-val="{{ true }}">
       <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px">
           <div>
@@ -777,10 +785,11 @@ select,button{font:inherit}
         </sc-if>
         <div style="font-size:12px;color:var(--ink-muted);margin-top:12px;line-height:1.6">{{ledger.foot}}</div>
       </div>
+      </sc-if>
 
       <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
         <div style="margin-bottom:18px">
-          <div style="font-size:14.5px;font-weight:640">Weekly pots so far</div>
+          <div style="font-size:14.5px;font-weight:640">{{weekly.title}}</div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">{{weekly.sub}}</div>
         </div>
         <sc-for list="{{weekly.rows}}" as="r" hint-placeholder-count="2">
@@ -816,7 +825,11 @@ select,button{font:inherit}
         <div style="font-size:12px;color:var(--ink-muted);margin-top:12px;line-height:1.6">{{weekly.foot}}</div>
       </div>
     </div>
+  </div>
+  </sc-if>
 
+  <sc-if value="{{season.hasData}}" hint-placeholder-val="{{ true }}">
+  <div>
     <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
         <div style="max-width:520px">

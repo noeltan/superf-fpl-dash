@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-25T02:05:30Z",
+ "generated_at": "2026-08-25T02:12:11Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -6093,6 +6093,10 @@
   "runner_up": "soonlee",
   "margin": 4,
   "pot": 130,
+  "net": [
+   81,
+   29
+  ],
   "scores": {
    "boonsiang": {
     "points": 32,
@@ -6161,7 +6165,51 @@
    "tianpin",
    "shaikzahir",
    "boonsiang"
-  ]
+  ],
+  "month": {
+   "month": "AUG",
+   "gameweeks": 2,
+   "played": [
+    1
+   ],
+   "remaining": 1,
+   "stake": 10,
+   "pot": 130,
+   "net": [
+    81,
+    29
+   ],
+   "totals": {
+    "boonsiang": 32,
+    "calvinfoo": 66,
+    "chris": 52,
+    "jack": 58,
+    "noel": 63,
+    "robinhoho": 49,
+    "sam": 74,
+    "shaikzahir": 48,
+    "soonlee": 70,
+    "tianpin": 49,
+    "wayshoonlim": 52,
+    "weichenlim": 59,
+    "weihun": 60
+   },
+   "order": [
+    "sam",
+    "soonlee",
+    "calvinfoo",
+    "noel",
+    "weihun",
+    "weichenlim",
+    "jack",
+    "chris",
+    "wayshoonlim",
+    "robinhoho",
+    "tianpin",
+    "shaikzahir",
+    "boonsiang"
+   ]
+  }
  },
  "months": [],
  "month_current": {
