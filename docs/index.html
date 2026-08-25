@@ -285,6 +285,42 @@ select,button{font:inherit}
   </div>
   </sc-if>
 
+  <sc-if value="{{provPot.show}}" hint-placeholder-val="{{ false }}">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;margin-bottom:18px">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-top:3px solid var(--warn);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
+      <div style="font-size:14.5px;font-weight:640;margin-bottom:3px">GW{{provPot.gw}} pot leader — provisional</div>
+      <div style="font-size:12.5px;color:var(--ink-muted);margin-bottom:14px">{{provPot.sub}}</div>
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <div style="font-size:clamp(24px,6.5vw,30px);font-weight:650;letter-spacing:-.02em">{{provPot.name}}</div>
+        <span style="font-size:10px;font-weight:680;letter-spacing:.1em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:2px 5px">PROVISIONAL</span>
+      </div>
+      <div style="font-size:13.5px;color:var(--ink-2);margin-top:8px">{{provPot.margin}}</div>
+      <div style="margin-top:14px;padding:11px 13px;background:var(--tint-warn);border-radius:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)">{{provPot.note}}</div>
+    </div>
+    <sc-if value="{{provPot.hasRows}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px">
+        <div>
+          <div style="font-size:14.5px;font-weight:640">GW{{provPot.gw}} full-time scores</div>
+          <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">Every match played. These points cannot move — only bonus can still land on top.</div>
+        </div>
+        <span style="font-size:10px;font-weight:680;letter-spacing:.1em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:3px 6px;white-space:nowrap">BONUS PENDING</span>
+      </div>
+      <sc-for list="{{provPot.rows}}" as="r" hint-placeholder-count="8">
+        <div style="display:flex;align-items:center;gap:12px;padding:6px 8px;border-bottom:1px solid var(--grid);background:{{r.rowBg}};border-left:3px solid {{r.mark}}">
+          <div style="width:20px;font-size:12px;color:var(--ink-muted);font-variant-numeric:tabular-nums">{{r.pos}}</div>
+          <div style="flex:1;font-size:13.5px;font-weight:{{r.weight}};color:{{r.ink}}">{{r.name}}</div>
+          <div style="font-size:14.5px;font-weight:640;font-variant-numeric:tabular-nums">
+            <span style="border-bottom:1px solid var(--warn);padding-bottom:1px">{{r.points}}</span>
+          </div>
+        </div>
+      </sc-for>
+      <div style="font-size:12px;color:var(--ink-muted);margin-top:12px;line-height:1.6">The hairline means provisional — confirmed bonus and auto-subs land only when FPL closes the round, then the book of record below takes over and the pot settles.</div>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;margin-bottom:18px">
     <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px">

@@ -204,6 +204,7 @@ def build_payload(
     current: Mapping,
     settled_dates: Mapping[int, str] | None = None,
     corrections: Sequence[Mapping] | None = None,
+    provisional: Mapping | None = None,
     you: str | None = None,
 ) -> dict:
     ids = [m["id"] for m in managers]
@@ -449,6 +450,40 @@ def build_payload(
             f"which exceeds the N-1 bound of {len(ids) - 1}"
         )
 
+    # --- the provisional round (§11.1 / §11.4) -------------------------------
+    # Display only, never money: every match is at full time, bonus is not
+    # confirmed, so nothing here is booked. Points rank the pot exactly as the
+    # ledger will (net_points is FPL's event points; hits ride along for
+    # display). Emitted only while the named round is actually provisional, so
+    # a settled gameweek's leftover raw/ record cannot resurface.
+    provisional_block = None
+    if (
+        provisional
+        and current.get("state") == "provisional"
+        and int(provisional.get("gw", 0)) == int(current.get("gameweek", 0))
+    ):
+        raw_scores = provisional.get("scores") or {}
+        prov_scores = {
+            m: {"points": int(v.get("points", 0)), "hits": int(v.get("hits", 0))}
+            for m, v in raw_scores.items()
+            if m in ids
+        }
+        order = sorted(prov_scores, key=lambda m: (-prov_scores[m]["points"], m))
+        pot_sen = rm_to_sen(WEEKLY_STAKE_RM) * (len(prov_scores) or n)
+        provisional_block = {
+            "gw": int(provisional["gw"]),
+            "observed_at": provisional.get("observed_at"),
+            "leader": order[0] if order else provisional.get("leader"),
+            "runner_up": order[1] if len(order) > 1 else None,
+            "margin": (
+                prov_scores[order[0]]["points"] - prov_scores[order[1]]["points"]
+                if len(order) > 1 else None
+            ),
+            "pot": _rm(pot_sen),
+            "scores": prov_scores,
+            "order": order,
+        }
+
     podiums, weeks_won = _place_counts(settlement, ids)
 
     active_totals = [totals_points[m] for m in ids if totals_points[m] or final_gws]
@@ -485,6 +520,7 @@ def build_payload(
         },
         "pl_table": [dict(r) for r in pl_table],
         "gameweeks": gameweek_rows,
+        "provisional": provisional_block,
         "months": month_rows,
         "month_current": month_current,
         "totals": totals_points,

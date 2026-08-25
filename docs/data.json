@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-25T00:53:28Z",
+ "generated_at": "2026-08-25T01:49:43Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -6086,6 +6086,83 @@
   }
  ],
  "gameweeks": [],
+ "provisional": {
+  "gw": 1,
+  "observed_at": "2026-08-24T22:22:49Z",
+  "leader": "sam",
+  "runner_up": "soonlee",
+  "margin": 4,
+  "pot": 130,
+  "scores": {
+   "boonsiang": {
+    "points": 32,
+    "hits": 0
+   },
+   "calvinfoo": {
+    "points": 66,
+    "hits": 0
+   },
+   "chris": {
+    "points": 52,
+    "hits": 0
+   },
+   "jack": {
+    "points": 58,
+    "hits": 0
+   },
+   "noel": {
+    "points": 63,
+    "hits": 0
+   },
+   "robinhoho": {
+    "points": 49,
+    "hits": 0
+   },
+   "sam": {
+    "points": 74,
+    "hits": 0
+   },
+   "shaikzahir": {
+    "points": 48,
+    "hits": 0
+   },
+   "soonlee": {
+    "points": 70,
+    "hits": 0
+   },
+   "tianpin": {
+    "points": 49,
+    "hits": 0
+   },
+   "wayshoonlim": {
+    "points": 52,
+    "hits": 0
+   },
+   "weichenlim": {
+    "points": 59,
+    "hits": 0
+   },
+   "weihun": {
+    "points": 60,
+    "hits": 0
+   }
+  },
+  "order": [
+   "sam",
+   "soonlee",
+   "calvinfoo",
+   "noel",
+   "weihun",
+   "weichenlim",
+   "jack",
+   "chris",
+   "wayshoonlim",
+   "robinhoho",
+   "tianpin",
+   "shaikzahir",
+   "boonsiang"
+  ]
+ },
  "months": [],
  "month_current": {
   "month": "AUG",
