@@ -547,7 +547,7 @@ class Dashboard {
       emptyNote: isLive || isProv
         ? "The live table above has the running numbers. This one is the book of record — " +
           "it only fills in once the gameweek goes final and the RM" + D.stakes.weekly.pot +
-          " weekly pot settles, because provisional bonus can still move who gets paid."
+          " weekly pot settles, because bonus and auto-subs can still move who gets paid."
         : "Standings only fill up after GW1 final. First RM" + D.stakes.weekly.pot +
           " weekly pot settle same night, so don't forget to set team ah.",
       signups: D.managers.map(m => ({ name:m.display_name, team:m.team_name, ink:inkOf(m.id), weight:wOf(m.id) })),
@@ -667,7 +667,7 @@ class Dashboard {
         show: true,
         gw: PB.gw,
         name: byId[PB.leader].display_name,
-        sub: "Every match at full time — FPL still confirming bonus and auto-subs. Not banked until every fixture says finished.",
+        sub: "Every match at full time, but nothing settled: bonus, auto-subs and the vice-captain all land when FPL closes the round, and scores move when they do.",
         margin: PB.runner_up && PB.margin !== null && PB.margin !== undefined
           ? (PB.margin === 0
               ? "Level with " + byId[PB.runner_up].display_name + " on points — the tiebreak ladder would decide · " + potLine
@@ -928,7 +928,7 @@ class Dashboard {
               " more gameweek" + (pm.remaining === 1 ? "" : "s") + " in the bucket. Nothing accrued yet."
             : ", with GW" + PB.gw + " still to be confirmed. The month settles the moment FPL closes it."),
         calloutBg:"var(--tint-warn)",
-        foot: "Money shown is what each position would pay if the month ended on these numbers. Bonus is not confirmed, so nothing here is accrued — the month only settles when its last gameweek is final."
+        foot: "Money shown is what each position would pay if the month ended on these numbers. The round is not closed, so nothing here is accrued — and these are not the final scores: bonus, auto-subs and the vice-captain still have to land."
       };
     } else if (settledMonth) {
       const max = Math.max.apply(null, Object.keys(settledMonth.totals).map(k => settledMonth.totals[k])) || 1;
@@ -1004,7 +1004,7 @@ class Dashboard {
       secondPrize: PB.runner_up ? rm(PB.net[1]) : "",
       chip:"", hasChip:false,
       gwNote:"BONUS PENDING", hasGWNote:true,
-      note: "Provisional — every match played, but FPL has not confirmed bonus. Nothing accrued: confirmed bonus can still move who gets paid.",
+      note: "Provisional — every match played, but FPL has not closed the round. Nothing accrued: confirmed bonus, auto-subs and the vice-captain can all still move the scores, and with them who gets paid.",
       bonusNote:"", hasBonusNote:false
     }] : [];
 

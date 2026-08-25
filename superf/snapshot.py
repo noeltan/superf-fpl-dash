@@ -165,9 +165,17 @@ def write(snapshot: Mapping, root: Path | None = None) -> Path:
 # --- provisional pot leader (§11.4) ------------------------------------------
 # Recorded separately from the immutable snapshot: it is an observation of a
 # state that is explicitly not final. It exists so a bonus flip can be named
-# permanently once the gameweek settles (§11.4) — and, since the whole round is
-# at full time when it is taken, so the pre-bonus points cannot move, the page
-# also shows the provisional pot standing from it while FPL confirms bonus.
+# permanently once the gameweek settles (§11.4), and so the page can show a
+# pot standing while FPL confirms rather than showing nothing at all.
+#
+# What it holds is NOT the settled score and can differ from it materially.
+# At full time FPL has applied neither confirmed bonus nor auto-subs nor the
+# vice-captain fallback, and all three only land when the round goes Final:
+# in GW1 one manager gained 11 points across that transition and moved five
+# places. So `leader` and `observed_at` are written once — that is what makes
+# the flip note trustworthy — while `scores` are refreshed on every run for as
+# long as the round is provisional, so the standing on the page tracks the
+# freshest thing FPL has said rather than the first.
 
 def provisional_path(gw: int, root: Path | None = None) -> Path:
     return (root or RAW) / f"gw-{gw:02d}.provisional.json"
@@ -180,29 +188,35 @@ def record_provisional_leader(
     root: Path | None = None,
     scores: Mapping[str, Mapping] | None = None,
 ) -> None:
-    """First observation wins, at the key level.
+    """Write-once for the flip note, refreshed for the standing.
 
     ``leader`` and ``observed_at`` are written once and never touched again —
-    that is what makes the §11.4 flip note trustworthy. ``scores`` (per-manager
-    ``{points, hits}`` as they stood at full time) are added to an existing
-    record exactly once if it does not carry them yet, so a file written before
-    scores were part of the record is completed rather than frozen half-empty.
-    The emitter reads this file instead of the history endpoint, which is what
-    keeps ``build.py --offline`` byte-identical while a round is provisional.
+    they answer "who led when this round first went provisional", which is the
+    question §11.4 needs and which a later write would destroy.
+
+    ``scores`` (per-manager ``{points, hits}``) are REPLACED on every call
+    while the round is provisional. They are a running observation, not a
+    record: FPL keeps moving them as bonus is confirmed, so the last reading
+    before the round goes Final is the closest we get. They are still not the
+    settled score — see the note above. The emitter reads this file rather than
+    the history endpoint, which is what lets ``build.py --offline`` reproduce
+    the published file while a round is provisional.
     """
     path = provisional_path(gw, root)
     if not leader and not scores:
         return
     if path.exists():
         record = json.loads(path.read_text())
-        if scores and "scores" not in record:
+        if scores:
             record["scores"] = {m: dict(v) for m, v in scores.items()}
+            record["scores_at"] = observed_at
             path.write_text(json.dumps(record, sort_keys=True) + "\n")
-            log.info("added provisional GW%d scores to the existing record", gw)
+            log.info("refreshed provisional GW%d scores", gw)
         return
     record = {"gw": gw, "leader": leader, "observed_at": observed_at}
     if scores:
         record["scores"] = {m: dict(v) for m, v in scores.items()}
+        record["scores_at"] = observed_at
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(record, sort_keys=True) + "\n")
     log.info("recorded provisional GW%d leader: %s", gw, leader)

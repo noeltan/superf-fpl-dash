@@ -451,11 +451,17 @@ def build_payload(
         )
 
     # --- the provisional round (§11.1 / §11.4) -------------------------------
-    # Display only, never money: every match is at full time, bonus is not
-    # confirmed, so nothing here is booked. Points rank the pot exactly as the
-    # ledger will (net_points is FPL's event points; hits ride along for
-    # display). Emitted only while the named round is actually provisional, so
-    # a settled gameweek's leftover raw/ record cannot resurface.
+    # Display only, never money: the round is at full time but not closed, so
+    # nothing here is booked and the ledger never reads it.
+    #
+    # These are NOT the scores the ledger will settle on, and the gap is not
+    # small: confirmed bonus, auto-subs and the vice-captain fallback all land
+    # at the Final transition, and in GW1 that moved one manager 11 points and
+    # five places. The page says so — this block exists to show a standing
+    # while FPL confirms, not to predict the settled one.
+    #
+    # Emitted only while the named round is actually provisional, so a settled
+    # gameweek's leftover raw/ record cannot resurface.
     provisional_block = None
     if (
         provisional
@@ -516,8 +522,9 @@ def build_payload(
                 if len(order) > 1 else None
             ),
             "pot": _rm(stake_sen * field),
-            # What 1st and 2nd would take if confirmed bonus changed nothing.
-            # Advertised, not accrued — no row of this exists in the ledger.
+            # What 1st and 2nd would take if the standing held. Advertised,
+            # not accrued — no row of this exists in the ledger, and the
+            # standing itself still has bonus and auto-subs to come.
             "net": [_rm(v) for v in advertised_net(stake_sen, field, WEEKLY_SPLIT)],
             "scores": prov_scores,
             "order": order,
