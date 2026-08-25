@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-25T07:49:23Z",
+ "generated_at": "2026-08-25T10:39:33Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -10,7 +10,7 @@
   "season": "2026/27",
   "gameweek": 1,
   "next_gw": 2,
-  "state": "provisional"
+  "state": "final"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -776,7 +776,7 @@
     "hs": 3,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 1
    },
@@ -789,7 +789,7 @@
     "hs": 2,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 4
    },
@@ -802,7 +802,7 @@
     "hs": 2,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 3
    },
@@ -815,7 +815,7 @@
     "hs": 2,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 5
    },
@@ -828,7 +828,7 @@
     "hs": 0,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 6
    },
@@ -841,7 +841,7 @@
     "hs": 3,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 2
    },
@@ -854,7 +854,7 @@
     "hs": 4,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 7
    },
@@ -867,7 +867,7 @@
     "hs": 2,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 8
    },
@@ -880,7 +880,7 @@
     "hs": 2,
     "as": 2,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 9
    },
@@ -893,7 +893,7 @@
     "hs": 2,
     "as": 3,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 10
    }
@@ -6085,132 +6085,131 @@
    ]
   }
  ],
- "gameweeks": [],
- "provisional": {
-  "gw": 1,
-  "observed_at": "2026-08-24T22:22:49Z",
-  "leader": "sam",
-  "runner_up": "soonlee",
-  "margin": 4,
-  "pot": 130,
-  "net": [
-   81,
-   29
-  ],
-  "scores": {
-   "boonsiang": {
-    "points": 32,
-    "hits": 0
-   },
-   "calvinfoo": {
-    "points": 66,
-    "hits": 0
-   },
-   "chris": {
-    "points": 52,
-    "hits": 0
-   },
-   "jack": {
-    "points": 58,
-    "hits": 0
-   },
-   "noel": {
-    "points": 63,
-    "hits": 0
-   },
-   "robinhoho": {
-    "points": 49,
-    "hits": 0
-   },
-   "sam": {
-    "points": 74,
-    "hits": 0
-   },
-   "shaikzahir": {
-    "points": 48,
-    "hits": 0
-   },
-   "soonlee": {
-    "points": 70,
-    "hits": 0
-   },
-   "tianpin": {
-    "points": 49,
-    "hits": 0
-   },
-   "wayshoonlim": {
-    "points": 52,
-    "hits": 0
-   },
-   "weichenlim": {
-    "points": 59,
-    "hits": 0
-   },
-   "weihun": {
-    "points": 60,
-    "hits": 0
-   }
-  },
-  "order": [
-   "sam",
-   "soonlee",
-   "calvinfoo",
-   "noel",
-   "weihun",
-   "weichenlim",
-   "jack",
-   "chris",
-   "wayshoonlim",
-   "robinhoho",
-   "tianpin",
-   "shaikzahir",
-   "boonsiang"
-  ],
-  "month": {
+ "gameweeks": [
+  {
+   "gw": 1,
    "month": "AUG",
-   "gameweeks": 2,
-   "played": [
-    1
-   ],
-   "remaining": 1,
-   "stake": 10,
-   "pot": 130,
-   "net": [
-    81,
-    29
-   ],
-   "totals": {
-    "boonsiang": 32,
-    "calvinfoo": 66,
-    "chris": 52,
-    "jack": 58,
-    "noel": 63,
-    "robinhoho": 49,
-    "sam": 74,
-    "shaikzahir": 48,
-    "soonlee": 70,
-    "tianpin": 49,
-    "wayshoonlim": 52,
-    "weichenlim": 59,
-    "weihun": 60
+   "note": null,
+   "scores": {
+    "noel": {
+     "points": 63,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "jack": {
+     "points": 58,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "sam": {
+     "points": 74,
+     "hits": 0,
+     "transfers": 0,
+     "chip": "bboost",
+     "did_not_set": false,
+     "active": true
+    },
+    "weihun": {
+     "points": 60,
+     "hits": 0,
+     "transfers": 0,
+     "chip": "bboost",
+     "did_not_set": false,
+     "active": true
+    },
+    "soonlee": {
+     "points": 70,
+     "hits": 0,
+     "transfers": 0,
+     "chip": "bboost",
+     "did_not_set": false,
+     "active": true
+    },
+    "boonsiang": {
+     "points": 36,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "tianpin": {
+     "points": 49,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "chris": {
+     "points": 52,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "calvinfoo": {
+     "points": 66,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "shaikzahir": {
+     "points": 48,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "weichenlim": {
+     "points": 61,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "wayshoonlim": {
+     "points": 52,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    },
+    "robinhoho": {
+     "points": 60,
+     "hits": 0,
+     "transfers": 0,
+     "chip": null,
+     "did_not_set": false,
+     "active": true
+    }
    },
-   "order": [
-    "sam",
-    "soonlee",
-    "calvinfoo",
-    "noel",
-    "weihun",
-    "weichenlim",
-    "jack",
-    "chris",
-    "wayshoonlim",
-    "robinhoho",
-    "tianpin",
-    "shaikzahir",
-    "boonsiang"
-   ]
+   "winners": [
+    "sam"
+   ],
+   "runners_up": [
+    "soonlee"
+   ],
+   "winner_net": 8100,
+   "runner_up_net": 2900,
+   "pot": 130,
+   "tiebreak": null,
+   "bonus_change": null
   }
- },
+ ],
+ "provisional": null,
  "months": [],
  "month_current": {
   "month": "AUG",
@@ -6222,188 +6221,406 @@
    81,
    29
   ],
-  "note": "August opens with GW1 \u2014 RM10 each, RM130 in the pot, 2 gameweeks to decide it."
+  "note": "August is 1 of 2 gameweeks in, RM130 in the pot. Nothing settles until the last one is final."
  },
  "totals": {
-  "noel": 0,
-  "jack": 0,
-  "sam": 0,
-  "weihun": 0,
-  "soonlee": 0,
-  "boonsiang": 0,
-  "tianpin": 0,
-  "chris": 0,
-  "calvinfoo": 0,
-  "shaikzahir": 0,
-  "weichenlim": 0,
-  "wayshoonlim": 0,
-  "robinhoho": 0
+  "noel": 63,
+  "jack": 58,
+  "sam": 74,
+  "weihun": 60,
+  "soonlee": 70,
+  "boonsiang": 36,
+  "tianpin": 49,
+  "chris": 52,
+  "calvinfoo": 66,
+  "shaikzahir": 48,
+  "weichenlim": 61,
+  "wayshoonlim": 52,
+  "robinhoho": 60
  },
  "rank": [
-  "noel",
-  "jack",
   "sam",
-  "weihun",
   "soonlee",
-  "boonsiang",
-  "tianpin",
-  "chris",
   "calvinfoo",
-  "shaikzahir",
+  "noel",
   "weichenlim",
+  "robinhoho",
+  "weihun",
+  "jack",
   "wayshoonlim",
-  "robinhoho"
+  "chris",
+  "tianpin",
+  "shaikzahir",
+  "boonsiang"
  ],
- "rank_prev": {},
+ "rank_prev": {
+  "boonsiang": 1,
+  "calvinfoo": 2,
+  "chris": 3,
+  "jack": 4,
+  "noel": 5,
+  "robinhoho": 6,
+  "sam": 7,
+  "shaikzahir": 8,
+  "soonlee": 9,
+  "tianpin": 10,
+  "wayshoonlim": 11,
+  "weichenlim": 12,
+  "weihun": 13
+ },
  "behind": {
-  "noel": 0,
-  "jack": 0,
+  "noel": 11,
+  "jack": 16,
   "sam": 0,
-  "weihun": 0,
-  "soonlee": 0,
-  "boonsiang": 0,
-  "tianpin": 0,
-  "chris": 0,
-  "calvinfoo": 0,
-  "shaikzahir": 0,
-  "weichenlim": 0,
-  "wayshoonlim": 0,
-  "robinhoho": 0
+  "weihun": 14,
+  "soonlee": 4,
+  "boonsiang": 38,
+  "tianpin": 25,
+  "chris": 22,
+  "calvinfoo": 8,
+  "shaikzahir": 26,
+  "weichenlim": 13,
+  "wayshoonlim": 22,
+  "robinhoho": 14
  },
  "ledger": {
   "noel": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "63 pts, 4th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "jack": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "58 pts, 8th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "sam": {
-   "weekly": 0,
+   "weekly": 8100,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": 8100,
+   "projected_season": 68000,
+   "delta_last_gw": 8100,
+   "by_gameweek": [
+    8100
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "74 pts, 1st of 13, top score \u2014 70% share",
+     "amount": 8100,
+     "balance": 8100
+    }
+   ]
   },
   "weihun": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "60 pts, 7th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "soonlee": {
-   "weekly": 0,
+   "weekly": 2900,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": 2900,
+   "projected_season": 22500,
+   "delta_last_gw": 2900,
+   "by_gameweek": [
+    2900
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "70 pts, 2nd of 13 \u2014 30% share",
+     "amount": 2900,
+     "balance": 2900
+    }
+   ]
   },
   "boonsiang": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "36 pts, 13th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "tianpin": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "49 pts, 11th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "chris": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "52 pts, 10th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "calvinfoo": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": 9500,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "66 pts, 3rd of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "shaikzahir": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "48 pts, 12th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "weichenlim": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "61 pts, 5th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "wayshoonlim": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "52 pts, 9th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   },
   "robinhoho": {
-   "weekly": 0,
+   "weekly": -1000,
    "monthly": 0,
-   "accrued": 0,
-   "projected_season": 0,
-   "delta_last_gw": 0,
-   "by_gameweek": [],
-   "statement": []
+   "accrued": -1000,
+   "projected_season": -10000,
+   "delta_last_gw": -1000,
+   "by_gameweek": [
+    -1000
+   ],
+   "statement": [
+    {
+     "date": "2026-08-24",
+     "type": "weekly",
+     "gw": 1,
+     "detail": "60 pts, 6th of 13",
+     "amount": -1000,
+     "balance": -1000
+    }
+   ]
   }
  },
  "corrections": [],
  "settlement": {
   "settled": false,
-  "payments": []
+  "payments": [
+   {
+    "from": "boonsiang",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "calvinfoo",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "chris",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "jack",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "noel",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "robinhoho",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "shaikzahir",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "tianpin",
+    "to": "sam",
+    "amount": 1000
+   },
+   {
+    "from": "wayshoonlim",
+    "to": "sam",
+    "amount": 100
+   },
+   {
+    "from": "wayshoonlim",
+    "to": "soonlee",
+    "amount": 900
+   },
+   {
+    "from": "weichenlim",
+    "to": "soonlee",
+    "amount": 1000
+   },
+   {
+    "from": "weihun",
+    "to": "soonlee",
+    "amount": 1000
+   }
+  ]
  },
  "podiums": {
   "noel": 0,
   "jack": 0,
-  "sam": 0,
+  "sam": 1,
   "weihun": 0,
-  "soonlee": 0,
+  "soonlee": 1,
   "boonsiang": 0,
   "tianpin": 0,
   "chris": 0,
-  "calvinfoo": 0,
+  "calvinfoo": 1,
   "shaikzahir": 0,
   "weichenlim": 0,
   "wayshoonlim": 0,
@@ -6412,7 +6629,7 @@
  "weeks_won": {
   "noel": 0,
   "jack": 0,
-  "sam": 0,
+  "sam": 1,
   "weihun": 0,
   "soonlee": 0,
   "boonsiang": 0,
@@ -6425,11 +6642,15 @@
   "robinhoho": 0
  },
  "stats": {
-  "avg_points": 0,
-  "high": null
+  "avg_points": 57.6,
+  "high": {
+   "gw": 1,
+   "manager": "sam",
+   "points": 74
+  }
  },
  "settled": {
-  "through_gw": 0,
+  "through_gw": 1,
   "projected": "season pot projected, not banked"
  },
  "checks": {

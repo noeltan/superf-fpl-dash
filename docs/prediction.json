@@ -216,7 +216,14 @@
   },
   "reasoning": "Sam Lim's lead is the good kind \u2014 55.0 of his 57.8 is banked, already on the board, and his bench boost means fifteen players counted, not eleven. Nobody catches that with two fixtures left. High confidence.\n\nSecond is the real contest. Noel Tan has banked 52.0 but only 1.4 remaining, one Jo\u00e3o Pedro at Fulham. Wei Hun Wong sits behind on banked but has Virgil, Wirtz and Jo\u00e3o Pedro still to come plus a bench boost, and Jack Siah is right there too. So Noel, low confidence \u2014 he is defending, not scoring.\n\nStructural note: almost everyone shares Jo\u00e3o Pedro, so Newcastle\u2013Liverpool decides more. Isak or Virgil hauling flips second to Wei Hun Wong or Christopher Chin."
  },
- "result": null,
+ "result": {
+  "actual_first": "sam",
+  "actual_second": "soonlee",
+  "exact_hit": true,
+  "podium_hit": true,
+  "pair_hit": false,
+  "mean_rank_error": 1.0
+ },
  "record": {
   "played": 0,
   "exact": 0,
