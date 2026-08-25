@@ -129,8 +129,22 @@ Two things worth stating plainly:
     "observed_at": "2026-08-24T22:22:49Z",
     "leader": "sam", "runner_up": "jack", "margin": 4,
     "pot": 130,                        // RM, advertised weekly pot
+    "net": [81, 29],                   // RM, what 1st/2nd would take — advertised, not accrued
     "scores": { "sam": { "points": 71, "hits": 0 } },
-    "order": ["sam", "jack"]           // points desc, then manager id
+    "order": ["sam", "jack"],          // points desc, then manager id
+
+    // The month bucket holding this round, carried to date: settled gameweeks
+    // in the bucket plus this round's full-time points. Aggregated here because
+    // the view formats money and never sums it. Without this the money tab's
+    // pot card falls back to "opens GW<n>" over a round already played.
+    "month": {
+      "month": "AUG", "gameweeks": 2,
+      "played": [1],                   // settled in the bucket, plus this round
+      "remaining": 1,                  // bucket gameweeks after this one
+      "stake": 10, "pot": 130, "net": [81, 29],
+      "totals": { "sam": 71 },
+      "order": ["sam", "jack"]
+    }
   },
 ```
 

@@ -257,6 +257,43 @@ def test_the_provisional_round_is_published_for_display():
     assert block["pot"] == 30
 
 
+def test_the_provisional_round_carries_its_month_to_date():
+    """The money tab's pot card reads this. GW3 sits in the SEP bucket, which
+    holds gameweeks 3-38 and has nothing settled in it, so the month to date is
+    exactly this round."""
+    month = _payload_with_provisional(PROVISIONAL_RECORD)["provisional"]["month"]
+    assert month["month"] == "SEP"
+    assert month["played"] == [3]
+    assert month["totals"] == {"sam": 71, "jack": 67, "noel": 40}
+    assert month["order"] == ["sam", "jack", "noel"]
+    september = next(b for b in BUCKETS if b["month"] == "SEP")["gameweeks"]
+    assert month["gameweeks"] == len(september)
+    assert month["remaining"] == len(september) - 1
+
+
+def test_the_month_to_date_adds_settled_gameweeks_in_the_same_bucket():
+    """A provisional GW2 sits in AUG with GW1 already settled, so the month to
+    date must be GW1 + GW2 — not GW2 alone."""
+    calendar = full_season({1: GW1_POINTS}, managers=MANAGERS, months={1: "AUG"})
+    settlement = settle(MANAGERS, calendar, BUCKETS, expected_gameweeks=38)
+    payload = build_payload(
+        generated_at="2026-09-01T06:00:00Z", league_name="SuperF", league_id=310479,
+        managers=MANAGERS, teams=TEAMS, events=EVENTS, breaks=[],
+        month_buckets=BUCKETS, fixtures_by_gw={1: [], 2: []}, pl_table=[],
+        gameweeks=calendar, settlement=settlement,
+        current={"season": "2026/27", "gameweek": 2, "next_gw": 3, "state": "provisional"},
+        provisional={
+            "gw": 2, "leader": "noel", "observed_at": "2026-08-28T21:00:00Z",
+            "scores": {"noel": {"points": 50, "hits": 0}},
+        },
+    )
+    month = payload["provisional"]["month"]
+    assert month["month"] == "AUG"
+    assert month["played"] == [1, 2]
+    assert month["remaining"] == 0
+    assert month["totals"]["noel"] == GW1_POINTS["noel"] + 50
+
+
 def test_the_provisional_round_books_no_money():
     payload = _payload_with_provisional(PROVISIONAL_RECORD)
     assert payload["settled"]["through_gw"] == 2   # GW3 is NOT in the book

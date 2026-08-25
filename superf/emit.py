@@ -468,10 +468,46 @@ def build_payload(
             for m, v in raw_scores.items()
             if m in ids
         }
+        prov_gw = int(provisional["gw"])
         order = sorted(prov_scores, key=lambda m: (-prov_scores[m]["points"], m))
-        pot_sen = rm_to_sen(WEEKLY_STAKE_RM) * (len(prov_scores) or n)
+        field = len(prov_scores) or n
+        stake_sen = rm_to_sen(WEEKLY_STAKE_RM)
+
+        # The month bucket this round sits in, carried to date. Without it the
+        # money tab's pot card falls back to "opens GW<n>" over a round that has
+        # been played. Aggregated here, never in the view: the page formats
+        # money, it does not sum it.
+        prov_month = None
+        bucket = next(
+            (b for b in month_buckets if prov_gw in b["gameweeks"]), None
+        )
+        if bucket and prov_scores:
+            bucket_gws = list(bucket["gameweeks"])
+            settled_in_bucket = [gw for gw in bucket_gws if gw in final_gws]
+            month_totals = {m: 0 for m in prov_scores}
+            for gw in settled_in_bucket:
+                for manager, score in gameweeks[gw].scores.items():
+                    if manager in month_totals and score.active:
+                        month_totals[manager] += score.net_points
+            for manager, row in prov_scores.items():
+                month_totals[manager] += row["points"]
+            month_stake_sen = rm_to_sen(MONTHLY_STAKE_PER_GW_RM * len(bucket_gws))
+            prov_month = {
+                "month": bucket["month"],
+                "gameweeks": len(bucket_gws),
+                "played": settled_in_bucket + [prov_gw],
+                "remaining": len(bucket_gws) - len(settled_in_bucket) - 1,
+                "stake": _rm(month_stake_sen),
+                "pot": _rm(month_stake_sen * field),
+                "net": [
+                    _rm(v) for v in advertised_net(month_stake_sen, field, MONTHLY_SPLIT)
+                ],
+                "totals": month_totals,
+                "order": sorted(month_totals, key=lambda m: (-month_totals[m], m)),
+            }
+
         provisional_block = {
-            "gw": int(provisional["gw"]),
+            "gw": prov_gw,
             "observed_at": provisional.get("observed_at"),
             "leader": order[0] if order else provisional.get("leader"),
             "runner_up": order[1] if len(order) > 1 else None,
@@ -479,9 +515,13 @@ def build_payload(
                 prov_scores[order[0]]["points"] - prov_scores[order[1]]["points"]
                 if len(order) > 1 else None
             ),
-            "pot": _rm(pot_sen),
+            "pot": _rm(stake_sen * field),
+            # What 1st and 2nd would take if confirmed bonus changed nothing.
+            # Advertised, not accrued — no row of this exists in the ledger.
+            "net": [_rm(v) for v in advertised_net(stake_sen, field, WEEKLY_SPLIT)],
             "scores": prov_scores,
             "order": order,
+            "month": prov_month,
         }
 
     podiums, weeks_won = _place_counts(settlement, ids)

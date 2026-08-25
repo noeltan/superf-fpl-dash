@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-25T02:16:48Z",
+ "generated_at": "2026-08-25T02:58:40Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -252,95 +252,95 @@
  },
  "managers": [
   {
-   "id": "noel",
    "display_name": "Noel Tan",
+   "entry_id": 1652821,
+   "id": "noel",
    "short": "Noel",
-   "team_name": "JEONSOMI",
-   "entry_id": 1652821
+   "team_name": "JEONSOMI"
   },
   {
-   "id": "jack",
    "display_name": "Jack Siah",
+   "entry_id": 1427521,
+   "id": "jack",
    "short": "Jack",
-   "team_name": "Apple TV",
-   "entry_id": 1427521
+   "team_name": "Apple TV"
   },
   {
-   "id": "sam",
    "display_name": "Sam Lim",
+   "entry_id": 2686159,
+   "id": "sam",
    "short": "Sam",
-   "team_name": "GeGe",
-   "entry_id": 2686159
+   "team_name": "GeGe"
   },
   {
-   "id": "weihun",
    "display_name": "Wei Hun Wong",
+   "entry_id": 4590653,
+   "id": "weihun",
    "short": "Wei Hun",
-   "team_name": "Back To Back To Back",
-   "entry_id": 4590653
+   "team_name": "Back To Back To Back"
   },
   {
-   "id": "soonlee",
    "display_name": "Soon Lee Loo",
+   "entry_id": 2488327,
+   "id": "soonlee",
    "short": "Soon Lee",
-   "team_name": "SLucky XI",
-   "entry_id": 2488327
+   "team_name": "SLucky XI"
   },
   {
-   "id": "boonsiang",
    "display_name": "Boon Siang Ng",
+   "entry_id": 1840731,
+   "id": "boonsiang",
    "short": "Boon",
-   "team_name": "Boon",
-   "entry_id": 1840731
+   "team_name": "Boon"
   },
   {
-   "id": "tianpin",
    "display_name": "Tian Pin Lee",
+   "entry_id": 1567532,
+   "id": "tianpin",
    "short": "Tian Pin",
-   "team_name": "Vege went tight",
-   "entry_id": 1567532
+   "team_name": "Vege went tight"
   },
   {
-   "id": "chris",
    "display_name": "Christopher Chin",
+   "entry_id": 1641730,
+   "id": "chris",
    "short": "Chris",
-   "team_name": "ChriSpirit",
-   "entry_id": 1641730
+   "team_name": "ChriSpirit"
   },
   {
-   "id": "calvinfoo",
    "display_name": "Calvin Foo",
+   "entry_id": 4677226,
+   "id": "calvinfoo",
    "short": "Calvin",
-   "team_name": "After 22 yrs",
-   "entry_id": 4677226
+   "team_name": "After 22 yrs"
   },
   {
-   "id": "shaikzahir",
    "display_name": "Shaik Zahir",
+   "entry_id": 4882676,
+   "id": "shaikzahir",
    "short": "Zahir",
-   "team_name": "BestPlaya",
-   "entry_id": 4882676
+   "team_name": "BestPlaya"
   },
   {
-   "id": "weichenlim",
    "display_name": "Wei Chen Lim",
+   "entry_id": 5140825,
+   "id": "weichenlim",
    "short": "Wei Chen",
-   "team_name": "chili pan mee",
-   "entry_id": 5140825
+   "team_name": "chili pan mee"
   },
   {
-   "id": "wayshoonlim",
    "display_name": "Way Shoon Lim",
+   "entry_id": 5250642,
+   "id": "wayshoonlim",
    "short": "Way Shoon",
-   "team_name": "AyamFC",
-   "entry_id": 5250642
+   "team_name": "AyamFC"
   },
   {
-   "id": "robinhoho",
    "display_name": "Robin Ho Ho",
+   "entry_id": 6529703,
+   "id": "robinhoho",
    "short": "Robin",
-   "team_name": "LetMeWin",
-   "entry_id": 6529703
+   "team_name": "LetMeWin"
   }
  ],
  "teams": {
@@ -6093,6 +6093,10 @@
   "runner_up": "soonlee",
   "margin": 4,
   "pot": 130,
+  "net": [
+   81,
+   29
+  ],
   "scores": {
    "boonsiang": {
     "points": 32,
@@ -6161,7 +6165,51 @@
    "tianpin",
    "shaikzahir",
    "boonsiang"
-  ]
+  ],
+  "month": {
+   "month": "AUG",
+   "gameweeks": 2,
+   "played": [
+    1
+   ],
+   "remaining": 1,
+   "stake": 10,
+   "pot": 130,
+   "net": [
+    81,
+    29
+   ],
+   "totals": {
+    "boonsiang": 32,
+    "calvinfoo": 66,
+    "chris": 52,
+    "jack": 58,
+    "noel": 63,
+    "robinhoho": 49,
+    "sam": 74,
+    "shaikzahir": 48,
+    "soonlee": 70,
+    "tianpin": 49,
+    "wayshoonlim": 52,
+    "weichenlim": 59,
+    "weihun": 60
+   },
+   "order": [
+    "sam",
+    "soonlee",
+    "calvinfoo",
+    "noel",
+    "weihun",
+    "weichenlim",
+    "jack",
+    "chris",
+    "wayshoonlim",
+    "robinhoho",
+    "tianpin",
+    "shaikzahir",
+    "boonsiang"
+   ]
+  }
  },
  "months": [],
  "month_current": {

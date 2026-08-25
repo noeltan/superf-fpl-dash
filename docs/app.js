@@ -897,6 +897,39 @@ class Dashboard {
         callout: mp.callout, calloutBg:"var(--tint-warn)",
         foot: "Money shown is what each position would pay if the month end right now. Only settle when the last gameweek in the bucket is final."
       };
+    } else if (PB && PB.month) {
+      /* Same card, from the book instead of the feed. Without this the money
+       * tab reads "opens GW1" while GW1 is played and on the page above —
+       * data.json carries the month to date precisely so the pot card does not
+       * have to wait for a worker that may never answer. */
+      const pm = PB.month;
+      const max = Math.max.apply(null, pm.order.map(id => pm.totals[id])) || 1;
+      pot = {
+        title: this.monthName(pm.month) + " pot", tag:"PROVISIONAL", tagRule:"var(--warn)", tagInk:"var(--warn-ink)",
+        sub: "Month to date including GW" + PB.gw + " at full time · bonus not confirmed · " +
+          pm.gameweeks + " gameweeks in the bucket",
+        potLabel: this.rmFlat(pm.pot), prizeLabel: rm(pm.net[0]) + " · " + rm(pm.net[1]),
+        hasBars: true,
+        rows: pm.order.map((id, i) => ({
+          pos: i + 1, name: byId[id].display_name, ink: inkOf(id), weight: wOf(id),
+          width: Math.round(pm.totals[id] / max * 100) + "%", fill: fillOf(id),
+          pts: pm.totals[id], title: byId[id].display_name + " · " + pm.totals[id] + " points this month",
+          money: i === 0 ? rm(pm.net[0]) : i === 1 ? rm(pm.net[1]) : rm(-pm.stake),
+          moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
+        })),
+        isTable: S.potView === "table",
+        isChart: S.potView === "chart" && S.vw >= 560,
+        isList: S.potView === "chart" && S.vw < 560,
+        onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
+        viewLabel: S.potView === "chart" ? "Table view" : (S.vw < 560 ? "List view" : "Chart view"),
+        callout: byId[pm.order[0]].short + " leads the " + this.monthName(pm.month) + " pot on " +
+          pm.totals[pm.order[0]] + (pm.remaining > 0
+            ? ", with GW" + PB.gw + " still to be confirmed and " + pm.remaining +
+              " more gameweek" + (pm.remaining === 1 ? "" : "s") + " in the bucket. Nothing accrued yet."
+            : ", with GW" + PB.gw + " still to be confirmed. The month settles the moment FPL closes it."),
+        calloutBg:"var(--tint-warn)",
+        foot: "Money shown is what each position would pay if the month ended on these numbers. Bonus is not confirmed, so nothing here is accrued — the month only settles when its last gameweek is final."
+      };
     } else if (settledMonth) {
       const max = Math.max.apply(null, Object.keys(settledMonth.totals).map(k => settledMonth.totals[k])) || 1;
       pot = {
@@ -955,9 +988,32 @@ class Dashboard {
       sub: "Accrued weekly and monthly pots, centred on RM0 — none of it paid yet",
       foot: "Blue side is owed money, red side owe money, and both sides always equal — every ringgit came out of the eight stakes. League keep nothing, and nothing move until May." };
 
+    /* A provisional round belongs at the top of this list, not missing from it:
+     * it is the pot people are actually arguing about. It is not in the book,
+     * so it is drawn as a row with a BONUS PENDING chip and the standing
+     * described as would-take rather than owed (§3.9.1). */
+    const provWeeklyRow = PB && PB.leader && byId[PB.leader] && PB.net ? [{
+      gw: PB.gw,
+      winner: byId[PB.leader].display_name, ink: inkOf(PB.leader),
+      points: PB.scores[PB.leader] ? PB.scores[PB.leader].points : "—",
+      prize: rm(PB.net[0]),
+      hasSecond: !!(PB.runner_up && byId[PB.runner_up]),
+      second: PB.runner_up && byId[PB.runner_up] ? byId[PB.runner_up].display_name : "",
+      secondInk: PB.runner_up ? inkOf(PB.runner_up) : "var(--ink-2)",
+      secondPoints: PB.runner_up && PB.scores[PB.runner_up] ? PB.scores[PB.runner_up].points : "",
+      secondPrize: PB.runner_up ? rm(PB.net[1]) : "",
+      chip:"", hasChip:false,
+      gwNote:"BONUS PENDING", hasGWNote:true,
+      note: "Provisional — every match played, but FPL has not confirmed bonus. Nothing accrued: confirmed bonus can still move who gets paid.",
+      bonusNote:"", hasBonusNote:false
+    }] : [];
+
     const weekly = {
-      sub: "70/30 of " + this.rmFlat(D.stakes.weekly.pot) + " — top two get paid",
-      rows: settledGWs.slice().reverse().map(g => {
+      // "so far" is wrong when the only round on the list has not settled.
+      title: settledGWs.length ? "Weekly pots so far" : "Weekly pot — GW" + (PB ? PB.gw : ""),
+      sub: (PB ? "GW" + PB.gw + " provisional · " : "") +
+        "70/30 of " + this.rmFlat(D.stakes.weekly.pot) + " — top two get paid",
+      rows: provWeeklyRow.concat(settledGWs.slice().reverse().map(g => {
         const w = g.winners[0];
         // Second place is a paid place, so name it. A tie for first swallows it:
         // the two winners take both shares between them.
@@ -981,7 +1037,7 @@ class Dashboard {
           note: g.tiebreak ? g.tiebreak.text
             : g.winners.length > 1 ? "Split " + g.winners.length + " ways — they take both shares"
             : "Everybody else pay RM" + D.stakes.weekly.stake };
-      }),
+      })),
       foot: "Every gameweek cost RM15 — RM10 to the week, RM5 to the month. Week pay top two, 70/30. Tie? Goals first, then assists, then goals conceded, then cards. Official FPL rule, cannot argue."
     };
 
@@ -1113,8 +1169,16 @@ class Dashboard {
 
     const season = {
       empty: isPre, hasData: !isPre,
-      emptyNote: "No money moved yet. First weekly pot settle after GW1 on " +
-        this.dayKey(D.events[0].deadline) + ", then August's RM80 monthly pot two gameweeks after that.",
+      /* The pot and the weekly list also stand up on a round that is played
+       * but not settled — that pot is the thing people came to look at. The
+       * ledger, statement and settle-up stay behind hasData: they read money
+       * that has been booked, and during a provisional round none has. */
+      showPots: !isPre || !!(PB && PB.month),
+      emptyNote: PB
+        ? "No money moved yet — GW" + PB.gw + " is played but not settled. " +
+          "The pot below is provisional: FPL has not confirmed bonus, and nothing accrues until it does."
+        : "No money moved yet. First weekly pot settle after GW1 on " +
+          this.dayKey(D.events[0].deadline) + ", then August's RM80 monthly pot two gameweeks after that.",
       foot: settledGWs.length >= 6
         ? "" : "Season race chart only comes out after six gameweeks settled — nothing to plot yet, waste space only."
     };
