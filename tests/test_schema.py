@@ -215,6 +215,63 @@ def test_payload_is_json_serialisable(payload):
     assert json.loads(json.dumps(payload))
 
 
+# --- the provisional round ----------------------------------------------------
+# Every match at full time, bonus pending. Display only, never money — the pot
+# leader has to be showable while FPL confirms, without anything booking.
+
+def _payload_with_provisional(record, *, gw=3, state="provisional"):
+    calendar = full_season(
+        {1: GW1_POINTS, 2: GW2_POINTS}, managers=MANAGERS, months={1: "AUG", 2: "AUG"}
+    )
+    settlement = settle(MANAGERS, calendar, BUCKETS, expected_gameweeks=38)
+    return build_payload(
+        generated_at="2026-09-01T06:00:00Z",
+        league_name="SuperF", league_id=310479,
+        managers=MANAGERS, teams=TEAMS, events=EVENTS, breaks=[],
+        month_buckets=BUCKETS, fixtures_by_gw={1: [], 2: [], 3: []}, pl_table=[],
+        gameweeks=calendar, settlement=settlement,
+        current={"season": "2026/27", "gameweek": gw, "next_gw": gw + 1, "state": state},
+        provisional=record,
+    )
+
+
+PROVISIONAL_RECORD = {
+    "gw": 3, "leader": "sam", "observed_at": "2026-09-05T21:00:00Z",
+    "scores": {
+        "sam": {"points": 71, "hits": 0},
+        "jack": {"points": 67, "hits": 4},
+        "noel": {"points": 40, "hits": 0},
+    },
+}
+
+
+def test_the_provisional_round_is_published_for_display():
+    block = _payload_with_provisional(PROVISIONAL_RECORD)["provisional"]
+    assert block["gw"] == 3
+    assert block["leader"] == "sam"
+    assert block["runner_up"] == "jack"
+    assert block["margin"] == 4
+    assert block["order"] == ["sam", "jack", "noel"]
+    assert block["scores"]["jack"] == {"points": 67, "hits": 4}
+    # RM10 a head over the managers with a recorded score.
+    assert block["pot"] == 30
+
+
+def test_the_provisional_round_books_no_money():
+    payload = _payload_with_provisional(PROVISIONAL_RECORD)
+    assert payload["settled"]["through_gw"] == 2   # GW3 is NOT in the book
+    assert all(g["gw"] != 3 for g in payload["gameweeks"])
+    assert payload["checks"]["zero_sum"]
+
+
+def test_a_stale_provisional_record_is_not_republished():
+    # The raw/ record outlives the state: once the round settles (or if the
+    # record names a different round), the block must vanish.
+    assert _payload_with_provisional(PROVISIONAL_RECORD, state="final")["provisional"] is None
+    assert _payload_with_provisional(PROVISIONAL_RECORD, gw=4)["provisional"] is None
+    assert _payload_with_provisional(None)["provisional"] is None
+
+
 # --- the rules tab ------------------------------------------------------------
 # It explains the money to people who did not write it, which makes it the worst
 # place for a hardcoded figure: authoritative-looking and wrong from the moment

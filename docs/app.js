@@ -652,6 +652,38 @@ class Dashboard {
       };
     }
 
+    /* ---- provisional pot, from the book (fallback for the live layer) ----
+     * The live feed shows the pot while it can poll, but data.json also
+     * carries the full-time scores of a provisional round (frozen into
+     * raw/gw-NN.provisional.json the moment every match ended), so the pot
+     * leader stays on the page even when the feed is absent — a blocked
+     * worker, a failed poll, or a browser that never got one back. Hidden the
+     * moment the live block is up, so the same card never shows twice. */
+    const PB = D.provisional;
+    let provPot = { show:false, gw:0, name:"", sub:"", margin:"", note:"", hasRows:false, rows:[] };
+    if (isProv && !F && PB && PB.gw === cur.gameweek && PB.leader && byId[PB.leader]) {
+      const potLine = this.rmFlat(D.stakes.weekly.pot) + " on the table";
+      provPot = {
+        show: true,
+        gw: PB.gw,
+        name: byId[PB.leader].display_name,
+        sub: "Every match at full time — FPL still confirming bonus and auto-subs. Not banked until every fixture says finished.",
+        margin: PB.runner_up && PB.margin !== null && PB.margin !== undefined
+          ? (PB.margin === 0
+              ? "Level with " + byId[PB.runner_up].display_name + " on points — the tiebreak ladder would decide · " + potLine
+              : "Leads the GW" + PB.gw + " pot by " + PB.margin + " from " + byId[PB.runner_up].display_name + " · " + potLine)
+          : potLine,
+        note: "Bonus can still move after the whistle and flip the pot. If it happen, this page will name names and keep it there forever — no arguing after that.",
+        hasRows: !!(PB.order && PB.order.length),
+        rows: (PB.order || []).map((id, i) => ({
+          pos: i + 1,
+          name: byId[id] ? byId[id].display_name : id,
+          points: PB.scores && PB.scores[id] ? PB.scores[id].points : "—",
+          ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id), mark: markOf(id)
+        }))
+      };
+    }
+
     /* ---- prediction ---- */
     const P = this.prediction;
     const confRule = c => c === "high" ? "var(--good)" : c === "medium" ? "var(--accent)" : "var(--axis)";
@@ -1102,7 +1134,7 @@ class Dashboard {
       isGW: S.tab === "gw", isSeason: S.tab === "season", isRules: S.tab === "rules",
       activeTabId: "tab-" + S.tab,
       showCountdown: !showLive, cd, brk,
-      showLive, live, fx, cal, standings, pl, pred,
+      showLive, live, provPot, fx, cal, standings, pl, pred,
       hero, pot, ledger, weekly, detail, stmt, settle, money, season, rules,
       footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +

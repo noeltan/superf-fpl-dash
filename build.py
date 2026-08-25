@@ -282,13 +282,23 @@ def build_gameweeks(
             # §11.4 — remember who led while the gameweek was provisional, so a
             # bonus flip can be named permanently once it settles. The history
             # endpoint already carries live points, so this costs no requests.
+            # The full score map rides along: every match is at full time in
+            # this state, so the pre-bonus points cannot move, and the emitter
+            # publishes the pot standing from this record while FPL confirms.
             if state == "provisional":
                 live_points = {
                     m: s.points for m, s in scores.items() if s.points is not None
                 }
                 if live_points:
                     leader = max(sorted(live_points), key=lambda m: live_points[m])
-                    snapshot_mod.record_provisional_leader(gw, leader, iso_z(now))
+                    snapshot_mod.record_provisional_leader(
+                        gw, leader, iso_z(now),
+                        scores={
+                            m: {"points": int(s.points), "hits": int(s.hits)}
+                            for m, s in scores.items()
+                            if s.active and s.points is not None
+                        },
+                    )
 
         gameweeks[gw] = Gameweek(
             gw=gw, month=event["month"], state=state, scores=scores, note=note
@@ -462,6 +472,15 @@ def main() -> int:
 
     roster = [{k: v for k, v in m.items() if k != "started_event"} for m in managers]
 
+    # The round in the §11.1 provisional state, if any, read back from its raw/
+    # record so the online build and the offline rebuild publish the same block.
+    provisional_gw = next(
+        (gw for gw in sorted(states) if states[gw] == "provisional"), None
+    )
+    provisional = (
+        snapshot_mod.load_provisional(provisional_gw) if provisional_gw else None
+    )
+
     try:
         payload = build_payload(
             generated_at=iso_z(now),
@@ -479,6 +498,7 @@ def main() -> int:
             current=derive_current(states),
             settled_dates=settled_dates,
             corrections=adjustments,
+            provisional=provisional,
         )
     except LedgerError as exc:
         log.error("BOOK DOES NOT BALANCE: %s", exc)

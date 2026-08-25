@@ -164,24 +164,53 @@ def write(snapshot: Mapping, root: Path | None = None) -> Path:
 
 # --- provisional pot leader (§11.4) ------------------------------------------
 # Recorded separately from the immutable snapshot: it is an observation of a
-# state that is explicitly not final, and it exists only so that a bonus flip can
-# be named permanently once the gameweek settles.
+# state that is explicitly not final. It exists so a bonus flip can be named
+# permanently once the gameweek settles (§11.4) — and, since the whole round is
+# at full time when it is taken, so the pre-bonus points cannot move, the page
+# also shows the provisional pot standing from it while FPL confirms bonus.
 
 def provisional_path(gw: int, root: Path | None = None) -> Path:
     return (root or RAW) / f"gw-{gw:02d}.provisional.json"
 
 
 def record_provisional_leader(
-    gw: int, leader: str, observed_at: str, root: Path | None = None
+    gw: int,
+    leader: str,
+    observed_at: str,
+    root: Path | None = None,
+    scores: Mapping[str, Mapping] | None = None,
 ) -> None:
+    """First observation wins, at the key level.
+
+    ``leader`` and ``observed_at`` are written once and never touched again —
+    that is what makes the §11.4 flip note trustworthy. ``scores`` (per-manager
+    ``{points, hits}`` as they stood at full time) are added to an existing
+    record exactly once if it does not carry them yet, so a file written before
+    scores were part of the record is completed rather than frozen half-empty.
+    The emitter reads this file instead of the history endpoint, which is what
+    keeps ``build.py --offline`` byte-identical while a round is provisional.
+    """
     path = provisional_path(gw, root)
-    if path.exists() or not leader:
+    if not leader and not scores:
         return
+    if path.exists():
+        record = json.loads(path.read_text())
+        if scores and "scores" not in record:
+            record["scores"] = {m: dict(v) for m, v in scores.items()}
+            path.write_text(json.dumps(record, sort_keys=True) + "\n")
+            log.info("added provisional GW%d scores to the existing record", gw)
+        return
+    record = {"gw": gw, "leader": leader, "observed_at": observed_at}
+    if scores:
+        record["scores"] = {m: dict(v) for m, v in scores.items()}
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps({"gw": gw, "leader": leader, "observed_at": observed_at}, sort_keys=True) + "\n"
-    )
+    path.write_text(json.dumps(record, sort_keys=True) + "\n")
     log.info("recorded provisional GW%d leader: %s", gw, leader)
+
+
+def load_provisional(gw: int, root: Path | None = None) -> dict | None:
+    path = provisional_path(gw, root)
+    return json.loads(path.read_text()) if path.exists() else None
 
 
 def bonus_change_for(gw: int, final_winner: str, at: str, root: Path | None = None) -> dict | None:

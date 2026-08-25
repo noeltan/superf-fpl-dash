@@ -71,9 +71,11 @@ thrown — so it was added, styled as the warning state.
              "finished_provisional": false, "id": 21 } ]
   },
 
-  // Derived from finished fixtures — the FPL API publishes no table.
-  // Empty until a match has been played, so the view shows its designed
-  // pre-season empty state rather than twenty rows of zeros.
+  // Derived from full-time fixtures (finished OR finished_provisional — what
+  // FPL confirms after the whistle is bonus, which cannot change a result) —
+  // the FPL API publishes no table. Empty until a match has reached full
+  // time, so the view shows its designed pre-season empty state rather than
+  // twenty rows of zeros.
   "pl_table": [ { "pos": 1, "team": 6, "p": 2, "w": 2, "d": 0, "l": 0,
                   "gf": 7, "ga": 0, "gd": 7, "pts": 6, "form": ["W", "W"] } ],
 ```
@@ -109,6 +111,28 @@ Two things worth stating plainly:
 - **`did_not_set`** is true when a manager was in the league for that gameweek
   but has no history row. FPL rolls a team over if you do nothing, so a true
   `0 ✕` is rare by design; it means non-participation, not a quiet week.
+
+### `provisional` — the round at full time, bonus pending (not in §5)
+
+```jsonc
+  // The §11.1 provisional round, if one is in that state right now; null
+  // otherwise. Display only, NEVER money: nothing here is booked, and the
+  // ledger does not read it. Frozen into raw/gw-NN.provisional.json the
+  // moment every match reached full time (the same record §11.4 uses to name
+  // a bonus flip), so the online build and the offline rebuild publish the
+  // same block. Points are FPL's event points as they stood at full time —
+  // exactly what the ledger will rank on — and cannot move; only confirmed
+  // bonus and auto-subs can still land on top. The page shows the pot leader
+  // from this block whenever the live layer's feed is not up.
+  "provisional": {
+    "gw": 1,
+    "observed_at": "2026-08-24T22:22:49Z",
+    "leader": "sam", "runner_up": "jack", "margin": 4,
+    "pot": 130,                        // RM, advertised weekly pot
+    "scores": { "sam": { "points": 71, "hits": 0 } },
+    "order": ["sam", "jack"]           // points desc, then manager id
+  },
+```
 
 ### `months[]` — complete buckets only
 
