@@ -18,6 +18,7 @@
 import { render } from "./runtime.js";
 import { PROXY_BASE } from "./config.js";
 import * as liveFeed from "./live.js";
+import * as notify from "./notify.js";
 
 const POLL_INTERVAL_MS = 60000;
 
@@ -174,6 +175,7 @@ class Dashboard {
     this.watchViewport();
     this.watchHistory();
     this.startLive();
+    this.checkNotify();
   }
 
   /* Rotating a phone crosses the 560px threshold, so the chart/list choice has
@@ -219,6 +221,29 @@ class Dashboard {
       ticks += 1;
       if (this.live || ticks % 30 === 0) this.setState({ tick: ticks }, true);
     }, 1000);
+  }
+
+  /* Read-only: what state is the reminder in? Deliberately never prompts —
+   * an unrequested permission dialog on first load is how a site gets its
+   * notifications blocked for good. The button is what asks. */
+  async checkNotify() {
+    try {
+      this.setState({ notify: await notify.currentState() }, true);
+    } catch (error) {
+      this.setState({ notify: "off" }, true);
+    }
+  }
+
+  async toggleNotify() {
+    const was = this.state.notify;
+    this.setState({ notify: "working" });
+    try {
+      const next = was === "on" ? await notify.disable() : await notify.enable();
+      this.setState({ notify: next });
+    } catch (error) {
+      console.warn("deadline reminders:", error);
+      this.setState({ notify: "error" });
+    }
   }
 
   /* §11.2 — poll only inside match windows, and only through the proxy. */
@@ -308,7 +333,7 @@ class Dashboard {
   }
 
   state = { tab:"gw", you:null, fxGW:null, theme:"light", detailRange:"all", vw:1200, potView:"chart", ledgerView:"chart",
-            showProj:false, moneyOpen:null, tick:0, liveSince:Date.now() };
+            showProj:false, moneyOpen:null, tick:0, liveSince:Date.now(), notify:"unavailable" };
 
   /* FPL's chip codes are not words anybody says out loud. Unknown codes pass
    * through rather than being swallowed — a chip nobody has heard of still
@@ -400,6 +425,45 @@ class Dashboard {
       : isPre ? "GW1 not played"
       : isFinal ? "GW" + cur.gameweek + " settled · GW" + cur.next_gw + " next"
       : "GW" + cur.gameweek + " in progress";
+
+    /* ---- deadline reminders ----
+     * One control, and it has to be honest about six different states. The
+     * failure modes are all silent ones — an iPhone that was never added to
+     * the home screen, a permission denied months ago, a worker without keys
+     * — so each says what it is instead of leaving a button that does nothing.
+     */
+    const notifyState = S.notify;
+    const notifyCopy = {
+      unavailable: { label:"", show:false },
+      unsupported: { label:"", show:false },
+      off:      { label:"🔔 Remind me", aria:"Turn on deadline reminders", pressed:"false",
+                  title:"Get a notification a few hours before each deadline" },
+      on:       { label:"🔔 Reminders on", aria:"Turn off deadline reminders", pressed:"true",
+                  title:"You will be reminded before each deadline. Tap to stop." },
+      working:  { label:"…", aria:"Working", pressed:"false", title:"Working" },
+      blocked:  { label:"🔕 Blocked", aria:"Notifications are blocked in this browser", pressed:"false",
+                  title:"Notifications are blocked for this site in your browser settings" },
+      "needs-install": { label:"🔔 Remind me", aria:"How to turn on deadline reminders", pressed:"false",
+                  title:"On iPhone, add SuperF to your home screen first" },
+      error:    { label:"🔔 Try again", aria:"Reminders could not be turned on, try again", pressed:"false",
+                  title:"That did not work — tap to try again" },
+    };
+    const nc = notifyCopy[notifyState] || notifyCopy.off;
+    const notifyOn = notifyState === "on";
+    const notify = {
+      show: nc.show !== false,
+      label: nc.label, aria: nc.aria, pressed: nc.pressed, title: nc.title,
+      ink: notifyOn ? "var(--good)" : notifyState === "blocked" ? "var(--ink-muted)" : "var(--ink-2)",
+      bg: notifyOn ? "var(--tint)" : "var(--surface-1)",
+      rule: notifyOn ? "var(--good)" : "var(--border)",
+      onToggle: () => this.toggleNotify(),
+      hasHint: notifyState === "needs-install" || notifyState === "blocked" || notifyState === "error",
+      hint: notifyState === "needs-install"
+        ? "Want a deadline reminder on this iPhone? Share → Add to Home Screen, open SuperF from there, then tap Remind me. Apple only allows notifications for sites added to the home screen."
+        : notifyState === "blocked"
+        ? "Notifications are blocked for this site in your browser settings. Allow them there and the reminder will work — nothing to change here."
+        : "Could not turn reminders on just now. Tap Remind me to try again.",
+    };
 
     /* A tablist, not three buttons: left/right move between tabs and only the
      * selected one is in the tab order, which is what a screen reader and a
@@ -1194,7 +1258,7 @@ class Dashboard {
       chrome: { dot: sm.dot, dotAnim: sm.anim, dotInk: sm.ink, stateText: sm.text, stateSub: stateSub,
                 themeLabel: S.theme === "dark" ? "Light" : "Dark",
                 themeAria: S.theme === "dark" ? "Switch to the light theme" : "Switch to the dark theme" },
-      tabs, banner,
+      tabs, banner, notify,
       isGW: S.tab === "gw", isSeason: S.tab === "season", isRules: S.tab === "rules",
       activeTabId: "tab-" + S.tab,
       showCountdown: !showLive, cd, brk,

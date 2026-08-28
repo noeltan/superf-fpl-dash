@@ -57,6 +57,13 @@ jobs:
 
       - name: Check the JavaScript parses
         run: |
-          for file in docs/app.js docs/runtime.js docs/live.js docs/config.js worker/index.js; do
+          for file in docs/app.js docs/runtime.js docs/live.js docs/config.js \
+                      docs/notify.js docs/sw.js worker/index.js worker/push.js; do
             node --check "$file"
           done
+
+      - name: Push reminder logic
+        # A bad VAPID signature fails silently — the push service 401s and the
+        # league just never gets reminded. So the signature is verified here
+        # the same way a push service verifies it.
+        run: node tests/test_push.mjs
