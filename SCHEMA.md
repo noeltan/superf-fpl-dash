@@ -117,16 +117,21 @@ Two things worth stating plainly:
 ```jsonc
   // The §11.1 provisional round, if one is in that state right now; null
   // otherwise. Display only, NEVER money: nothing here is booked, and the
-  // ledger does not read it. Frozen into raw/gw-NN.provisional.json the
-  // moment every match reached full time (the same record §11.4 uses to name
-  // a bonus flip), so the online build and the offline rebuild publish the
-  // same block. Points are FPL's event points as they stood at full time —
-  // exactly what the ledger will rank on — and cannot move; only confirmed
-  // bonus and auto-subs can still land on top. The page shows the pot leader
-  // from this block whenever the live layer's feed is not up.
+  // ledger does not read it. Read from raw/gw-NN.provisional.json (the same
+  // record §11.4 uses to name a bonus flip), so the online build and the
+  // offline rebuild publish the same block.
+  //
+  // These are NOT the scores the ledger will settle on. Confirmed bonus,
+  // auto-subs and the vice-captain fallback all land at the Final transition:
+  // in GW1 that moved one manager +11 points and five places. The page says so
+  // wherever it shows them. `scores`/`scores_at` are refreshed on every run
+  // while the round is provisional; `leader`/`observed_at` are write-once,
+  // because §11.4 asks who led when it FIRST went provisional. The page shows
+  // the pot leader from this block whenever the live layer's feed is not up.
   "provisional": {
     "gw": 1,
     "observed_at": "2026-08-24T22:22:49Z",
+    "scores_at": "2026-08-24T22:22:49Z",   // last refresh of `scores`
     "leader": "sam", "runner_up": "jack", "margin": 4,
     "pot": 130,                        // RM, advertised weekly pot
     "net": [81, 29],                   // RM, what 1st/2nd would take — advertised, not accrued

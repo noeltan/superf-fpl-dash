@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SuperF — FPL League Dashboard</title>
+<!-- Installable, because Apple grants Push only to a site that has been added
+     to the home screen — without this the reminder toggle cannot work at all
+     on an iPhone. Everything else about the page is unchanged by it. -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SuperF">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <meta name="description" content="The book of record for the SuperF FPL league. Weekly, monthly and season money accrues all season and settles once, after GW38.">
 <!-- Reads the theme back before first paint, so a remembered dark theme does
      not arrive as a white flash. Same key as app.js writes; the shape is
@@ -116,6 +126,9 @@ select,button{font:inherit}
       </sc-raw-select>
       </span>
     </div>
+    <sc-if value="{{notify.show}}" hint-placeholder-val="{{ false }}">
+      <button sc-camel-on-click="{{notify.onToggle}}" aria-label="{{notify.aria}}" aria-pressed="{{notify.pressed}}" title="{{notify.title}}" data-focus-key="notify" style="color:{{notify.ink}};background:{{notify.bg}};border:1px solid {{notify.rule}};border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">{{notify.label}}</button>
+    </sc-if>
     <button sc-camel-on-click="{{toggleTheme}}" aria-label="{{chrome.themeAria}}" data-focus-key="theme" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer">{{chrome.themeLabel}}</button>
   </div>
 </header>
@@ -154,6 +167,9 @@ select,button{font:inherit}
         <span style="font-size:12.5px;color:var(--ink-muted);font-variant-numeric:tabular-nums">· {{cd.utc}} UTC</span>
       </div>
       <div style="font-size:12.5px;color:var(--ink-2);margin-top:12px;padding-top:12px;border-top:1px solid var(--grid);line-height:1.55">{{cd.note}}</div>
+      <sc-if value="{{notify.hasHint}}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:12.5px;color:var(--warn-ink);margin-top:11px;padding:10px 12px;background:var(--tint-warn);border-radius:9px;line-height:1.55">{{notify.hint}}</div>
+      </sc-if>
     </div>
     <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);display:flex;flex-direction:column;gap:14px">
       <div>
@@ -301,8 +317,8 @@ select,button{font:inherit}
     <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px">
         <div>
-          <div style="font-size:14.5px;font-weight:640">GW{{provPot.gw}} full-time scores</div>
-          <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">Every match played. These points cannot move — only bonus can still land on top.</div>
+          <div style="font-size:14.5px;font-weight:640">GW{{provPot.gw}} provisional scores</div>
+          <div style="font-size:12.5px;color:var(--ink-muted);margin-top:2px">Every match played, but not yet settled. Confirmed bonus, auto-subs and the vice-captain all land only when FPL closes the round — scores can still rise, sometimes by a lot.</div>
         </div>
         <span style="font-size:10px;font-weight:680;letter-spacing:.1em;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:3px 6px;white-space:nowrap">BONUS PENDING</span>
       </div>
@@ -315,7 +331,7 @@ select,button{font:inherit}
           </div>
         </div>
       </sc-for>
-      <div style="font-size:12px;color:var(--ink-muted);margin-top:12px;line-height:1.6">The hairline means provisional — confirmed bonus and auto-subs land only when FPL closes the round, then the book of record below takes over and the pot settles.</div>
+      <div style="font-size:12px;color:var(--ink-muted);margin-top:12px;line-height:1.6">The hairline means provisional. Confirmed bonus, auto-subs and the vice-captain land only when FPL closes the round — a manager whose starter did not play can gain a lot there — and then the book of record below takes over and the pot settles.</div>
     </div>
     </sc-if>
   </div>

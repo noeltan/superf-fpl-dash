@@ -276,23 +276,38 @@ def test_provisional_scores_ride_along_with_the_leader(tmp_path):
     assert record["scores"] == SCORES
 
 
-def test_a_record_written_before_scores_existed_is_completed_once(tmp_path):
-    """GW1's file predates the scores key. It gets them exactly once; the
-    write-once leader and timestamp are never touched."""
+def test_scores_refresh_while_the_leader_stays_write_once(tmp_path):
+    """The two halves of this record answer different questions.
+
+    §11.4 asks who led when the round FIRST went provisional, so the leader and
+    its timestamp are frozen. The standing on the page should track whatever
+    FPL last said, so the scores are replaced every run — they are an
+    observation of a moving state, not a record of a settled one."""
+    snapshot_mod.record_provisional_leader(
+        3, "jack", "2026-09-06T20:00:00Z", root=tmp_path, scores=SCORES
+    )
+    later = {"jack": {"points": 72, "hits": 0}, "sam": {"points": 80, "hits": 4}}
+    snapshot_mod.record_provisional_leader(
+        3, "sam", "2026-09-06T23:00:00Z", root=tmp_path, scores=later
+    )
+    record = snapshot_mod.load_provisional(3, tmp_path)
+    assert record["leader"] == "jack"                       # write-once survives
+    assert record["observed_at"] == "2026-09-06T20:00:00Z"  # ditto
+    assert record["scores"] == later                        # but the standing moves
+    assert record["scores_at"] == "2026-09-06T23:00:00Z"
+
+
+def test_a_record_written_before_scores_existed_gains_them(tmp_path):
+    """A file written before scores were part of the shape is completed, not
+    left half-empty, and still keeps its original leader."""
     snapshot_mod.record_provisional_leader(3, "jack", "2026-09-06T20:00:00Z", root=tmp_path)
+    assert "scores" not in snapshot_mod.load_provisional(3, tmp_path)
     snapshot_mod.record_provisional_leader(
         3, "sam", "2026-09-06T22:00:00Z", root=tmp_path, scores=SCORES
     )
     record = snapshot_mod.load_provisional(3, tmp_path)
-    assert record["leader"] == "jack"                       # write-once survives
-    assert record["observed_at"] == "2026-09-06T20:00:00Z"
+    assert record["leader"] == "jack"
     assert record["scores"] == SCORES
-
-    later = {"jack": {"points": 0, "hits": 0}}
-    snapshot_mod.record_provisional_leader(
-        3, "sam", "2026-09-06T23:00:00Z", root=tmp_path, scores=later
-    )
-    assert snapshot_mod.load_provisional(3, tmp_path)["scores"] == SCORES
 
 
 def test_no_provisional_record_reads_as_absent(tmp_path):

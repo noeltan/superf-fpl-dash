@@ -25,7 +25,7 @@ data/2026-27/raw/gw-NN.projection.json  what the projection knew at the deadline
 data/2026-27/corrections.json append-only adjusting entries (§3.9.4)
 data/2026-27/data.json        derived ledger, rebuildable from the two above
 docs/                         GitHub Pages — the published copy and the page
-worker/                       Cloudflare Worker — the one header Pages cannot send
+worker/                       Cloudflare Worker — the missing header, and the reminder
 ```
 
 **`raw/` is append-only; `data.json` is disposable.** `raw/gw-NN.json` freezes
@@ -78,6 +78,24 @@ Serve the page locally with `python -m http.server -d docs 8000`.
 4. **Live scores** — `cd worker && npx wrangler deploy`, then paste the URL into
    `docs/config.js`. Until you do, everything works except the in-match live
    layer, which stays hidden.
+5. **Deadline reminders** (optional) — a browser notification a few hours before
+   each deadline. Three one-time steps, all on the Worker:
+
+   ```bash
+   cd worker
+   npx wrangler kv namespace create SUBSCRIPTIONS   # paste the id into wrangler.toml
+   node genkeys.mjs                                 # prints a VAPID keypair
+   npx wrangler secret put VAPID_PUBLIC_KEY
+   npx wrangler secret put VAPID_PRIVATE_JWK
+   npx wrangler deploy
+   ```
+
+   Then a "🔔 Remind me" button appears in the header and each person opts in on
+   their own device. Skip it and nothing changes: `/push/*` answers 503, the
+   button never renders, and the rest of the dashboard is untouched.
+
+   On iPhone the site must be added to the home screen first — Apple grants Push
+   only to installed sites — and the button says so rather than doing nothing.
 
 Scheduled workflows only fire from the default branch, so the crons start once
 this is merged.
@@ -102,6 +120,9 @@ this is merged.
 | `docs/runtime.js` | the template runtime the prototype needed and did not ship with |
 | `superf/emit.py` → `rules_block` | the "How it works" tab, derived from N so it cannot go stale |
 | `tools/gen_workflows.py` | regenerates both workflows from the real calendar |
+| `worker/push.js` | VAPID-signed Web Push, without payload encryption |
+| `docs/sw.js` | the service worker that writes the reminder from `data.json` |
+| `docs/notify.js` | the opt-in half, and the six states it has to be honest about |
 
 ### Decisions worth knowing
 
@@ -117,6 +138,17 @@ manager. With uniform stakes it reduces to the spec's version exactly.
 managers occupy.** That is the only reading that stays zero-sum, and it
 stays zero-sum: two managers tied for the weekly pot take both paid shares
 between them, +RM30 each.
+
+**The reminder push carries no payload.** An encrypted payload (RFC 8291) is
+most of the code in a push library — ECDH, HKDF, aes128gcm — and none of it is
+needed to say "the deadline is close", because the page that would say it is
+already published. So the Worker sends a bare wake-up and `docs/sw.js` fetches
+`data.json` and writes the notification from the same calendar the site renders.
+One deadline list, not two, and a subscription's payload cannot leak from
+anywhere because there is not one. What is left is VAPID: a signed JWT, about
+forty lines of WebCrypto. `tests/test_push.mjs` verifies that signature the way
+a push service verifies it, because a bad one fails silently — the push service
+answers 401 and the league simply never gets reminded.
 
 **Snapshot once, never re-fetch.** A Final gameweek's inputs cannot change, so
 they are written to `data/2026-27/raw/gw-NN.json` on first sight and read from

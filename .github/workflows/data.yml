@@ -7,10 +7,17 @@ on:
   schedule:
     # Weekly, Tuesday 06:00 Malaysia time (§4).
     - cron: "0 22 * * 1"
+    # Daily safety net, 14:00 Malaysia time. The per-round attempts below are
+    # timed off the last kickoff, but a round goes Final only when FPL confirms
+    # bonus, and that is on FPL's clock: GW1 confirmed ~14h after its last
+    # whistle, after every per-round attempt had fired, so the settled pot
+    # would have waited days for the next round's crons while the page still
+    # said "bonus pending". One line bounds that for every round.
+    - cron: "0 6 * * *"
     # Plus 3h, 6h, 12h after each round's last kickoff, so a
     # gameweek that goes Final at the weekend is published the same day — with
     # retries, because the round is only Final once FPL confirms bonus, and a
-    # single early attempt would leave it unsettled until the weekly cron.
+    # single early attempt would leave it unsettled until the daily cron.
     - cron: "0 22 24 8 *"
     - cron: "0 1 25 8 *"
     - cron: "0 7 25 8 *"

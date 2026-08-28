@@ -2,4 +2,32 @@ name = "superf-fpl-proxy"
 main = "index.js"
 compatibility_date = "2026-08-15"
 
-# No KV, no D1, no secrets. It adds one header and caches for 30 seconds.
+# The proxy half needs nothing: it adds one header and caches for 30 seconds.
+# Everything below is for deadline reminders, and every part of it is optional
+# — with no KV bound and no keys set, /push/* answers 503 and the page simply
+# never offers the toggle. The dashboard is unchanged either way.
+
+# Hourly, not "at the reminder time". Cron is a suggestion, so the sender fires
+# on a window and a KV flag stops it firing twice — the same shape as the data
+# job's retries, learned the same way.
+[triggers]
+crons = ["0 * * * *"]
+
+[vars]
+# Where the published calendar lives. The Worker reads the same data.json the
+# page does, so there is one deadline list in the world, not two.
+DATA_URL = "https://noeltan.github.io/superf-fpl-dash/data.json"
+VAPID_SUBJECT = "mailto:superf-bot@users.noreply.github.com"
+
+# Push subscriptions. Endpoints only — no names, no manager ids, nothing that
+# says who anybody is.
+#   npx wrangler kv namespace create SUBSCRIPTIONS
+# then paste the id it prints here.
+[[kv_namespaces]]
+binding = "SUBSCRIPTIONS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# Secrets, set once and never committed:
+#   node genkeys.mjs                      # prints both halves
+#   npx wrangler secret put VAPID_PUBLIC_KEY
+#   npx wrangler secret put VAPID_PRIVATE_JWK

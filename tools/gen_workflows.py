@@ -14,13 +14,17 @@ So each deadline gets several attempts, the job guards itself on the real
 window, and it refuses to publish once the first kickoff has gone. Duplicate
 cron lines across gameweeks collapse, which keeps the file readable.
 
-The data job runs weekly per §4, plus a few times after each round's last
-kickoff so a gameweek that goes Final at the weekend is published the same day
-rather than sitting behind a Tuesday cron — which is also what stops §9.5's
-stale banner crying wolf every weekend. Several attempts, not one: the round is
-only Final once FPL confirms bonus, which is usually within the first attempt's
-three hours but sat overnight for GW1 — and a single attempt that lands early
-leaves the round unsettled until the weekly cron, up to a week later.
+The data job runs weekly per §4, daily as a safety net, plus a few times after
+each round's last kickoff so a gameweek that goes Final at the weekend is
+published the same day rather than sitting behind a Tuesday cron — which is
+also what stops §9.5's stale banner crying wolf every weekend.
+
+Several attempts, not one, with a daily backstop behind them: a round is Final
+only once FPL confirms bonus, and that is on FPL's clock, not ours. GW1
+confirmed roughly fourteen hours after its last whistle — after every per-round
+attempt had already fired — so without the daily line the settled pot would
+have waited for the next round's crons, days later, while the page went on
+saying "bonus pending".
 
 Usage:  python3 tools/gen_workflows.py [--offline]
 """
@@ -107,10 +111,17 @@ on:
   schedule:
     # Weekly, Tuesday 06:00 Malaysia time (§4).
     - cron: "0 22 * * 1"
+    # Daily safety net, 14:00 Malaysia time. The per-round attempts below are
+    # timed off the last kickoff, but a round goes Final only when FPL confirms
+    # bonus, and that is on FPL's clock: GW1 confirmed ~14h after its last
+    # whistle, after every per-round attempt had fired, so the settled pot
+    # would have waited days for the next round's crons while the page still
+    # said "bonus pending". One line bounds that for every round.
+    - cron: "0 6 * * *"
     # Plus {', '.join(f'{h}h' for h in DATA_OFFSETS_HOURS)} after each round's last kickoff, so a
     # gameweek that goes Final at the weekend is published the same day — with
     # retries, because the round is only Final once FPL confirms bonus, and a
-    # single early attempt would leave it unsettled until the weekly cron.
+    # single early attempt would leave it unsettled until the daily cron.
 {data_cron}
   workflow_dispatch:
 
