@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-25T10:39:33Z",
+ "generated_at": "2026-08-29T02:25:14Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 1,
-  "next_gw": 2,
-  "state": "final"
+  "gameweek": 2,
+  "next_gw": 3,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -31,16 +31,16 @@
   },
   "monthly": {
    "stake_per_gw": 5,
-   "gameweeks": 2,
-   "stake": 10,
-   "pot": 130,
+   "gameweeks": 3,
+   "stake": 15,
+   "pot": 195,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    81,
-    29
+    121.5,
+    43.5
    ]
   },
   "season": {
@@ -252,95 +252,95 @@
  },
  "managers": [
   {
-   "display_name": "Noel Tan",
-   "entry_id": 1652821,
    "id": "noel",
+   "display_name": "Noel Tan",
    "short": "Noel",
-   "team_name": "JEONSOMI"
+   "team_name": "JEONSOMI",
+   "entry_id": 1652821
   },
   {
-   "display_name": "Jack Siah",
-   "entry_id": 1427521,
    "id": "jack",
+   "display_name": "Jack Siah",
    "short": "Jack",
-   "team_name": "Apple TV"
+   "team_name": "Apple TV",
+   "entry_id": 1427521
   },
   {
-   "display_name": "Sam Lim",
-   "entry_id": 2686159,
    "id": "sam",
+   "display_name": "Sam Lim",
    "short": "Sam",
-   "team_name": "GeGe"
+   "team_name": "GeGe",
+   "entry_id": 2686159
   },
   {
-   "display_name": "Wei Hun Wong",
-   "entry_id": 4590653,
    "id": "weihun",
+   "display_name": "Wei Hun Wong",
    "short": "Wei Hun",
-   "team_name": "Back To Back To Back"
+   "team_name": "Back To Back To Back",
+   "entry_id": 4590653
   },
   {
-   "display_name": "Soon Lee Loo",
-   "entry_id": 2488327,
    "id": "soonlee",
+   "display_name": "Soon Lee Loo",
    "short": "Soon Lee",
-   "team_name": "SLucky XI"
+   "team_name": "SLucky XI",
+   "entry_id": 2488327
   },
   {
-   "display_name": "Boon Siang Ng",
-   "entry_id": 1840731,
    "id": "boonsiang",
+   "display_name": "Boon Siang Ng",
    "short": "Boon",
-   "team_name": "Boon"
+   "team_name": "Boon",
+   "entry_id": 1840731
   },
   {
-   "display_name": "Tian Pin Lee",
-   "entry_id": 1567532,
    "id": "tianpin",
+   "display_name": "Tian Pin Lee",
    "short": "Tian Pin",
-   "team_name": "Vege went tight"
+   "team_name": "Vege went tight",
+   "entry_id": 1567532
   },
   {
-   "display_name": "Christopher Chin",
-   "entry_id": 1641730,
    "id": "chris",
+   "display_name": "Christopher Chin",
    "short": "Chris",
-   "team_name": "ChriSpirit"
+   "team_name": "ChriSpirit",
+   "entry_id": 1641730
   },
   {
-   "display_name": "Calvin Foo",
-   "entry_id": 4677226,
    "id": "calvinfoo",
+   "display_name": "Calvin Foo",
    "short": "Calvin",
-   "team_name": "After 22 yrs"
+   "team_name": "After 22 yrs",
+   "entry_id": 4677226
   },
   {
-   "display_name": "Shaik Zahir",
-   "entry_id": 4882676,
    "id": "shaikzahir",
+   "display_name": "Shaik Zahir",
    "short": "Zahir",
-   "team_name": "BestPlaya"
+   "team_name": "BestPlaya",
+   "entry_id": 4882676
   },
   {
-   "display_name": "Wei Chen Lim",
-   "entry_id": 5140825,
    "id": "weichenlim",
+   "display_name": "Wei Chen Lim",
    "short": "Wei Chen",
-   "team_name": "chili pan mee"
+   "team_name": "chili pan mee",
+   "entry_id": 5140825
   },
   {
-   "display_name": "Way Shoon Lim",
-   "entry_id": 5250642,
    "id": "wayshoonlim",
+   "display_name": "Way Shoon Lim",
    "short": "Way Shoon",
-   "team_name": "AyamFC"
+   "team_name": "AyamFC",
+   "entry_id": 5250642
   },
   {
-   "display_name": "Robin Ho Ho",
-   "entry_id": 6529703,
    "id": "robinhoho",
+   "display_name": "Robin Ho Ho",
    "short": "Robin",
-   "team_name": "LetMeWin"
+   "team_name": "LetMeWin",
+   "entry_id": 6529703
   }
  ],
  "teams": {
@@ -905,11 +905,11 @@
     "ko": "2026-08-28T19:00:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 4,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 11
    },
    {
@@ -1361,19 +1361,6 @@
     "id": 44
    },
    {
-    "h": 15,
-    "a": 20,
-    "ko": "2026-09-19T14:00:00Z",
-    "dh": 2,
-    "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 45
-   },
-   {
     "h": 17,
     "a": 11,
     "ko": "2026-09-19T14:00:00Z",
@@ -1398,6 +1385,19 @@
     "finished": false,
     "finished_provisional": false,
     "id": 47
+   },
+   {
+    "h": 15,
+    "a": 20,
+    "ko": "2026-09-20T13:00:00Z",
+    "dh": 2,
+    "da": 5,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 45
    },
    {
     "h": 3,
@@ -5786,6 +5786,22 @@
  "pl_table": [
   {
    "pos": 1,
+   "team": 15,
+   "p": 2,
+   "w": 2,
+   "d": 0,
+   "l": 0,
+   "gf": 6,
+   "ga": 2,
+   "gd": 4,
+   "pts": 6,
+   "form": [
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 2,
    "team": 5,
    "p": 1,
    "w": 1,
@@ -5800,7 +5816,7 @@
    ]
   },
   {
-   "pos": 2,
+   "pos": 3,
    "team": 1,
    "p": 1,
    "w": 1,
@@ -5815,7 +5831,7 @@
    ]
   },
   {
-   "pos": 3,
+   "pos": 4,
    "team": 4,
    "p": 1,
    "w": 1,
@@ -5830,7 +5846,7 @@
    ]
   },
   {
-   "pos": 4,
+   "pos": 5,
    "team": 9,
    "p": 1,
    "w": 1,
@@ -5845,7 +5861,7 @@
    ]
   },
   {
-   "pos": 5,
+   "pos": 6,
    "team": 11,
    "p": 1,
    "w": 1,
@@ -5860,7 +5876,7 @@
    ]
   },
   {
-   "pos": 6,
+   "pos": 7,
    "team": 6,
    "p": 1,
    "w": 1,
@@ -5875,23 +5891,8 @@
    ]
   },
   {
-   "pos": 7,
-   "team": 12,
-   "p": 1,
-   "w": 1,
-   "d": 0,
-   "l": 0,
-   "gf": 2,
-   "ga": 1,
-   "gd": 1,
-   "pts": 3,
-   "form": [
-    "W"
-   ]
-  },
-  {
    "pos": 8,
-   "team": 15,
+   "team": 12,
    "p": 1,
    "w": 1,
    "d": 0,
@@ -6011,21 +6012,6 @@
   },
   {
    "pos": 16,
-   "team": 8,
-   "p": 1,
-   "w": 0,
-   "d": 0,
-   "l": 1,
-   "gf": 0,
-   "ga": 2,
-   "gd": -2,
-   "pts": 0,
-   "form": [
-    "L"
-   ]
-  },
-  {
-   "pos": 17,
    "team": 16,
    "p": 1,
    "w": 0,
@@ -6040,7 +6026,7 @@
    ]
   },
   {
-   "pos": 18,
+   "pos": 17,
    "team": 7,
    "p": 1,
    "w": 0,
@@ -6055,7 +6041,7 @@
    ]
   },
   {
-   "pos": 19,
+   "pos": 18,
    "team": 19,
    "p": 1,
    "w": 0,
@@ -6070,7 +6056,7 @@
    ]
   },
   {
-   "pos": 20,
+   "pos": 19,
    "team": 2,
    "p": 1,
    "w": 0,
@@ -6081,6 +6067,22 @@
    "gd": -4,
    "pts": 0,
    "form": [
+    "L"
+   ]
+  },
+  {
+   "pos": 20,
+   "team": 8,
+   "p": 2,
+   "w": 0,
+   "d": 0,
+   "l": 2,
+   "gf": 1,
+   "ga": 6,
+   "gd": -5,
+   "pts": 0,
+   "form": [
+    "L",
     "L"
    ]
   }
@@ -6212,16 +6214,16 @@
  "provisional": null,
  "months": [],
  "month_current": {
-  "month": "AUG",
-  "gameweeks": 2,
-  "opens_gw": 1,
-  "stake": 10,
-  "pot": 130,
+  "month": "SEP",
+  "gameweeks": 3,
+  "opens_gw": 3,
+  "stake": 15,
+  "pot": 195,
   "net": [
-   81,
-   29
+   121.5,
+   43.5
   ],
-  "note": "August is 1 of 2 gameweeks in, RM130 in the pot. Nothing settles until the last one is final."
+  "note": "September opens with GW3 \u2014 RM15 each, RM195 in the pot, 3 gameweeks to decide it."
  },
  "totals": {
   "noel": 63,
