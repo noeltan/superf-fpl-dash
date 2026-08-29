@@ -249,6 +249,7 @@ select,button{font:inherit}
       </div>
 
       <div style="display:flex;flex-direction:column;gap:18px">
+        <sc-if value="{{live.pot.show}}" hint-placeholder-val="{{ true }}">
         <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px)">
           <div style="font-size:14.5px;font-weight:640;margin-bottom:3px">Pot leader — provisional</div>
           <div style="font-size:12.5px;color:var(--ink-muted);margin-bottom:14px">Not banked until every fixture says finished. Cannot rush.</div>
@@ -259,6 +260,7 @@ select,button{font:inherit}
           <div style="font-size:13.5px;color:var(--ink-2);margin-top:8px">{{live.pot.margin}}</div>
           <div style="margin-top:14px;padding:11px 13px;background:var(--tint-warn);border-radius:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)">{{live.pot.note}}</div>
         </div>
+        </sc-if>
       </div>
     </div>
 

@@ -114,9 +114,12 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
 
   // BPS standings per fixture — who is IN LINE for bonus, which is what FPL's
   // own bonus tab shows. Deliberately not added to anybody's score: see the
-  // note on live_points below.
+  // note on live_points below. Only for fixtures whose bonus is still open —
+  // once a fixture reads finished, FPL has confirmed its bonus and folded it
+  // into total_points, so "in line for" would be stale over a settled award.
   const bpsTop = new Map();
   for (const fixture of fixtures) {
+    if (fixture.finished) continue;
     const rows = [];
     for (const element of elements) {
       const team = teamOfElement.get(element.id);
@@ -253,8 +256,8 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
     state,
     matches_in_play: inPlayCount,
     bonus_watch: state === "provisional"
-      ? "All matches finished, but FPL has not confirmed bonus or applied auto-subs. Scores below are FPL's own and will still move. Nothing settles until every fixture reads finished."
-      : "Scores are FPL's live points — bonus is not in them yet, for anybody. The BPS standings below show who is in line for it; one late save or booking moves them, and the pot with it.",
+      ? "All matches finished, but FPL has not confirmed every bonus or applied auto-subs. Scores below are FPL's own and can still move. Nothing settles until every fixture reads finished."
+      : "Scores are FPL's live points. Bonus folds into a score when FPL confirms it at each match's finish — until then the bonus watch shows who is in line, and one late save or booking can move it, and the pot with it.",
     pot_leader: leader && runnerUp
       ? { manager: leader.id, margin: leader.live_points - runnerUp.live_points, over: runnerUp.id }
       : null,

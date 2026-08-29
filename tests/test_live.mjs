@@ -134,6 +134,39 @@ test("the award ladder itself is unchanged", () => {
   assert.equal(awards.get("c"), 1);
 });
 
+test("a finished fixture drops off the bonus watch — its bonus is settled", () => {
+  // Confirmed bonus is inside total_points once a fixture reads finished;
+  // showing who is "in line" for an award already made would be stale.
+  const done = { ...FIXTURE, finished: true, finished_provisional: true };
+  const live = assemble({
+    data: DATA, gw: 2, fixtures: [done], elements: ELEMENTS,
+    picksByManager: { noel: { active_chip: null, picks: [{ element: 10, multiplier: 1 }] } },
+    bootstrap: BOOTSTRAP,
+  });
+  assert.deepEqual(live.fixtures[0].bps_top3, []);
+});
+
+console.log("\nA thin feed must not take the page down");
+
+test("one manager in the feed means no pot race, not a crash", () => {
+  // Picks fetches fail one by one on a bad connection. A feed of one is a
+  // feed with no race in it: pot_leader must be null, and the page's guard
+  // renders no card rather than dereferencing it.
+  const live = build([
+    { element: 10, multiplier: 1, is_captain: false, is_vice_captain: false },
+  ]);
+  assert.equal(live.pot_leader, null);
+});
+
+test("an empty feed still assembles", () => {
+  const live = assemble({
+    data: DATA, gw: 2, fixtures: [FIXTURE], elements: ELEMENTS,
+    picksByManager: {}, bootstrap: BOOTSTRAP,
+  });
+  assert.deepEqual(live.managers, []);
+  assert.equal(live.pot_leader, null);
+});
+
 console.log("\nWhat is still pending is still reported");
 
 test("a played-but-zero-minutes starter is flagged as a pending sub", () => {
