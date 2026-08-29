@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-29T02:25:14Z",
+ "generated_at": "2026-08-29T12:35:29Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -918,9 +918,9 @@
     "ko": "2026-08-29T11:30:00Z",
     "dh": 3,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 1,
+    "started": true,
     "finished": false,
     "finished_provisional": false,
     "id": 14
