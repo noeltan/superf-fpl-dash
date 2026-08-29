@@ -301,6 +301,7 @@ def main() -> int:
             log.info("GW%d already has a published call", gw)
             return 0
 
+    rescued = False
     if args.mid_round:
         if not gw_fixtures:
             log.error("GW%d has no fixtures to call", gw)
@@ -350,6 +351,20 @@ def main() -> int:
                         len(still_to_play), len(gw_fixtures),
                     )
                     args.mid_round = True
+                    rescued = True
+                elif args.mid_round_if_late:
+                    # The rescue found nothing to rescue: every match has
+                    # kicked off, so a call now would be commentary. For the
+                    # scheduled job that is a deliberate no-op, not a failure —
+                    # a red run nobody can act on trains people to ignore the
+                    # red runs somebody must (GW38's simultaneous kickoffs
+                    # would otherwise guarantee one every season).
+                    log.warning(
+                        "GW%d window closed at %s and every match has kicked "
+                        "off — nothing left to call. Publishing nothing, "
+                        "deliberately.", gw, iso_z(closes),
+                    )
+                    return 0
                 else:
                     log.error(
                         "GW%d window closed at %s and it is now %s — publishing nothing. "
@@ -381,6 +396,13 @@ def main() -> int:
             for row in live.get("elements", [])
         }
         if not scored_so_far:
+            if rescued:
+                log.warning(
+                    "GW%d live feed is empty — the round has barely started and "
+                    "there is nothing banked to call from yet. Publishing "
+                    "nothing, deliberately; a later attempt may catch it.", gw,
+                )
+                return 0
             log.error("GW%d live feed is empty — nothing banked to call from", gw)
             return 1
 

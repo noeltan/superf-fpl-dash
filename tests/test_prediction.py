@@ -829,12 +829,37 @@ def test_a_late_rescue_is_still_never_counted_in_the_record(run):
     assert predict.settle_outstanding(settled) == EMPTY_RECORD_FOR_TEST
 
 
-def test_a_late_run_with_no_football_left_still_refuses(run):
+def test_a_late_run_with_no_football_left_is_a_deliberate_no_op(run):
     """Every match kicked off: a call now would be commentary, and the flag
-    must not talk anybody into publishing one."""
+    must not talk anybody into publishing one. But for the scheduled job this
+    is a no-op, not a failure — GW38's simultaneous kickoffs would otherwise
+    guarantee a red run every season, and red runs nobody can act on train
+    people to ignore the ones somebody must."""
     run.build(fixture_states=("live", "live"), live_points=RUN_LIVE)
     run.clock(LATE)
     run.argv("--mid-round-if-late", "--gw", "1")
+    assert predict.main() == 0
+    assert not (run.tmp_path / "prediction.json").exists()
+
+    # Without the flag it is still a hard refusal: a human rerunning it should
+    # be told, loudly, that the window is gone.
+    run.argv("--gw", "1")
+    assert predict.main() == 1
+    assert not (run.tmp_path / "prediction.json").exists()
+
+
+def test_a_rescue_with_an_empty_live_feed_is_a_no_op_not_a_failure(run):
+    """The first minutes after kickoff, before FPL's feed catches up. Nothing
+    to act on, so the scheduled job must not go red — but a deliberate
+    --mid-round keeps its hard refusal, because a human running it can wait
+    a minute and try again."""
+    run.build(fixture_states=("done", "todo"), live_points={})
+    run.clock(LATE)
+    run.argv("--mid-round-if-late")
+    assert predict.main() == 0
+    assert not (run.tmp_path / "prediction.json").exists()
+
+    run.argv("--mid-round")
     assert predict.main() == 1
     assert not (run.tmp_path / "prediction.json").exists()
 
