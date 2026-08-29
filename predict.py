@@ -21,6 +21,11 @@ mean nothing if a call made with six results in hand counted towards it.
 Modes:
     predict.py             call the upcoming gameweek (inside the window)
     predict.py --mid-round call the rest of a gameweek already in progress
+    predict.py --mid-round-if-late
+                           call blind if the window is open, and fall back to a
+                           mid-round call if it has already closed. What the
+                           scheduled job runs, because GitHub does not promise
+                           to fire a cron inside an 85-minute window.
     predict.py --score     only score a finished gameweek into `result`/`record`
     predict.py --force     ignore the window guard (manual reruns, testing)
 
@@ -222,6 +227,13 @@ def main() -> int:
         help="call the rest of a gameweek already in progress, from the points "
              "already banked plus the fixtures still to kick off",
     )
+    parser.add_argument(
+        "--mid-round-if-late", action="store_true", dest="mid_round_if_late",
+        help="if the pre-kickoff window has already closed and nothing was "
+             "published, call the rest of the round instead of publishing "
+             "nothing. For the scheduled job, whose cron GitHub does not "
+             "promise to fire on time.",
+    )
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--gw", type=int, help="override the target gameweek")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -289,6 +301,7 @@ def main() -> int:
             log.info("GW%d already has a published call", gw)
             return 0
 
+    rescued = False
     if args.mid_round:
         if not gw_fixtures:
             log.error("GW%d has no fixtures to call", gw)
@@ -315,13 +328,51 @@ def main() -> int:
                 log.info("too early for GW%d — the window opens at %s", gw, iso_z(opens))
                 return 0
             if now > closes:
-                log.error(
-                    "GW%d window closed at %s and it is now %s — publishing nothing. "
-                    "A late prediction is worthless and it looks like cheating (§12.1). "
-                    "If the gameweek is still running, --mid-round calls the rest of it.",
-                    gw, iso_z(closes), iso_z(now),
-                )
-                return 1
+                # The blind call is gone and cannot be faked: §12.1's window is
+                # the whole reason the record means anything. But the round may
+                # still have football left in it, and a call over the fixtures
+                # that have not kicked off is honest — just a different bet,
+                # which is why it publishes as MID-ROUND and never counts
+                # towards the §12.3 record.
+                #
+                # This is not a rare path. GitHub does not promise to fire a
+                # cron on time: GW2's three attempts were scheduled 17:35,
+                # 17:50 and 18:10 and all three landed after 01:00 the next
+                # morning, seven hours past a window that is only 85 minutes
+                # wide. Publishing nothing every time that happens means the
+                # feature does not exist.
+                if args.mid_round_if_late and still_to_play:
+                    log.warning(
+                        "GW%d pre-kickoff window closed at %s and it is now %s — "
+                        "the blind call is gone. %d of %d matches have not kicked "
+                        "off, so calling the rest of the round instead. It is "
+                        "published as MID-ROUND and is not counted in the record.",
+                        gw, iso_z(closes), iso_z(now),
+                        len(still_to_play), len(gw_fixtures),
+                    )
+                    args.mid_round = True
+                    rescued = True
+                elif args.mid_round_if_late:
+                    # The rescue found nothing to rescue: every match has
+                    # kicked off, so a call now would be commentary. For the
+                    # scheduled job that is a deliberate no-op, not a failure —
+                    # a red run nobody can act on trains people to ignore the
+                    # red runs somebody must (GW38's simultaneous kickoffs
+                    # would otherwise guarantee one every season).
+                    log.warning(
+                        "GW%d window closed at %s and every match has kicked "
+                        "off — nothing left to call. Publishing nothing, "
+                        "deliberately.", gw, iso_z(closes),
+                    )
+                    return 0
+                else:
+                    log.error(
+                        "GW%d window closed at %s and it is now %s — publishing nothing. "
+                        "A late prediction is worthless and it looks like cheating (§12.1). "
+                        "If the gameweek is still running, --mid-round calls the rest of it.",
+                        gw, iso_z(closes), iso_z(now),
+                    )
+                    return 1
 
     # --- squads ---------------------------------------------------------------
     managers = data["managers"]
@@ -345,6 +396,13 @@ def main() -> int:
             for row in live.get("elements", [])
         }
         if not scored_so_far:
+            if rescued:
+                log.warning(
+                    "GW%d live feed is empty — the round has barely started and "
+                    "there is nothing banked to call from yet. Publishing "
+                    "nothing, deliberately; a later attempt may catch it.", gw,
+                )
+                return 0
             log.error("GW%d live feed is empty — nothing banked to call from", gw)
             return 1
 

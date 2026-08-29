@@ -7,6 +7,14 @@ name: prediction.json
 # between the deadline and the first kickoff. Each deadline gets 3 attempts
 # because Actions cron is queued and routinely delayed; whichever lands first
 # publishes, and the rest exit as no-ops.
+#
+# "Routinely delayed" undersells it. GW2's three attempts were scheduled 17:35,
+# 17:50 and 18:10 and all three ran after 01:00 the next morning — seven hours
+# past a window only 85 minutes wide, so the round got no call at all. Scheduled
+# runs therefore pass --mid-round-if-late: if the blind window has gone, call
+# the fixtures that have not kicked off instead. That call is published as
+# MID-ROUND and never counts towards the §12.3 record, which is what keeps the
+# record about blind calls only.
 
 on:
   schedule:
@@ -163,6 +171,7 @@ jobs:
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
         run: |
           python predict.py -v \
+            ${{ github.event_name == 'schedule' && '--mid-round-if-late' || '' }} \
             ${{ inputs.gw && format('--gw {0}', inputs.gw) || '' }} \
             ${{ inputs.force && '--force' || '' }} \
             ${{ inputs.mid_round && '--mid-round' || '' }}
