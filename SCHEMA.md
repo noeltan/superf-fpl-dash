@@ -276,7 +276,7 @@ are the prototype's additions to §5.
                   "bps_top3": [ { "player": "Saka", "bps": 34,
                                   "provisional_bonus": 3 } ] } ],
   "managers": [
-    { "id": "noel", "live_points": 41, "provisional_bonus_included": 4,
+    { "id": "noel", "live_points": 41,          // FPL's own points, unmodified
       "played": 8, "in_play": 2, "to_play": 1,
       "captain": { "name": "Haaland", "points": 12, "multiplier": 2,
                    "fallback_to_vice": false, "vice": null },            // ← vice
@@ -291,10 +291,18 @@ are the prototype's additions to §5.
 sorted by kickoff then fixture id. The prototype's handoff note flags this as a
 build-step guarantee; it is held in `contract_fixtures()` and `live.js`.
 
-A live score is **not** the sum of `total_points` (§11.3): provisional bonus is
-computed from BPS every poll, confirmed bonus is left alone once a fixture is
-finished, and auto-subs and captain fallback are *reported as pending* rather
-than applied.
+`live_points` is **FPL's own number** — `Σ total_points × multiplier`, nothing
+added. It briefly carried a BPS-derived bonus estimate on top; that is gone.
+The estimate moved with every tackle and made the table disagree with the FPL
+app for the whole of every match, which in a book of record is worse than a
+smaller number that reconciles.
+
+So a live score is still **not** the settled score (§11.3). Bonus, auto-subs
+and the captain fallback all land only when FPL closes the round, and all three
+are *reported as pending* rather than applied: `subs_pending` per manager,
+`fallback_to_vice` on the captain, and `bps_top3` per fixture — the same BPS
+standings FPL's own bonus tab shows, published beside the table rather than
+folded into it.
 
 ---
 

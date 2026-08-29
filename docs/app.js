@@ -675,8 +675,13 @@ class Dashboard {
         },
         rows: F.managers.map(m => ({
           points: m.live_points, name: byId[m.id].display_name,
-          sub: "incl. +" + m.provisional_bonus_included + " provisional bonus" +
-               (m.subs_pending ? " · " + m.subs_pending + " sub pending" : ""),
+          // Only what is true for THIS row. "Bonus not in yet" was false the
+          // moment a 3pm game finished while the 5:30 played — that fixture's
+          // confirmed bonus is already inside the score. The footer carries
+          // the nuance once; a wrong claim repeated thirteen times is worse.
+          sub: m.subs_pending
+            ? m.subs_pending + " sub pending — auto-subs land at gameweek end"
+            : "",
           played: m.played + "/" + (m.squad || 11), inPlay: m.in_play, toPlay: m.to_play,
           chip: this.chipLabel(m.chip), hasChip: !!m.chip,
           toPlayInk: m.to_play >= 3 ? "var(--ink-1)" : "var(--ink-2)",
@@ -687,14 +692,21 @@ class Dashboard {
           deltaInk: m.rank_delta > 0 ? "var(--good)" : m.rank_delta < 0 ? "var(--crit)" : "var(--ink-muted)",
           ink: inkOf(m.id), weight: wOf(m.id), rowBg: rowBgOf(m.id), mark: markOf(m.id)
         })),
-        tableFoot: "Provisional bonus already inside, that's why every number got the hairline. Auto-subs and vice captain only kick in when FPL close the gameweek, not now. Δ rank = where you'd sit overall if it end like this.",
-        pot: {
+        tableFoot: "Same numbers as the FPL app. Bonus folds into a score when FPL confirms it at each match's finish — until then the bonus watch card shows who is in line — and auto-subs and vice captain only kick in when FPL close the gameweek. That is why every number got the hairline: it can still move. Δ rank = where you'd sit overall if it end like this.",
+        /* pot_leader is null until at least two managers made it into the
+         * feed — picks fetches can fail one by one on a bad connection, and a
+         * feed of one is a feed with no race in it. A missing card is a shrug;
+         * an unguarded dereference here took the whole page down with it. */
+        pot: F.pot_leader && byId[F.pot_leader.manager] && byId[F.pot_leader.over] ? {
+          show: true,
           name: byId[F.pot_leader.manager].display_name,
-          margin: "Leads the GW" + F.gw + " pot by " + F.pot_leader.margin + " from " +
-            byId[F.pot_leader.over].display_name + " · " + this.rmFlat(D.stakes.weekly.pot) + " on the table",
+          margin: (F.pot_leader.margin === 0
+              ? "Level on points with " + byId[F.pot_leader.over].display_name + " — the tiebreak ladder would decide"
+              : "Leads the GW" + F.gw + " pot by " + F.pot_leader.margin + " from " +
+                byId[F.pot_leader.over].display_name) + " · " + this.rmFlat(D.stakes.weekly.pot) + " on the table",
           note: prov ? "Bonus can still move after the whistle and flip the pot. If it happen, this page will name names and keep it there forever — no arguing after that."
                      : "Nothing settle until every fixture says finished. Pot is shown only, not paid yet."
-        },
+        } : { show: false, name: "", margin: "", note: "" },
         caps: (() => {
           const byPlayer = {};
           F.managers.forEach(m => {

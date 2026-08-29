@@ -5,13 +5,22 @@
  * stored: the data is as fresh as the poll, and there is no server-side state
  * to go wrong.
  *
- * A live score is NOT the sum of total_points (§11.3). Three things move after
- * the whistle and each can flip who wins the weekly pot:
+ * The table shows FPL'S OWN points, unmodified. It used to add a BPS-derived
+ * bonus estimate on top; that is gone. The estimate moved with every tackle,
+ * disagreed with the FPL app for the whole of every match, and made a number
+ * nobody could check against the source — in a league whose product is being
+ * the book of record, a figure you cannot reconcile is worse than a smaller
+ * one you can.
+ *
+ * So a live score here is what FPL says it is, and it is still NOT the settled
+ * score (§11.3). Three things land only when FPL closes the round, each able to
+ * flip who wins the weekly pot:
  *   (a) bonus      — during a match `bonus` is 0 and only `bps` is populated
  *   (b) auto-subs  — applied by FPL only at gameweek end
  *   (c) captain    — the vice takes over only at gameweek end
- * So this computes provisional bonus from BPS every poll, and reports what is
- * still pending rather than implying the score is settled.
+ * What this does is report all three as pending, and show the BPS standings —
+ * the same thing FPL's own bonus tab shows — beside the table rather than
+ * inside it.
  */
 
 import { PROXY_BASE } from "./config.js";
@@ -103,11 +112,14 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
     (bootstrap.elements || []).map((e) => [e.id, e.web_name])
   );
 
-  // Provisional bonus only applies while a fixture is unfinished — once it is
-  // finished, confirmed bonus is already inside total_points.
-  const bonusByElement = new Map();
+  // BPS standings per fixture — who is IN LINE for bonus, which is what FPL's
+  // own bonus tab shows. Deliberately not added to anybody's score: see the
+  // note on live_points below. Only for fixtures whose bonus is still open —
+  // once a fixture reads finished, FPL has confirmed its bonus and folded it
+  // into total_points, so "in line for" would be stale over a settled award.
   const bpsTop = new Map();
   for (const fixture of fixtures) {
+    if (fixture.finished) continue;
     const rows = [];
     for (const element of elements) {
       const team = teamOfElement.get(element.id);
@@ -129,9 +141,6 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
           provisional_bonus: awards.get(r.element),
         }))
     );
-    if (fixture.started && !fixture.finished) {
-      for (const [element, bonus] of awards) bonusByElement.set(element, bonus);
-    }
   }
 
   const fixtureOfTeam = new Map();
@@ -146,7 +155,6 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
     if (!picks) continue;
 
     let points = 0;
-    let bonusIncluded = 0;
     let played = 0;
     let inPlay = 0;
     let toPlay = 0;
@@ -162,10 +170,14 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
       const state = fixtureState(fixture);
 
       if (pick.multiplier > 0) {
-        const bonus = bonusByElement.get(pick.element) || 0;
-        const total = (stats.total_points || 0) + bonus;
+        // FPL's own number, unmodified. We used to add a BPS-derived bonus
+        // estimate on top; it made the table disagree with the FPL app for
+        // the whole of every match, and an estimate that moves with every
+        // tackle is not worth a table that cannot be checked against the
+        // source. Bonus arrives here when FPL confirms it, inside
+        // total_points, exactly as it does for everyone else.
+        const total = stats.total_points || 0;
         points += total * pick.multiplier;
-        bonusIncluded += bonus * pick.multiplier;
 
         if (state === "played") played += 1;
         else if (state === "in_play") inPlay += 1;
@@ -187,8 +199,7 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
             vice: fellBack && vicePick
               ? {
                   name: nameOfElement.get(vicePick.element) || "?",
-                  points: (viceStats.total_points || 0) +
-                    (bonusByElement.get(vicePick.element) || 0),
+                  points: viceStats.total_points || 0,
                 }
               : null,
           };
@@ -199,7 +210,6 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
     managers.push({
       id: manager.id,
       live_points: points,
-      provisional_bonus_included: bonusIncluded,
       played,
       in_play: inPlay,
       to_play: toPlay,
@@ -246,8 +256,8 @@ export function assemble({ data, gw, fixtures, elements, picksByManager, bootstr
     state,
     matches_in_play: inPlayCount,
     bonus_watch: state === "provisional"
-      ? "All matches finished but bonus is not confirmed, and auto-subs have not been applied. Nothing settles until every fixture reads finished."
-      : "Bonus is provisional while matches are in play. One late save or booking moves the BPS, and the pot can change hands with it.",
+      ? "All matches finished, but FPL has not confirmed every bonus or applied auto-subs. Scores below are FPL's own and can still move. Nothing settles until every fixture reads finished."
+      : "Scores are FPL's live points. Bonus folds into a score when FPL confirms it at each match's finish — until then the bonus watch shows who is in line, and one late save or booking can move it, and the pot with it.",
     pot_leader: leader && runnerUp
       ? { manager: leader.id, margin: leader.live_points - runnerUp.live_points, over: runnerUp.id }
       : null,
