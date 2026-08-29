@@ -582,6 +582,7 @@ def run(monkeypatch, tmp_path):
         made["stub"] = stub
         return stub
 
+    monkeypatch.setattr(_FrozenClock, "at", IN_WINDOW, raising=False)
     stub = build()
     return _Run(stub, tmp_path, build, monkeypatch)
 
@@ -600,13 +601,25 @@ class _Run:
     def published(self):
         return json.loads((self.tmp_path / "prediction.json").read_text())
 
+    def clock(self, moment):
+        """Move the frozen clock — the window guard is the thing under test."""
+        self._monkeypatch.setattr(_FrozenClock, "at", moment, raising=False)
+
+
+# Seven hours after the deadline: past the window, and the shape of the real
+# failure — GW2's crons were scheduled inside the window and fired the next
+# morning.
+LATE = parse_utc("2026-08-22T00:30:00Z")
+
 
 class _FrozenClock(datetime):
-    """`datetime.now(tz)` inside the window; everything else unchanged."""
+    """`datetime.now(tz)` at `_FrozenClock.at`; everything else unchanged."""
+
+    at = IN_WINDOW
 
     @classmethod
     def now(cls, tz=None):
-        return IN_WINDOW
+        return cls.at
 
 
 def test_the_run_publishes_a_call_inside_the_window(run):
@@ -769,6 +782,86 @@ def test_a_mid_round_call_will_not_overwrite_a_pre_kickoff_one(run):
     run.argv("--mid-round")
     assert predict.main() == 1
     assert run.published() == blind
+
+
+# --- the window the cron cannot be trusted to hit -----------------------------
+# §12.1's window is 85 minutes wide and GitHub does not promise to fire a cron
+# inside it. GW2's three attempts were scheduled 17:35, 17:50 and 18:10 and all
+# three ran after 01:00 the next morning, so the round got no call at all.
+
+def test_a_late_run_still_publishes_nothing_by_default(run):
+    """The blind call is gone and must not be faked. Without the flag this is
+    still a refusal, because that is what a manual rerun should do."""
+    run.build(fixture_states=("todo", "todo"))
+    run.clock(LATE)
+    run.argv()
+    assert predict.main() == 1
+    assert not (run.tmp_path / "prediction.json").exists()
+
+
+def test_a_late_scheduled_run_calls_the_rest_of_the_round(run):
+    """What the scheduled job now does: the blind window is gone, but one match
+    has not kicked off, so there is an honest call left to make."""
+    run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.clock(LATE)
+    run.argv("--mid-round-if-late")
+    assert predict.main() == 0
+
+    published = run.published()
+    assert published["mode"] == "mid_round", "it must not pose as a blind call"
+    assert published["mid_round"]["remaining"] == 1
+    assert published["mid_round"]["played"] == 1
+
+
+def test_a_late_rescue_is_still_never_counted_in_the_record(run):
+    """The whole point of the mode. A call made holding a result would inflate
+    §12.3's record into something meaningless."""
+    run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.clock(LATE)
+    run.argv("--mid-round-if-late")
+    assert predict.main() == 0
+
+    settled = {"gameweeks": [{
+        "gw": 1, "winners": ["jack"],
+        "scores": {"noel": {"points": 40, "active": True},
+                   "jack": {"points": 90, "active": True}},
+    }]}
+    assert predict.settle_outstanding(settled) == EMPTY_RECORD_FOR_TEST
+
+
+def test_a_late_run_with_no_football_left_still_refuses(run):
+    """Every match kicked off: a call now would be commentary, and the flag
+    must not talk anybody into publishing one."""
+    run.build(fixture_states=("live", "live"), live_points=RUN_LIVE)
+    run.clock(LATE)
+    run.argv("--mid-round-if-late", "--gw", "1")
+    assert predict.main() == 1
+    assert not (run.tmp_path / "prediction.json").exists()
+
+
+def test_the_rescue_never_overwrites_a_call_made_in_the_window(run):
+    """The blind call is the one the record is about. A late scheduled run that
+    lost the race must leave it exactly as it found it."""
+    run.build(fixture_states=("todo", "todo"))
+    run.argv()
+    assert predict.main() == 0
+    blind = run.published()
+    assert "mode" not in blind
+
+    run.build(fixture_states=("done", "todo"), live_points=RUN_LIVE)
+    run.clock(LATE)
+    run.argv("--mid-round-if-late")
+    assert predict.main() == 0
+    assert run.published() == blind, "the blind call was overwritten"
+
+
+def test_inside_the_window_the_flag_changes_nothing(run):
+    """It is a fallback, not a mode: a run that lands on time still makes the
+    blind call the record is about."""
+    run.build(fixture_states=("todo", "todo"))
+    run.argv("--mid-round-if-late")
+    assert predict.main() == 0
+    assert "mode" not in run.published(), "published as mid-round despite being on time"
 
 
 def test_a_mid_round_call_is_scored_but_never_counted(run, monkeypatch):
