@@ -675,7 +675,8 @@ class Dashboard {
         },
         rows: F.managers.map(m => ({
           points: m.live_points, name: byId[m.id].display_name,
-          sub: "incl. +" + m.provisional_bonus_included + " provisional bonus" +
+          // What is NOT in this number, which is the only thing worth the line.
+          sub: "FPL points · bonus not in yet" +
                (m.subs_pending ? " · " + m.subs_pending + " sub pending" : ""),
           played: m.played + "/" + (m.squad || 11), inPlay: m.in_play, toPlay: m.to_play,
           chip: this.chipLabel(m.chip), hasChip: !!m.chip,
@@ -687,7 +688,7 @@ class Dashboard {
           deltaInk: m.rank_delta > 0 ? "var(--good)" : m.rank_delta < 0 ? "var(--crit)" : "var(--ink-muted)",
           ink: inkOf(m.id), weight: wOf(m.id), rowBg: rowBgOf(m.id), mark: markOf(m.id)
         })),
-        tableFoot: "Provisional bonus already inside, that's why every number got the hairline. Auto-subs and vice captain only kick in when FPL close the gameweek, not now. Δ rank = where you'd sit overall if it end like this.",
+        tableFoot: "Same numbers as the FPL app — bonus is not in them yet, for anybody, and auto-subs and vice captain only kick in when FPL close the gameweek. That is why every number got the hairline: it can still move. Δ rank = where you'd sit overall if it end like this.",
         pot: {
           name: byId[F.pot_leader.manager].display_name,
           margin: "Leads the GW" + F.gw + " pot by " + F.pot_leader.margin + " from " +

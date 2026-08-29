@@ -67,3 +67,8 @@ jobs:
         # league just never gets reminded. So the signature is verified here
         # the same way a push service verifies it.
         run: node tests/test_push.mjs
+
+      - name: Live table matches FPL
+        # The table must show FPL's own points. Drift here is silent: the
+        # scores would simply read a few points high while matches are on.
+        run: node tests/test_live.mjs
