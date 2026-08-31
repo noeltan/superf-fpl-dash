@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-30T11:43:25Z",
+ "generated_at": "2026-08-31T13:22:05Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -970,11 +970,11 @@
     "ko": "2026-08-30T13:00:00Z",
     "dh": 2,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 4,
+    "as": 3,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 16
    },
    {
@@ -983,11 +983,11 @@
     "ko": "2026-08-30T13:00:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 17
    },
    {
@@ -996,11 +996,11 @@
     "ko": "2026-08-30T13:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 19
    },
    {
@@ -1009,11 +1009,11 @@
     "ko": "2026-08-30T15:30:00Z",
     "dh": 2,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 5,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 18
    },
    {
@@ -5818,6 +5818,38 @@
   },
   {
    "pos": 3,
+   "team": 6,
+   "p": 2,
+   "w": 2,
+   "d": 0,
+   "l": 0,
+   "gf": 7,
+   "ga": 5,
+   "gd": 2,
+   "pts": 6,
+   "form": [
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 4,
+   "team": 4,
+   "p": 2,
+   "w": 1,
+   "d": 1,
+   "l": 0,
+   "gf": 4,
+   "ga": 1,
+   "gd": 3,
+   "pts": 4,
+   "form": [
+    "W",
+    "D"
+   ]
+  },
+  {
+   "pos": 5,
    "team": 17,
    "p": 2,
    "w": 1,
@@ -5833,7 +5865,7 @@
    ]
   },
   {
-   "pos": 4,
+   "pos": 6,
    "team": 9,
    "p": 2,
    "w": 1,
@@ -5849,22 +5881,39 @@
    ]
   },
   {
-   "pos": 5,
-   "team": 5,
-   "p": 1,
+   "pos": 7,
+   "team": 13,
+   "p": 2,
    "w": 1,
-   "d": 0,
+   "d": 1,
    "l": 0,
-   "gf": 4,
-   "ga": 0,
-   "gd": 4,
-   "pts": 3,
+   "gf": 2,
+   "ga": 1,
+   "gd": 1,
+   "pts": 4,
    "form": [
-    "W"
+    "W",
+    "D"
    ]
   },
   {
-   "pos": 6,
+   "pos": 8,
+   "team": 5,
+   "p": 2,
+   "w": 1,
+   "d": 0,
+   "l": 1,
+   "gf": 7,
+   "ga": 4,
+   "gd": 3,
+   "pts": 3,
+   "form": [
+    "W",
+    "L"
+   ]
+  },
+  {
+   "pos": 9,
    "team": 1,
    "p": 1,
    "w": 1,
@@ -5879,67 +5928,55 @@
    ]
   },
   {
-   "pos": 7,
-   "team": 4,
-   "p": 1,
-   "w": 1,
-   "d": 0,
-   "l": 0,
-   "gf": 3,
-   "ga": 0,
-   "gd": 3,
-   "pts": 3,
-   "form": [
-    "W"
-   ]
-  },
-  {
-   "pos": 8,
-   "team": 6,
-   "p": 1,
-   "w": 1,
-   "d": 0,
-   "l": 0,
-   "gf": 3,
-   "ga": 2,
-   "gd": 1,
-   "pts": 3,
-   "form": [
-    "W"
-   ]
-  },
-  {
-   "pos": 9,
-   "team": 12,
-   "p": 1,
-   "w": 1,
-   "d": 0,
-   "l": 0,
-   "gf": 2,
-   "ga": 1,
-   "gd": 1,
-   "pts": 3,
-   "form": [
-    "W"
-   ]
-  },
-  {
    "pos": 10,
-   "team": 13,
-   "p": 1,
+   "team": 16,
+   "p": 2,
    "w": 1,
    "d": 0,
-   "l": 0,
-   "gf": 1,
-   "ga": 0,
+   "l": 1,
+   "gf": 5,
+   "ga": 4,
    "gd": 1,
    "pts": 3,
    "form": [
+    "L",
     "W"
    ]
   },
   {
    "pos": 11,
+   "team": 20,
+   "p": 2,
+   "w": 1,
+   "d": 0,
+   "l": 1,
+   "gf": 2,
+   "ga": 2,
+   "gd": 0,
+   "pts": 3,
+   "form": [
+    "L",
+    "W"
+   ]
+  },
+  {
+   "pos": 12,
+   "team": 12,
+   "p": 2,
+   "w": 1,
+   "d": 0,
+   "l": 1,
+   "gf": 4,
+   "ga": 6,
+   "gd": -2,
+   "pts": 3,
+   "form": [
+    "W",
+    "L"
+   ]
+  },
+  {
+   "pos": 13,
    "team": 14,
    "p": 2,
    "w": 0,
@@ -5955,7 +5992,7 @@
    ]
   },
   {
-   "pos": 12,
+   "pos": 14,
    "team": 3,
    "p": 2,
    "w": 0,
@@ -5971,7 +6008,7 @@
    ]
   },
   {
-   "pos": 13,
+   "pos": 15,
    "team": 18,
    "p": 2,
    "w": 0,
@@ -5987,47 +6024,18 @@
    ]
   },
   {
-   "pos": 14,
-   "team": 10,
-   "p": 1,
-   "w": 0,
-   "d": 0,
-   "l": 1,
-   "gf": 2,
-   "ga": 3,
-   "gd": -1,
-   "pts": 0,
-   "form": [
-    "L"
-   ]
-  },
-  {
-   "pos": 15,
-   "team": 20,
-   "p": 1,
-   "w": 0,
-   "d": 0,
-   "l": 1,
-   "gf": 1,
-   "ga": 2,
-   "gd": -1,
-   "pts": 0,
-   "form": [
-    "L"
-   ]
-  },
-  {
    "pos": 16,
-   "team": 16,
-   "p": 1,
+   "team": 10,
+   "p": 2,
    "w": 0,
    "d": 0,
-   "l": 1,
-   "gf": 0,
-   "ga": 2,
+   "l": 2,
+   "gf": 2,
+   "ga": 4,
    "gd": -2,
    "pts": 0,
    "form": [
+    "L",
     "L"
    ]
   },
