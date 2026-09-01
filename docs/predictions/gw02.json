@@ -210,7 +210,14 @@
   },
   "reasoning": "Christopher Chin leads on xP 77.1 and, crucially, 26.0 of it is already banked \u2014 a real lead, not a projected one. Jack Siah has the biggest bank at 31.0 but only 39.5 left to come, so he fades as the weekend runs. Noel Tan matches Chris's 26.0 banked with 47.5 remaining and the same Haaland captaincy, which is why I take him second, though narrowly. Shaik Zahir's 67.8 is entirely projection with nothing on the board \u2014 highest ceiling, least safety. Structural risk is real: Chris carries 3 x ARS into Villa away on Monday night, difficulty 4/4, the last fixture of the week. Nobody played a chip."
  },
- "result": null,
+ "result": {
+  "actual_first": "wayshoonlim",
+  "actual_second": "sam",
+  "exact_hit": false,
+  "podium_hit": false,
+  "pair_hit": false,
+  "mean_rank_error": 6.0
+ },
  "record": {
   "played": 0,
   "exact": 0,
