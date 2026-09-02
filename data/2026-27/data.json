@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-01T12:24:11Z",
+ "generated_at": "2026-09-02T11:03:52Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -1348,19 +1348,6 @@
     "id": 43
    },
    {
-    "h": 13,
-    "a": 8,
-    "ko": "2026-09-19T14:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 44
-   },
-   {
     "h": 17,
     "a": 11,
     "ko": "2026-09-19T14:00:00Z",
@@ -1385,6 +1372,19 @@
     "finished": false,
     "finished_provisional": false,
     "id": 47
+   },
+   {
+    "h": 13,
+    "a": 8,
+    "ko": "2026-09-20T13:00:00Z",
+    "dh": 3,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 44
    },
    {
     "h": 15,
@@ -1744,19 +1744,6 @@
     "id": 74
    },
    {
-    "h": 14,
-    "a": 5,
-    "ko": "2026-10-24T14:00:00Z",
-    "dh": 2,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 78
-   },
-   {
     "h": 6,
     "a": 19,
     "ko": "2026-10-24T16:30:00Z",
@@ -1794,6 +1781,19 @@
     "finished": false,
     "finished_provisional": false,
     "id": 76
+   },
+   {
+    "h": 14,
+    "a": 5,
+    "ko": "2026-10-25T14:00:00Z",
+    "dh": 2,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 78
    },
    {
     "h": 16,
@@ -1917,7 +1917,7 @@
    {
     "h": 2,
     "a": 10,
-    "ko": "2026-11-01T14:00:00Z",
+    "ko": "2026-10-31T20:00:00Z",
     "dh": 2,
     "da": 4,
     "hs": null,
