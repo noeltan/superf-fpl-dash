@@ -242,22 +242,29 @@ rearranged both tabs, and that did move markup:
   tap a month header to open its gameweeks in place. That one table replaced
   the diverging ledger chart, the 38-column gameweek grid, and the range
   picker that existed to make the grid readable.
-- **Two tabs, not three.** The "How the money works" card the third tab was
-  built from is gone; the stakes and the tiebreak ladder are footnotes under
-  the tables that need them. `rules` is still emitted (see `SCHEMA.md`) but
-  nothing on the page reads it.
+- **The "How it works" tab stays.** It explains the money to the people who
+  did not write the rules, and every figure on it is derived from `N` and the
+  real calendar by `rules_block`, so a new manager rewrites the whole tab
+  without anyone touching copy.
 - **Below 720px** (`MOBILE_BREAKPOINT` in `docs/app.js`) the tabs move to a
   bottom bar, the league table shows manager / gameweek / total with the other
   five fields a tap away on the row, and the month table becomes a ranked
-  accrued list that opens the same way. The breakpoint, the nav position, the
-  row density and whether bars survive a phone are constants at the top of
-  `app.js` — they were component props in the design canvas.
+  accrued list that opens the same way. The breakpoint, the nav position and
+  whether bars survive a phone are constants at the top of `app.js` — they
+  were component props in the design canvas.
+
+**Nobody is "you".** The site is opened from a link by whoever has it and
+cannot know who that is, so there is no manager picker, no highlighted row,
+no personal accrued balance and no per-manager statement. What it shows is the
+league: the table, the pots, who is up and who is down, and who would pay whom.
+`ledger[].statement` is still emitted and still asserted (§3.9.2) — the audit
+trail exists, it just is not a card on a public page.
 
 Since then the chrome has been worked on, which did touch the markup:
 
 **Three things it forgot on every reload** — which manager you are, who you
 compare against, and the theme — now live in `localStorage` under
-`superf.prefs`, and the tab lives in the URL fragment (`#season`) so
+`superf.prefs`, and the tab lives in the URL fragment (`#season`, `#rules`) so
 it survives a reload, links, and the back button. Preferences only: nothing
 stored changes what the page *says*, a remembered manager is checked against the
 current roster before it is trusted, and every access is guarded because storage
@@ -265,7 +272,7 @@ throws outright in a locked-down browser. A one-liner in `<head>` reads the
 theme back before first paint, so a remembered dark theme does not arrive as a
 white flash.
 
-**The tabs are a tablist**, not two buttons: left/right/Home/End move between
+**The tabs are a tablist**, not three buttons: left/right/Home/End move between
 them, only the selected one is in the tab order, and the panel is labelled by
 its tab. Alongside it, the page grew an `<h1>`, `header`/`main`/`footer`
 landmarks, a skip link, `scope="col"` on 52 column headers, labels on the four

@@ -7,8 +7,9 @@ to keep it from drifting is that `tests/test_schema.py` asserts the emitter
 against these shapes, so a change here that nobody implements fails the build.
 
 If a number appears on screen it exists in one of these files. The page never
-computes money. The reverse does not hold: `rules` is still emitted and still
-asserted, but since the 2 Sep layout revision no card reads it (see below).
+computes money. The reverse does not hold: `ledger[].statement` is emitted and
+asserted but no longer rendered — the page has no reader to show one manager's
+line to (see below).
 
 ---
 
@@ -255,19 +256,17 @@ for the card.
 
 > **Every statement ends on `accrued`.** The emitter asserts it. A manager who
 > disputes their total must be able to find the single row they disagree with
-> (§3.9.2) — a statement that does not reconcile is worse than none.
+> (§3.9.2) — a statement that does not reconcile is worse than none. The page
+> no longer renders one: it cannot know who is reading it, so there is nobody
+> to pick a statement for. The rows are still emitted and still asserted, and
+> the settlement sheet on the money tab is the league-wide view of that book.
 
-**`rules` is derived, never written down**, and since the 2 Sep layout revision
-**nothing on the page reads it**: the "How the money works" card the third tab
-was built from is gone, and what it explained now sits as footnotes under the
-tables that need it. The block is still emitted and still asserted, because it
-costs nothing to keep correct and a tab that comes back should not need a
-rebuild of the whole season to fill it. What it holds:
+**`rules` drives the "How it works" tab** and is derived, never written down:
 per-month stakes and pots from the real calendar, the paid-place floor table
 around the current league size, the tiebreak ladder with each level's direction
 read out of `TiebreakStats.key`, and the best-case breakdown. A thirteenth
-manager rewrites every figure in it without anyone touching copy — which was
-the point, because a tab that explains the money is the worst place for a
+manager rewrites every figure on that tab without anyone touching copy — which
+is the point, because a tab that explains the money is the worst place for a
 hardcoded number to go stale.
 
 **`runners_up` is empty when a tie for first swallowed second place.** The tied

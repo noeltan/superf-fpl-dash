@@ -299,8 +299,8 @@ function monthPot(data, gw, liveManagers) {
   const played = bucket.gameweeks.filter((g) => settledGws.has(g) || g === gw);
   const remaining = bucket.gameweeks.length - played.length;
   const leader = order[0];
-  const you = data._you || order[0];
-  const gap = totals[leader] - totals[you];
+  const second = order[1];
+  const gap = second === undefined ? 0 : totals[leader] - totals[second];
   const nameOf = (id) => {
     const manager = data.managers.find((m) => m.id === id);
     return manager ? manager.short : id;
@@ -316,9 +316,9 @@ function monthPot(data, gw, liveManagers) {
     provisional: true,
     totals,
     order,
-    callout: you === leader
-      ? `You lead the ${bucket.month} pot on ${totals[you]} including live points. ${remaining} gameweek${remaining === 1 ? "" : "s"} still to come, and none of it is banked yet.`
-      : `You need ${gap} more than ${nameOf(leader)} to take the +RM${stakes.net[0]} — ${totals[you]} against ${totals[leader]}, live points included. ${remaining} gameweek${remaining === 1 ? "" : "s"} left.`,
+    callout: second === undefined
+      ? `${nameOf(leader)} leads the ${bucket.month} pot on ${totals[leader]}, live points included.`
+      : `${nameOf(leader)} leads the ${bucket.month} pot on ${totals[leader]}, ${gap} ahead of ${nameOf(second)} — live points included, ${remaining} gameweek${remaining === 1 ? "" : "s"} still to come.`,
   };
 }
 

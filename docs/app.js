@@ -10,12 +10,15 @@
  * prominent"): the league table is the top of the Gameweek tab and carries the
  * deadline and the summary button in its header; the countdown card is gone;
  * the season calendar, the international break and the Premier League table
- * are behind one REFERENCE toggle; the Season tab leads with the accrued hero
- * and then one month-by-month table in place of the diverging ledger chart,
- * the 38-column gameweek grid and its range picker; and the third tab went
- * with the "How the money works" card it was built from. Below
- * MOBILE_BREAKPOINT the tabs move to a bottom bar and the wide tables become
- * tap-to-expand lists.
+ * are behind one REFERENCE toggle; and the Season tab leads with the league's
+ * money, then one month-by-month table in place of the diverging ledger chart,
+ * the 38-column gameweek grid and its range picker. Below MOBILE_BREAKPOINT
+ * the tabs move to a bottom bar and the wide tables become tap-to-expand
+ * lists.
+ *
+ * Nothing on the page is addressed to a reader. It is opened from a link by
+ * whoever has it, so there is no "you" to pick, to highlight, or to show a
+ * personal balance to — only the league.
  *
  * Money vocabulary follows §3.9.1 exactly: nothing is paid until May, so the
  * running figure is "owes" / "is owed" and never "won" or "collected".
@@ -44,10 +47,9 @@ const POLL_INTERVAL_MS = 60000;
  * anyone would stare at a stalled score. */
 const DROPDOWN_HOLD_MS = 20000;
 
-/* Two things the page used to forget on every reload: which of the
- * managers you are, and whether you asked for the dark theme. The league reads
- * this all season on the same phone, so being asked to find yourself in a
- * dropdown again every visit is the single cheapest thing to fix.
+/* The theme, remembered across reloads. It used to remember which manager you
+ * were as well; the page no longer asks, because it is opened from a link by
+ * whoever has it and cannot know.
  *
  * Preferences only — no money, nothing derived, nothing that would change what
  * the page says. Storage throws in a locked-down browser, so every access is
@@ -77,10 +79,10 @@ function savePrefs(patch) {
  * the only piece of state worth a history entry: "look at how it works" is a
  * thing people send each other, "look at the season tab" is not.
  *
- * Two tabs since the 2 Sep layout revision: the "How the money works" card the
- * third tab was built from is gone, and what it explained now sits as footnotes
- * under the tables that need it. */
-const TABS = ["gw", "season"];
+ * "How it works" is the third: it explains the money to eight-to-thirteen
+ * people who did not write the rules, and every figure on it is derived from
+ * N and the real calendar rather than typed in. */
+const TABS = ["gw", "season", "rules"];
 
 /* The design canvas exposed these as component props; here they are constants,
  * because a static page has nobody to set them. The values are the design's own
@@ -164,17 +166,8 @@ class Dashboard {
       this.prediction = null;
     }
 
-    // A remembered manager is checked against the current roster before it is
-    // trusted: somebody who left the league must not go on being "you".
-    const prefs = loadPrefs();
-    const known = new Set(data.managers.map((m) => m.id));
-    const fallback = data.managers.find((m) => m.id === "noel") || data.managers[0];
-    const preferred = known.has(prefs.you)
-      ? data.managers.find((m) => m.id === prefs.you)
-      : fallback;
     this.state = {
       tab: tabFromHash() || "gw",
-      you: preferred.id,
       fxGW: data.current.state === "final" || data.current.state === "upcoming"
         ? data.current.next_gw
         : data.current.gameweek,
@@ -357,7 +350,7 @@ class Dashboard {
     }
   }
 
-  state = { tab:"gw", you:null, fxGW:null, theme:"light", vw:1200, potView:"chart",
+  state = { tab:"gw", fxGW:null, theme:"light", vw:1200, potView:"chart",
             showProj:false, tick:0, liveSince:Date.now(), notify:"unavailable",
             /* refOpen — the reference drawer (calendar, breaks, PL table).
              * openRow — which league-table row is expanded on a phone.
@@ -508,19 +501,19 @@ class Dashboard {
     const byId = {}; D.managers.forEach(m => { byId[m.id] = m; });
     const monthCurrent = D["month_current"] ||
       { month:"\u2014", gameweeks:0, opens_gw:0, stake:0, pot:0, net:[0,0], note:"" };
-    const you = byId[S.you] ? S.you : D.managers[0].id;
-    D._you = you;   // read by the live month-pot callout
+    /* Nobody is "you". The page is a league scoreboard opened from a link, so
+     * there is no reader to highlight and nothing here is addressed to one. */
     const isLive = cur.state === "live", isProv = cur.state === "provisional";
     const isFinal = cur.state === "final";
     const isPre = !D.gameweeks.length;   // nothing settled yet — the designed empty state
     const settledGWs = D.gameweeks;
     const lastGW = settledGWs.length ? settledGWs[settledGWs.length - 1] : null;
 
-    const fillOf = id => id === you ? "var(--accent)" : "var(--dim)";
-    const inkOf  = id => id === you ? "var(--accent)" : "var(--ink-2)";
-    const wOf    = id => id === you ? 620 : 450;
-    const rowBgOf = id => id === you ? "var(--tint)" : "transparent";
-    const markOf = id => id === you ? "var(--accent)" : "transparent";
+    const fillOf = () => "var(--dim)";
+    const inkOf  = () => "var(--ink-2)";
+    const wOf    = () => 450;
+    const rowBgOf = () => "transparent";
+    const markOf = () => "transparent";
     const name = id => byId[id] ? byId[id].short : id;
 
     /* ---- chrome ---- */
@@ -588,9 +581,13 @@ class Dashboard {
     /* A tablist, not three buttons: left/right move between tabs and only the
      * selected one is in the tab order, which is what a screen reader and a
      * keyboard both expect of something shaped like this. */
-    const tabLabels = { gw:"Gameweek", season:"Season & money" };
+    const tabLabels = { gw:"Gameweek", season:"Season & money", rules:"How it works" };
+    /* The bottom bar has a third of a phone's width per tab. "Season & money"
+     * wraps there and takes the bar to two lines, so it gets a short form —
+     * the top strip, which has room, keeps the full one. */
+    const navLabels = { gw:"Gameweek", season:"Money", rules:"How it works" };
     const tabs = TABS.map(k => ({
-      key: k, label: tabLabels[k],
+      key: k, label: tabLabels[k], navLabel: navLabels[k],
       selected: S.tab === k, tabindex: S.tab === k ? 0 : -1,
       onClick: () => this.goTab(k),
       onKeydown: e => {
@@ -806,7 +803,7 @@ class Dashboard {
         };
       }),
       foot: "★ counts weekly pots won. Miss the deadline also never mind — FPL roll your last team over and it score as usual. 0 ✕ only show up if somebody never enter a team at all, and that one still pay RM" +
-        D.stakes.weekly.stake + ". Accrued only ah — nobody pay anything yet, we settle in May."
+        D.stakes.weekly.stake + "."
     };
 
     /* ---- the gameweek summary ----
@@ -905,7 +902,7 @@ class Dashboard {
               : "Leads the GW" + F.gw + " pot by " + F.pot_leader.margin + " from " +
                 byId[F.pot_leader.over].display_name) + " · " + this.rmFlat(D.stakes.weekly.pot) + " on the table",
           note: prov ? "Bonus can still move after the whistle and flip the pot. If it happen, this page will name names and keep it there forever — no arguing after that."
-                     : "Nothing settle until every fixture says finished. Pot is shown only, not paid yet."
+                     : "Provisional until every fixture says finished."
         } : { show: false, name: "", margin: "", note: "" },
         caps: (() => {
           const byPlayer = {};
@@ -1059,28 +1056,89 @@ class Dashboard {
     };
 
 
-    /* ---- season tab ---- */
-    const L = D.ledger[you];
-    const owes = L.accrued < 0;
-    const hero = {
-      label: "ACCRUED BALANCE · " + byId[you].display_name.toUpperCase() + " · NOTHING PAID YET",
-      value: this.sen2(L.accrued),
-      position: L.accrued === 0 ? "You are square with the league."
-        : owes ? "You owe " + this.senAbs(L.accrued) + " — only settle after GW38."
-               : "You are owed " + this.senAbs(L.accrued) + " — only settle after GW38.",
-      ink: L.accrued > 0 ? "var(--good)" : L.accrued < 0 ? "var(--crit)" : "var(--ink-1)",
-      delta: this.sen(L.delta_last_gw),
-      deltaInk: L.delta_last_gw > 0 ? "var(--good)" : L.delta_last_gw < 0 ? "var(--crit)" : "var(--ink-2)",
-      deltaNote: lastGW ? "since GW" + lastGW.gw : "",
-      projected: "On current standings the season pot project " + this.sen(L.projected_season) + " — showing only, not inside the accrued balance until GW38 final.",
-      kpis: [
-        { label:"LEAGUE RANK", value: (D.rank.indexOf(you) + 1),
-          sub: D.behind[you] === 0 ? "leading" : D.behind[you] + " points behind" },
-        { label:"TOTAL POINTS", value: D.totals[you], sub:"league average " + D.stats.avg_points },
-        { label:"WEEKS WON", value: D.weeks_won[you], sub:"of " + settledGWs.length + " played" }
+    /* ---- rules tab (§7.2F) — explains the money, never restates it ----
+     * Everything here reads out of D.rules, which build.py derives from N and
+     * the real calendar. Nothing is typed in: a thirteenth manager rewrites
+     * every figure on this tab without anyone touching copy. */
+    const R = D.rules;
+    const byPot = R.months.slice().sort((a, b) => a.pot - b.pot);
+    const monthlyLow = byPot[0], monthlyHigh = byPot[byPot.length - 1];
+    const potRow = (name, stake, pot, split, net, note) => ({
+      name, stake, pot: this.rmFlat(pot),
+      split: split.map(x => Math.round(x * 100) + "%").join(" / "),
+      pays: net.map(v => rm(v)).join(" · "), note
+    });
+    const rules = {
+      intro: "Every gameweek cost RM" + R.gameweek_cost + " — RM" + R.weekly_stake +
+        " to the week, RM" + R.monthly_stake_per_gw + " to the month. Plus RM" +
+        R.season_stake + " once for the season. Over " + D.checks.gameweeks_expected +
+        " gameweeks that come to " + this.rmFlat(D.exposure.staked) + " each.",
+      zeroSum: "League keep nothing. Every ringgit that leave one column land in somebody else column, " +
+        "which is why every table here add up to RM0. If it ever don't, the site refuse to publish " +
+        "instead of showing you a wrong number.",
+      pots: [
+        potRow("Weekly", "RM" + R.weekly_stake + " × " + N, D.stakes.weekly.pot,
+               D.stakes.weekly.split, D.stakes.weekly.net,
+               D.checks.gameweeks_expected + " times a season"),
+        // The monthly pot is not one number — it follows how many gameweeks the
+        // month has. Showing the current bucket here would read as "the"
+        // monthly figure, so the rules tab shows the range and the table below
+        // breaks it down month by month.
+        {
+          name: "Monthly", stake: "RM" + R.monthly_stake_per_gw + " per gameweek",
+          pot: this.rmFlat(monthlyLow.pot) + "–" + this.rmFlat(monthlyHigh.pot),
+          split: D.stakes.monthly.split.map(x => Math.round(x * 100) + "%").join(" / "),
+          pays: rm(monthlyLow.net[0]) + " … " + rm(monthlyHigh.net[0]),
+          note: R.months.length + " buckets, Aug to May — depend how many gameweeks"
+        },
+        potRow("Season", "RM" + R.season_stake + " × " + N, D.stakes.season.pot,
+               D.stakes.season.split, D.stakes.season.net, "Only settle after GW38")
+      ],
+      months: R.months.map(m => ({
+        name: this.monthName(m.month), gws: m.gameweeks,
+        stake: this.rmFlat(m.stake), pot: this.rmFlat(m.pot),
+        first: rm(m.net[0]), second: rm(m.net[1]), rest: rm(-m.stake)
+      })),
+      monthsNote: "Stake is per gameweek, not per month. December got " +
+        Math.max.apply(null, R.months.map(m => m.gameweeks)) + " gameweeks and August got " +
+        Math.min.apply(null, R.months.map(m => m.gameweeks)) +
+        " — flat monthly fee would make one August gameweek worth a few December ones for the same effort.",
+      tiebreak: R.tiebreak.map(t => ({
+        level: t.level, label: t.label.charAt(0).toUpperCase() + t.label.slice(1), who: t.direction
+      })).concat([{ level: R.tiebreak.length + 1, label: "Split the pot", who: "ours" }]),
+      floors: R.floors.map(f => ({
+        n: f.n,
+        seasonThird: rm(f.season_third), seasonInk: f.season_third < 0 ? "var(--crit)" : "var(--good)",
+        weeklySecond: rm(f.weekly_second), weeklyInk: f.weekly_second < 0 ? "var(--crit)" : "var(--good)",
+        mark: f.is_us ? "us" : "", isUs: f.is_us,
+        rowBg: f.is_us ? "var(--tint)" : "transparent"
+      })),
+      floorNote: "Any paid place only worth having while its share beat one stake. It get safer as we grow " +
+        "and break if we shrink. Build check every pot every run and stop rather than publish a podium that cost money.",
+      settleNote: N + " people settling one by one could be " + R.naive_payments +
+        " separate payments. Site work out the shortest set instead: at most " + R.max_payments +
+        ". Same answer every time it run, so nothing to negotiate.",
+      steps: [
+        "Each weekly pot, as soon as that gameweek final.",
+        "Each monthly pot, but only once every gameweek in that month final.",
+        "The season pot, only after GW" + D.checks.gameweeks_expected + ".",
+        "Your balance — those three added up, and checked to sum to RM0 across the league."
+      ],
+      best: this.rm(D.exposure.best), worst: this.rm(D.exposure.worst),
+      staked: this.rmFlat(D.exposure.staked),
+      bestNote: "Best case break down as " + this.rmFlat(R.best_breakdown.weekly) + " from the weekly pots, " +
+        this.rmFlat(R.best_breakdown.monthly) + " from the monthly, " + this.rmFlat(R.best_breakdown.season) +
+        " from the season. Nobody going to do that — it just show the shape: downside is capped and known " +
+        "from day one, upside is a few times bigger.",
+      terms: [
+        { term: "Provisional", meaning: "Live, mid-match, still can change. Bonus not confirmed until the match end, auto-subs and vice captain only apply when the whole gameweek close." },
+        { term: "Accrued", meaning: "Settled maths, already in the book. You owe or you are owed. Won't change unless a correction get posted, and corrections come in as their own visible row." },
+        { term: "Projected", meaning: "What something would pay if it end today. Deliberately kept OUT of your balance. Season pot sit here until GW38." },
+        { term: "Settled", meaning: "Actually paid. That happen once, in May." }
       ]
     };
 
+    /* ---- season tab ---- */
     /* month pot — live/provisional feed takes over when the month has live gameweeks */
     const mp = F && F.month_pot ? F.month_pot : null;
     const settledMonth = D.months.length ? D.months[D.months.length - 1] : null;
@@ -1105,7 +1163,7 @@ class Dashboard {
         onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
         viewLabel: S.potView === "chart" ? "Table view" : (mob && !BARS_ON_MOBILE ? "List view" : "Chart view"),
         callout: mp.callout, calloutBg:"var(--tint-warn)",
-        foot: "Money shown is what each position would pay if the month end right now. Only settle when the last gameweek in the bucket is final."
+        foot: "What each position would take if the month end right now. Settles when the bucket's last gameweek is final."
       };
     } else if (PB && PB.month) {
       /* Same card, from the book instead of the feed. Without this the money
@@ -1172,7 +1230,7 @@ class Dashboard {
         hasBars:false, rows:[], isChart:false, isList:false, isTable:false,
         onView: () => {}, viewLabel:"",
         callout: monthCurrent.note, calloutBg:"var(--surface-2)",
-        foot: "Bars only fill up once GW" + monthCurrent.opens_gw + " scores come in. Nobody owe anybody before that."
+        foot: "Bars fill up once GW" + monthCurrent.opens_gw + " scores come in."
       };
     }
 
@@ -1307,7 +1365,7 @@ class Dashboard {
       cols: mtCols,
       rows: D.rank.map(id => ({
         name: byId[id].display_name, ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id), mark: markOf(id),
-        stickyBg: id === you ? "var(--surface-2)" : "var(--surface-1)",
+        stickyBg: "var(--surface-1)",
         cells: mtCols.map(c => {
           if (c.kind === "gw") return gwCell(c.gw, id);
           const rec = c.rec, place = rec ? rec.order.indexOf(id) : -1;
@@ -1358,38 +1416,6 @@ class Dashboard {
     };
 
 
-    /* §7.2G statement — accrual ledger, per manager */
-    const stRows = (D.ledger[you].statement || []).map(r => ({
-      date: this.dateShort(r.date + "T00:00:00Z"),
-      event: r.type === "weekly" ? "GW" + r.gw + " weekly" : this.monthName(r.month) + " monthly",
-      detail: r.detail,
-      amount: this.sen2(r.amount),
-      amountInk: r.amount > 0 ? "var(--pos)" : r.amount < 0 ? "var(--neg)" : "var(--ink-2)",
-      balance: this.sen2Flat(r.balance),
-      balanceInk: r.balance > 0 ? "var(--pos)" : r.balance < 0 ? "var(--neg)" : "var(--ink-2)"
-    }));
-    const stmt = {
-      has: stRows.length > 0, empty: stRows.length === 0,
-      who: byId[you].display_name,
-      head: L.accrued === 0 ? byId[you].display_name + " is square with the league"
-        : L.accrued < 0 ? byId[you].display_name + " owes " + this.senAbs(L.accrued)
-                        : byId[you].display_name + " is owed " + this.senAbs(L.accrued),
-      headInk: L.accrued > 0 ? "var(--good)" : L.accrued < 0 ? "var(--crit)" : "var(--ink-1)",
-      sub: "One row per settled event, oldest first. Change the You selector up top to read somebody else's line.",
-      rows: stRows,
-      emptyNote: "Nothing settled yet, so nothing in the book. First row appear after GW1 go final.",
-      corrections: (D.corrections || []).length,
-      correctionNote: (D.corrections || []).length
-        ? (D.corrections || []).length + " correction(s) posted — shown as their own rows, original entries never deleted."
-        : "No corrections posted. If we ever find a mistake, it comes in as a new row with a reason — we never quietly rewrite an old one.",
-      onCSV: () => this.downloadCSV(
-        "superf-statement-" + you + ".csv",
-        [["date","event","detail","amount_rm","balance_rm"]].concat(
-          (D.ledger[you].statement || []).map(r => [ r.date,
-            r.type === "weekly" ? "GW" + r.gw + " weekly" : r.month + " monthly",
-            r.detail, (r.amount / 100).toFixed(2), (r.balance / 100).toFixed(2) ])))
-    };
-
     /* §7.2H settlement sheet */
     const sPay = (D.settlement && D.settlement.payments) || [];
     const settle = {
@@ -1401,7 +1427,7 @@ class Dashboard {
       title: (D.settlement && D.settlement.settled) ? "Settlement sheet" : "Settlement preview",
       sub: (D.settlement && D.settlement.settled)
         ? "GW38 is final. This is who pays whom — " + sPay.length + " transfers, nothing more."
-        : "If the season ended today, " + sPay.length + " payments would settle the whole league. Nobody owe anything yet.",
+        : "If the season ended today, " + sPay.length + " payments would settle the whole league.",
       rows: sPay.map(p => ({
         from: byId[p.from].display_name, to: byId[p.to].display_name,
         amount: this.sen2Flat(p.amount),
@@ -1411,7 +1437,7 @@ class Dashboard {
       total: this.sen2Flat(sPay.reduce((a,p) => a + p.amount, 0)),
       foot: "Minimum-transfer set: at most " + (N - 1) + " payments instead of up to " + (N * (N - 1)) +
         ". Sorted by amount then id, so the sheet come out the same every time you run it.",
-      emptyNote: "Nothing to settle yet. Once a gameweek go final the preview shows who would pay whom.",
+      emptyNote: "Once a gameweek go final, the preview shows who would pay whom.",
       onCSV: () => this.downloadCSV("superf-settlement.csv",
         [["from","to","amount_rm"]].concat(sPay.map(p => [p.from, p.to, (p.amount / 100).toFixed(2)])))
     };
@@ -1420,23 +1446,19 @@ class Dashboard {
       empty: isPre, hasData: !isPre,
       /* The pot and the weekly list also stand up on a round that is played
        * but not settled — that pot is the thing people came to look at. The
-       * ledger, statement and settle-up stay behind hasData: they read money
+       * month table and the settle-up stay behind hasData: they read money
        * that has been booked, and during a provisional round none has. */
       showPots: !isPre || !!(PB && PB.month),
       emptyNote: PB
-        ? "No money moved yet — GW" + PB.gw + " is played but not settled. " +
-          "The pot below is provisional: FPL has not confirmed bonus, and nothing accrues until it does."
-        : "No money moved yet. First weekly pot settle after GW1 on " +
-          this.dayKey(D.events[0].deadline) + ", then August's RM80 monthly pot two gameweeks after that.",
+        ? "GW" + PB.gw + " is played but not settled — FPL has not confirmed bonus, so the pot below is provisional."
+        : "First weekly pot settle after GW1 on " + this.dayKey(D.events[0].deadline) +
+          ", then August's RM80 monthly pot two gameweeks after that.",
       foot: settledGWs.length >= 6
         ? "" : "Season race chart only comes out after six gameweeks settled — nothing to plot yet, waste space only."
     };
 
     return {
-      league: D.league, managerOpts: D.managers.map(m => ({ id:m.id, name:m.display_name })),
-      you,
-      onYou: e => { const v = e.target.value;
-        savePrefs({ you:v }); this.setState({ you:v }); },
+      league: D.league,
       toggleTheme: () => { const theme = S.theme === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", theme);
         savePrefs({ theme }); this.setState({ theme }); },
@@ -1444,11 +1466,11 @@ class Dashboard {
                 themeLabel: S.theme === "dark" ? "Light" : "Dark",
                 themeAria: S.theme === "dark" ? "Switch to the light theme" : "Switch to the dark theme" },
       tabs, banner, notify, L: LAY, isMob: mob, isDesk: !mob,
-      isGW: S.tab === "gw", isSeason: S.tab === "season",
+      isGW: S.tab === "gw", isSeason: S.tab === "season", isRules: S.tab === "rules",
       activeTabId: "tab-" + S.tab,
       brk, dl, share, ref,
       showLive, live, provPot, fx, cal, standings, pl, pred,
-      hero, pot, weekly, mt, stmt, settle, season,
+      pot, weekly, mt, settle, season, rules,
       footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +
         " of " + D.checks.gameweeks_expected + " gameweeks in the calendar · " +
