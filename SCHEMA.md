@@ -7,7 +7,8 @@ to keep it from drifting is that `tests/test_schema.py` asserts the emitter
 against these shapes, so a change here that nobody implements fails the build.
 
 If a number appears on screen it exists in one of these files. The page never
-computes money.
+computes money. The reverse does not hold: `rules` is still emitted and still
+asserted, but since the 2 Sep layout revision no card reads it (see below).
 
 ---
 
@@ -161,6 +162,9 @@ Two things worth stating plainly:
       "stake": 10, "pot": 80, "split": [0.70, 0.30], "net": [46, 14],  // ← stake/net not in §5
       "totals": { "noel": 114 },
       "order": ["soonlee", "jack"],
+      "winners": ["soonlee"],     // ← not in §5: a list — a level-5 tie splits the month
+      "runners_up": ["jack"],     // ← not in §5: empty when a tie swallowed second
+      "ledger": { "noel": -1000, "soonlee": 4600 },   // ← not in §5: SEN, per manager
       "gap_to_first": 3,          // ← not in §5: first's margin over second
       "callout": "August settled. …" },                                // ← not in §5
   ],
@@ -174,12 +178,20 @@ Two things worth stating plainly:
 entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 `month_current` instead.
 
+**`ledger` is what each manager's line in the book says for that month**, and
+it is the only correct source for a per-manager month figure. "Paid places get
+`net`, everyone else pays `stake`" is wrong twice: the stake is per gameweek a
+manager was active for (§3.8.6), so somebody who joined mid-bucket owes less,
+and the third name in a three-way tie for first is paid, not charged. The page
+and the summary both read `ledger`; `net` and `stake` are the headline figures
+for the card.
+
 ### Standings and ledger
 
 ```jsonc
   "totals":    { "noel": 114 },              // season points
   "rank":      ["soonlee", "jack"],          // ordered ids, §3.5 applied
-  "rank_prev": { "noel": 6 },                // rank before the last settled gameweek
+  "rank_prev": { "noel": 6 },                // rank before the last settled gameweek; {} until two have
   "behind":    { "noel": 27 },               // ← not in §5
   "podiums":   { "noel": 1 },                // top-3 finishes, display only (§2)
   "weeks_won": { "soonlee": 2 },             // ← not in §5
@@ -215,7 +227,19 @@ entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 
   "settled": { "through_gw": 2,
                "projected": "season pot projected, not banked" },   // ← not in §5
-  "checks":  { "zero_sum": true, "gameweeks_expected": 38, "gameweeks_present": 38 }
+  "checks":  { "zero_sum": true, "gameweeks_expected": 38, "gameweeks_present": 38 },
+
+  // ← not in §5. The message the league sends out, composed by the emitter.
+  // `null` until a gameweek has settled.
+  "summary": {
+    "gw": 2, "month": "AUG", "settled_on": "2026-08-31",
+    "title": "SuperF · GW2 settled · Mon 31 Aug",
+    "headline": "Way Shoon takes GW2",
+    "monthly_settled": true,          // did this gameweek close a month bucket?
+    "blocks": [ { "heading": "GW2", "lines": ["Way Shoon takes GW2 on 110 pts …"] } ],
+    "footer": "Nothing is paid until after GW38 — …\nGW3 deadline: Sat 5 Sep, 01:30 MYT.",
+    "text": "SuperF · GW2 settled · Mon 31 Aug\n\nGW2\n…"   // the pasteable message
+  }
 }
 ```
 
@@ -233,12 +257,17 @@ entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 > disputes their total must be able to find the single row they disagree with
 > (§3.9.2) — a statement that does not reconcile is worse than none.
 
-**`rules` drives the "How it works" tab** and is derived, never written down:
+**`rules` is derived, never written down**, and since the 2 Sep layout revision
+**nothing on the page reads it**: the "How the money works" card the third tab
+was built from is gone, and what it explained now sits as footnotes under the
+tables that need it. The block is still emitted and still asserted, because it
+costs nothing to keep correct and a tab that comes back should not need a
+rebuild of the whole season to fill it. What it holds:
 per-month stakes and pots from the real calendar, the paid-place floor table
 around the current league size, the tiebreak ladder with each level's direction
 read out of `TiebreakStats.key`, and the best-case breakdown. A thirteenth
-manager rewrites every figure on that tab without anyone touching copy — which
-is the point, because a tab that explains the money is the worst place for a
+manager rewrites every figure in it without anyone touching copy — which was
+the point, because a tab that explains the money is the worst place for a
 hardcoded number to go stale.
 
 **`runners_up` is empty when a tie for first swallowed second place.** The tied
@@ -254,6 +283,36 @@ nobody received.
 **Statement row types:** `weekly` (carries `gw`), `monthly` (carries `month`),
 `season`, `correction` (carries `affects_gw`). Ordered oldest first, and within
 a date: weekly, then monthly, then season, then corrections.
+
+### `summary` — the message that leaves the site
+
+`superf/summary.py` composes it **from the finished payload**, not from the
+settlement, and `build.py` attaches it last. That direction is the point: the
+message has to say what the page says, and a second derivation of the same
+money could be right while the page was wrong — for seven months, in a chat
+nobody re-reads.
+
+`text` is assembled from `title`, `blocks` and `footer`, so the card on the
+Gameweek tab and the message in the group chat cannot drift. The view copies
+the string; it never builds one.
+
+- **`blocks[]`** are `{ heading, lines[] }`, in order: the gameweek, `Every
+  score`, the month, then `Season so far`. A block with no lines is dropped.
+  The page does not render them — it sends `text`. They are here because `text`
+  is assembled from them, so the two cannot disagree.
+- **The month block is `— settled` only when the bucket's last gameweek is
+  Final.** Otherwise it is `— running`: a standing, what first *would* take,
+  and no accrual anywhere in it. This is the same `months[]` /
+  `month_current` boundary, said in words.
+- **The season pot never appears as a credit.** §3.9.1 — projected is not in
+  the book, and the footer repeats that nothing is paid until after GW38,
+  because a forwarded message arrives without the page around it.
+- **Money is quoted off the settled ledger**, so a gameweek played at a smaller
+  field reports what it actually paid, never `stakes.weekly.net` (§3.8.6).
+- `null` while nothing has settled. The card is absent rather than empty.
+
+`python -m superf.summary [path]` prints `text` from a published `data.json`,
+so a gameweek can be sent out without opening the site.
 
 ---
 
