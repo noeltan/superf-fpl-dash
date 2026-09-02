@@ -333,7 +333,69 @@ class Dashboard {
   }
 
   state = { tab:"gw", you:null, fxGW:null, theme:"light", detailRange:"all", vw:1200, potView:"chart", ledgerView:"chart",
-            showProj:false, moneyOpen:null, tick:0, liveSince:Date.now(), notify:"unavailable" };
+            showProj:false, moneyOpen:null, tick:0, liveSince:Date.now(), notify:"unavailable",
+            summaryOpen:false, summaryCopy:"idle" };
+
+  /* ---- the gameweek summary ----
+   *
+   * The text is `data.summary.text`, composed by the emitter. Nothing here
+   * builds or reformats it: a message assembled in the browser would be a
+   * second derivation of the ledger, and two derivations of the same money is
+   * exactly the failure this repo is built to avoid. The view copies a string.
+   */
+  summaryText(){
+    return this.data && this.data.summary ? this.data.summary.text : "";
+  }
+
+  async copySummary(){
+    const text = this.summaryText();
+    if (!text) return;
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch (error) {
+      /* The async clipboard needs a secure context and a permission this page
+       * may not have — an iPhone opened over plain http on the home wifi has
+       * neither. execCommand is deprecated and still the only thing that works
+       * there, so it stays as the fallback rather than the button failing on
+       * the one device the league actually reads this on. */
+      ok = this.copyFallback(text);
+    }
+    this.setState({ summaryCopy: ok ? "copied" : "failed" });
+    clearTimeout(this._copyTimer);
+    this._copyTimer = setTimeout(() => this.setState({ summaryCopy: "idle" }, true), 6000);
+  }
+
+  copyFallback(text){
+    try {
+      const field = document.createElement("textarea");
+      field.value = text;
+      // Off-screen but focusable: display:none or hidden cannot be selected,
+      // and a visible one scrolls the page out from under the tap.
+      field.setAttribute("readonly", "");
+      field.style.cssText = "position:fixed;top:0;left:-9999px;opacity:0";
+      document.body.appendChild(field);
+      field.select();
+      field.setSelectionRange(0, text.length);
+      const ok = document.execCommand("copy");
+      field.remove();
+      return ok;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async shareSummary(){
+    const summary = this.data && this.data.summary;
+    if (!summary) return;
+    try {
+      await navigator.share({ title: summary.title, text: summary.text });
+    } catch (error) {
+      /* Dismissing the share sheet rejects. That is not an error and must not
+       * put a failure message on the card. */
+    }
+  }
 
   /* FPL's chip codes are not words anybody says out loud. Unknown codes pass
    * through rather than being swallowed — a chip nobody has heard of still
@@ -634,6 +696,50 @@ class Dashboard {
       }),
       foot: "★ counts top-three finishes — for bragging only, no money. Miss the deadline also never mind — FPL roll your last team over and it score as usual. 0 ✕ only show up if somebody never enter a team at all, and that one still pay RM" +
         D.stakes.weekly.stake + ". Accrued only ah — nobody pay anything yet, we settle in May."
+    };
+
+    /* ---- the gameweek summary ----
+     *
+     * The message the league actually reads. It arrives composed in
+     * `data.summary` — headings, lines and the pasteable text — so this block
+     * chooses what is on screen and nothing else. Absent until a gameweek has
+     * settled, because there is no result to send before then.
+     *
+     * The block flagged `fold` is one line per manager, and is folded away by
+     * default: the card has to stay glanceable at any league size, and the
+     * person sending it does not need to read what they are about to paste.
+     */
+    const SC = D.summary || null;
+    const copyState = S.summaryCopy;
+    const summary = {
+      show: !!SC,
+      title: SC ? SC.title : "",
+      sub: SC
+        ? (SC.monthly_settled
+            ? SC.headline + " — and the month settled with it. Send it to the group."
+            : SC.headline + ". Send it to the group.")
+        : "",
+      blocks: SC ? SC.blocks.filter(b => S.summaryOpen || !b.fold) : [],
+      footer: SC ? SC.footer : "",
+      /* Every browser here can copy; only some can hand off to a share sheet,
+       * and a Share button that does nothing on a laptop is worse than no
+       * button. Copy is therefore the primary and share is the extra. */
+      canShare: typeof navigator !== "undefined" && typeof navigator.share === "function",
+      onShare: () => this.shareSummary(),
+      onCopy: () => this.copySummary(),
+      copyLabel: copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy summary",
+      copyAria: "Copy the GW" + (SC ? SC.gw : "") + " summary to the clipboard",
+      copyInk: copyState === "copied" ? "var(--good)" : copyState === "failed" ? "var(--crit)" : "var(--ink-1)",
+      copyRule: copyState === "copied" ? "var(--good)" : copyState === "failed" ? "var(--crit)" : "var(--border)",
+      /* aria-live, so a screen reader hears that the copy landed — the label
+       * change alone is silent, and the clipboard gives no other feedback. */
+      status: copyState === "copied" ? "Copied. Paste it straight into the group chat."
+        : copyState === "failed" ? "This browser would not let the page copy. Select the text above and copy it by hand."
+        : "",
+      hasStatus: copyState !== "idle",
+      statusInk: copyState === "failed" ? "var(--crit)" : "var(--good)",
+      toggleLabel: S.summaryOpen ? "Hide every score" : "Show every score",
+      onToggle: () => this.setState({ summaryOpen: !S.summaryOpen }),
     };
 
     /* ---- PL table ---- */
@@ -1274,7 +1380,7 @@ class Dashboard {
       isGW: S.tab === "gw", isSeason: S.tab === "season", isRules: S.tab === "rules",
       activeTabId: "tab-" + S.tab,
       showCountdown: !showLive, cd, brk,
-      showLive, live, provPot, fx, cal, standings, pl, pred,
+      showLive, live, provPot, fx, cal, standings, summary, pl, pred,
       hero, pot, ledger, weekly, detail, stmt, settle, money, season, rules,
       footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +

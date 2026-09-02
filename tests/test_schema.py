@@ -73,7 +73,7 @@ TOP_LEVEL = [
     "teams", "events", "breaks", "month_buckets", "fixtures", "pl_table",
     "gameweeks", "months", "month_current", "totals", "rank", "rank_prev",
     "behind", "ledger", "corrections", "settlement", "podiums", "weeks_won",
-    "stats", "settled", "checks",
+    "stats", "settled", "checks", "summary",
 ]
 
 

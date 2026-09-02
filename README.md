@@ -50,6 +50,31 @@ refuses to publish a ledger that does not balance.
 Nothing above is hardcoded. Every figure is derived from `N`, so a ninth manager
 rescales the site without a code change.
 
+## The gameweek summary
+
+Nobody opens a dashboard on a Sunday night; they read WhatsApp. So the thing
+that actually circulates is a block of text — who took the week, what everybody
+scored, the month **once its last gameweek is final**, and the season so far.
+It appears as a card on the Gameweek tab with a Copy button (and Share, where
+the browser has a share sheet), and it prints from the terminal:
+
+```bash
+python -m superf.summary              # from docs/data.json
+python -m superf.summary path/to/data.json
+```
+
+It is composed in `superf/summary.py` **from the assembled payload**, not from
+the ledger, and lands in `data.json` as `summary`. That direction matters: the
+message must say what the page says. A message retyped by hand — or derived a
+second time from the settlement — can be wrong while the page is right, and
+nobody would find out until May.
+
+The vocabulary is §3.9.1's throughout. The weekly and monthly pots are
+*accrued* ("is owed", "owe"); the season pot is *projected* and never appears
+as a credit; the footer repeats that nothing is paid until after GW38, because
+a forwarded message arrives without the rest of the site attached. A month that
+is still running says what first *would* take, and says "would".
+
 ## Running it
 
 ```bash
@@ -58,6 +83,7 @@ pip install -r requirements.txt
 python build.py            # fetch, settle, assert, write docs/data.json
 python predict.py          # call the upcoming gameweek (inside its window)
 python predict.py --score  # score a finished gameweek into result/record
+python -m superf.summary   # print the gameweek summary, ready to paste
 python -m pytest -q        # the ledger maths
 
 python build.py --offline  # rebuild from raw/ snapshots, API switched off
@@ -114,6 +140,7 @@ this is merged.
 | `superf/scoring.py` | how good the xP ranking was — Spearman, pairwise, §12.3's three |
 | `tools/backtest.py` | replays the frozen inputs and marks the model against results |
 | `superf/emit.py` | assembles `data.json` to the contract in `SCHEMA.md` |
+| `superf/summary.py` | the weekly message, composed from the finished payload |
 | `superf/snapshot.py` | §4.2 pruned immutable snapshots, and §11.4 bonus flips |
 | `superf/corrections.py` | §3.9.4 adjusting entries that never rewrite history |
 | `superf/backup.py` | CSV + Sheets, including the end-of-season settle-up |

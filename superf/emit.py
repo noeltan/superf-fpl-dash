@@ -13,6 +13,7 @@ from typing import Mapping, Sequence
 
 from . import copy as copytext
 from . import corrections as corrections_mod
+from . import summary as summary_mod
 from .config import (
     CURRENCY,
     EXPECTED_GAMEWEEKS,
@@ -26,6 +27,7 @@ from .config import (
     WEEKLY_SPLIT,
     WEEKLY_STAKE_RM,
 )
+from .copy import ordinal
 from .ledger import Gameweek, Settlement
 from .money import LedgerError, advertised_net, minimum_transfers, rm_to_sen, sen_to_rm
 from .tiebreak import ladder as tiebreak_ladder
@@ -543,7 +545,7 @@ def build_payload(
 
     month_for_stakes = len(current_month["gameweeks"]) if current_month else 0
 
-    return {
+    payload = {
         "generated_at": generated_at,
         "league": {"id": league_id, "name": league_name, "currency": CURRENCY, "players": n},
         "current": dict(current),
@@ -595,11 +597,10 @@ def build_payload(
         },
     }
 
-
-def ordinal(place: int) -> str:
-    if 10 <= place % 100 <= 20:
-        return f"{place}th"
-    return f"{place}{ {1: 'st', 2: 'nd', 3: 'rd'}.get(place % 10, 'th') }"
+    # Composed last, from the finished payload: the message that goes out to
+    # the group chat has to quote the page, not a second derivation of it.
+    payload["summary"] = summary_mod.build(payload)
+    return payload
 
 
 def _statement_for(

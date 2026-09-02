@@ -450,6 +450,44 @@ select,button{font:inherit}
     </div>
   </div>
 
+  <!-- The message that leaves the site. Everything in it is composed in
+       data.summary by the emitter; this card picks what shows and copies a
+       string. Nothing here formats money. -->
+  <sc-if value="{{summary.show}}" hint-placeholder-val="{{ true }}">
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);margin-bottom:18px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="min-width:0">
+        <div style="font-size:14.5px;font-weight:640">{{summary.title}}</div>
+        <div style="font-size:12.5px;color:var(--ink-muted);margin-top:3px;line-height:1.5">{{summary.sub}}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <sc-if value="{{summary.canShare}}" hint-placeholder-val="{{ false }}">
+          <button sc-camel-on-click="{{summary.onShare}}" data-focus-key="summary-share" aria-label="Share the gameweek summary" style="color:var(--ink-2);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">Share</button>
+        </sc-if>
+        <button sc-camel-on-click="{{summary.onCopy}}" data-focus-key="summary-copy" aria-label="{{summary.copyAria}}" style="color:{{summary.copyInk}};background:var(--surface-2);border:1px solid {{summary.copyRule}};border-radius:8px;padding:9px 13px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap">{{summary.copyLabel}}</button>
+      </div>
+    </div>
+
+    <div role="status" aria-live="polite" style="font-size:12.5px;color:{{summary.statusInk}};line-height:1.55">
+      <sc-if value="{{summary.hasStatus}}" hint-placeholder-val="{{ false }}"><span>{{summary.status}}</span></sc-if>
+    </div>
+
+    <div style="margin-top:12px;padding:14px 16px;background:var(--surface-2);border-radius:10px">
+      <sc-for list="{{summary.blocks}}" as="b" hint-placeholder-count="3">
+        <div style="margin-bottom:14px">
+          <div style="font-size:11px;font-weight:660;letter-spacing:.11em;color:var(--ink-muted);margin-bottom:6px">{{b.heading}}</div>
+          <sc-for list="{{b.lines}}" as="l" hint-placeholder-count="3">
+            <div style="font-size:13.5px;line-height:1.65;color:var(--ink-2);font-variant-numeric:tabular-nums">{{l}}</div>
+          </sc-for>
+        </div>
+      </sc-for>
+      <div style="font-size:12.5px;color:var(--ink-muted);line-height:1.6;border-top:1px solid var(--grid);padding-top:11px;white-space:pre-line">{{summary.footer}}</div>
+    </div>
+
+    <button sc-camel-on-click="{{summary.onToggle}}" data-focus-key="summary-toggle" style="margin-top:12px;color:var(--ink-2);background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12.5px;cursor:pointer">{{summary.toggleLabel}}</button>
+  </div>
+  </sc-if>
+
   <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);margin-bottom:18px">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px">
       <div>
