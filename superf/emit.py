@@ -232,8 +232,13 @@ def build_payload(
     behind = {m: leader_points - totals_points[m] for m in ids}
 
     # Rank before the most recent settled gameweek (§5 `rank_prev`).
+    #
+    # Empty until two gameweeks have settled. With one, "before" is a book of
+    # zeros sorted by id — and the movement arrows on the league table would
+    # read that as Sam up six and Boon down twelve on the one week nobody has
+    # moved from anywhere.
     rank_prev: dict[str, int] = {}
-    if len(final_gws) >= 1:
+    if len(final_gws) >= 2:
         prior = {m: 0 for m in ids}
         for gw in final_gws[:-1]:
             for manager, score in gameweeks[gw].scores.items():
@@ -346,6 +351,17 @@ def build_payload(
                 "net": [_rm(v) for v in nets],
                 "totals": month_totals,
                 "order": order,
+                # `winners` is a list for the same reason `gameweeks[].winners`
+                # is: a level-5 tie for the month splits both paid shares, and
+                # `order[0]` alone would name one of them as if it had won
+                # outright. `runners_up` is empty when a tie swallowed second.
+                "winners": ranking.winners,
+                "runners_up": ranking.runners_up,
+                # SEN, per manager, straight off the settled ledger. A view or a
+                # message that charges "everyone else the stake" is wrong for
+                # a manager who joined mid-bucket (stake is per gameweek
+                # active, §3.8.6) and for the third name in a three-way tie.
+                "ledger": {m: ledger.get(m, 0) for m in ids if m in ledger},
                 "gap_to_first": margin,
                 "callout": copytext.settled_month_callout(
                     month,

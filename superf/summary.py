@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 from typing import Mapping, Sequence
 
 from . import copy as copytext
+from .config import TZ_OFFSET_HOURS
 from .money import sen_to_rm
 
 FOOTER = (
@@ -66,7 +67,7 @@ def _deadline_myt(value: str) -> str:
         moment = datetime.strptime(value[:19], "%Y-%m-%dT%H:%M:%S")
     except ValueError:
         return value
-    local = (moment + timedelta(hours=8)).replace(tzinfo=None)
+    local = (moment + timedelta(hours=TZ_OFFSET_HOURS)).replace(tzinfo=None)
     return (
         f"{DAYS[local.weekday()]} {local.day} {MONTHS_SHORT[local.month - 1]}, "
         f"{local:%H:%M}"
@@ -184,31 +185,65 @@ def _table_block(gameweek: Mapping, names: Mapping[str, str], ledger_row: Mappin
     return {"heading": "Every score", "lines": lines}
 
 
+def _debits_line(ledger: Mapping[str, int], pot) -> str:
+    """Who paid, read off the ledger — never "everyone else owes the stake".
+
+    The stake is per gameweek a manager was active for (§3.8.6), so somebody
+    who joined for the last gameweek of a three-gameweek bucket owes a third of
+    what the rest do. One sentence when they all match, a range when they do
+    not; the number is never invented.
+    """
+    debits = sorted({-v for v in ledger.values() if v < 0})
+    payers = sum(1 for v in ledger.values() if v < 0)
+    if not debits:
+        return f"Pot {copytext.rm(pot)}."
+    if len(debits) == 1:
+        return (
+            f"The other {_plural(payers, 'manager')} owe "
+            f"{copytext.rm(sen_to_rm(debits[0]))} each. Pot {copytext.rm(pot)}."
+        )
+    return (
+        f"The other {_plural(payers, 'manager')} owe their stake — "
+        f"{copytext.rm(sen_to_rm(debits[0]))} to {copytext.rm(sen_to_rm(debits[-1]))}, "
+        f"by gameweeks played. Pot {copytext.rm(pot)}."
+    )
+
+
 def _settled_month_block(month: Mapping, names: Mapping[str, str]) -> dict:
     """A month whose last gameweek has just gone Final — the monthly winners."""
-    order = month["order"]
     totals = month["totals"]
-    nets = month["net"]
+    ledger = month.get("ledger") or {}
+    winners = list(month.get("winners") or month["order"][:1])
+    runners_up = list(month.get("runners_up") or [])
+    label = copytext.month_name(month["month"])
     lines = [
-        f"{copytext.month_name(month['month'])} is settled over "
-        f"GW{month['gameweeks'][0]}–GW{month['gameweeks'][-1]}."
+        f"{label} is settled over GW{month['gameweeks'][0]}–GW{month['gameweeks'][-1]}."
     ]
-    if order:
+    if winners:
+        points = totals.get(winners[0], 0)
+        owed = copytext.rm(sen_to_rm(ledger.get(winners[0], 0)))
+        if len(winners) > 1:
+            # Both paid shares split between them, so there is no second place
+            # and each takes less than the headline share. Say the share.
+            lines.append(
+                f"{_join([names.get(m, m) for m in winners])} tie the month on "
+                f"{points} pts and are owed {owed} each — dead level after all four tiebreaks."
+            )
+        else:
+            lines.append(
+                f"{names.get(winners[0], winners[0])} takes the month on {points} pts "
+                f"and is owed {owed}."
+            )
+    if runners_up:
+        points = totals.get(runners_up[0], 0)
+        owed = copytext.rm(sen_to_rm(ledger.get(runners_up[0], 0)))
         lines.append(
-            f"{names.get(order[0], order[0])} takes the month on "
-            f"{totals.get(order[0], 0)} pts and is owed "
-            f"{copytext.rm(nets[0] if nets else 0)}."
+            f"{_join([names.get(m, m) for m in runners_up])} "
+            f"{'are' if len(runners_up) > 1 else 'is'} second on {points} and "
+            f"{'are' if len(runners_up) > 1 else 'is'} owed {owed}."
         )
-    if len(order) > 1:
-        lines.append(
-            f"{names.get(order[1], order[1])} is second on {totals.get(order[1], 0)} "
-            f"and is owed {copytext.rm(nets[1] if len(nets) > 1 else 0)}."
-        )
-    lines.append(
-        f"The other {_plural(max(len(order) - 2, 0), 'manager')} owe "
-        f"{copytext.rm(month['stake'])} each. Pot {copytext.rm(month['pot'])}."
-    )
-    return {"heading": f"{copytext.month_name(month['month'])} — settled", "lines": lines}
+    lines.append(_debits_line(ledger, month["pot"]))
+    return {"heading": f"{label} — settled", "lines": lines}
 
 
 def _running_month_block(
@@ -336,13 +371,20 @@ def build(payload: Mapping) -> dict | None:
         bucket = next(
             (b for b in payload.get("month_buckets") or [] if gw in b["gameweeks"]), None
         )
-        current = payload.get("month_current")
-        if bucket and current and current["month"] == bucket["month"]:
+        # `rules.months` carries every bucket's stake, pot and advertised net.
+        # NOT `month_current`: that follows next_gw, and while the bucket's
+        # last gameweek is live it already points a month ahead.
+        terms = next(
+            (m for m in (payload.get("rules") or {}).get("months") or []
+             if bucket and m["month"] == bucket["month"]),
+            None,
+        )
+        if bucket and terms:
             played, totals = _month_to_date(gameweeks, bucket["gameweeks"])
             if played:
                 blocks.append(
                     _running_month_block(
-                        {**current, "last_gw": bucket["gameweeks"][-1]},
+                        {**terms, "last_gw": bucket["gameweeks"][-1]},
                         played,
                         totals,
                         names,
@@ -401,12 +443,13 @@ def build(payload: Mapping) -> dict | None:
 def main(argv: Sequence[str] | None = None) -> int:
     import json
     import sys
+    from pathlib import Path
 
     from .config import DATA_JSON
 
     args = list(sys.argv[1:] if argv is None else argv)
     path = args[0] if args else DATA_JSON
-    payload = json.loads(open(path, encoding="utf-8").read())
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
     block = payload.get("summary") or build(payload)
     if not block:
         print("Nothing has settled yet — no summary to send.", file=sys.stderr)

@@ -295,3 +295,97 @@ def test_the_published_summary_agrees_with_the_published_ledger():
     for manager in gameweek["winners"]:
         amount = published["ledger"][manager]["by_gameweek"][-1]
         assert f"RM{amount // 100}" in "\n".join(summary["blocks"][0]["lines"])
+
+
+# --- from the PR review: four things the first cut got wrong ------------------
+
+
+def test_a_tie_for_the_month_reads_as_a_tie():
+    """A level-5 tie for the month splits both paid shares; the message must not
+    crown one of them and call the other second."""
+    # GW1 as spec, GW2 arranged so noel and soonlee finish August dead level
+    # on 141 with identical (empty) tiebreak stats.
+    tied_gw2 = dict(GW2_POINTS, noel=141 - GW1_POINTS["noel"], soonlee=141 - GW1_POINTS["soonlee"])
+    payload = payload_for({1: GW1_POINTS, 2: tied_gw2})
+    month = payload["months"][0]
+    assert sorted(month["winners"]) == ["noel", "soonlee"]
+    assert month["runners_up"] == []
+    body = "\n".join(
+        b["lines"][1] for b in payload["summary"]["blocks"] if b["heading"] == "August — settled"
+    )
+    assert "Noel and Soon Lee tie the month on 141 pts" in body
+    assert "is second" not in "\n".join(
+        line for b in payload["summary"]["blocks"] if b["heading"] == "August — settled" for line in b["lines"]
+    )
+    # And the amount quoted is each one's own line in the ledger, not net[0].
+    assert f"RM{month['ledger']['noel'] // 100}" in body
+
+
+def test_month_debits_are_read_off_the_ledger_not_assumed_to_be_the_stake():
+    """§3.8.6 — a manager who joined for the last gameweek of a bucket owes one
+    gameweek's stake, and the message must say so rather than charge the full
+    month to "the other N"."""
+    from superf.ledger import ManagerScore
+
+    calendar = full_season(
+        {1: GW1_POINTS, 2: GW2_POINTS}, managers=MANAGERS, months={1: "AUG", 2: "AUG"}
+    )
+    roster = MANAGERS + [
+        {"id": "late", "display_name": "Late Joiner", "short": "Late",
+         "team_name": "Latecomer", "entry_id": 9999999}
+    ]
+    for gw, gameweek in calendar.items():
+        gameweek.scores["late"] = ManagerScore(points=None, active=False)
+    calendar[2].scores["late"] = ManagerScore(points=1, active=True)
+    settlement = settle(roster, calendar, BUCKETS, expected_gameweeks=38)
+    payload = build_payload(
+        generated_at="2026-09-01T06:00:00Z", league_name="SuperF", league_id=310479,
+        managers=roster, teams=TEAMS, events=EVENTS, breaks=[], month_buckets=BUCKETS,
+        fixtures_by_gw={}, pl_table=[], gameweeks=calendar, settlement=settlement,
+        current={"season": "2026/27", "gameweek": 2, "next_gw": 3, "state": "final"},
+        settled_dates=SETTLED_DATES,
+    )
+    month = payload["months"][0]
+    # One gameweek in the bucket, so one gameweek's monthly stake — RM5, not RM10.
+    assert month["ledger"]["late"] == -500
+    assert month["ledger"]["noel"] == -1000
+    body = "\n".join(
+        line for b in payload["summary"]["blocks"] if b["heading"] == "August — settled" for line in b["lines"]
+    )
+    assert "owe their stake — RM5 to RM10, by gameweeks played" in body
+    assert "owe RM10 each" not in body
+
+
+def test_rank_prev_is_empty_until_there_is_a_before():
+    """With one gameweek settled, "the rank before it" is a book of zeros sorted
+    by id — and the league table's movement arrows would print it as places
+    gained. Empty means no arrow."""
+    one = payload_for(
+        {1: GW1_POINTS},
+        current={"season": "2026/27", "gameweek": 1, "next_gw": 2, "state": "final"},
+        settled_dates={1: "2026-08-24"},
+    )
+    assert one["rank_prev"] == {}
+    two = payload_for({1: GW1_POINTS, 2: GW2_POINTS})
+    assert two["rank_prev"]["soonlee"] == 1   # led after GW1
+
+
+def test_the_running_month_survives_its_last_gameweek_being_live():
+    """`month_current` follows next_gw, and while a bucket's last gameweek is
+    being played next_gw already points a month ahead. The summary for the
+    gameweek before it must still carry the running month."""
+    buckets = [{"month": "AUG", "gameweeks": [1, 2, 3]}, {"month": "SEP", "gameweeks": list(range(4, 39))}]
+    live = payload_for(
+        {1: GW1_POINTS, 2: GW2_POINTS},
+        buckets=buckets,
+        # GW3, the bucket's last gameweek, is live: derive_current sets next_gw = 4.
+        current={"season": "2026/27", "gameweek": 3, "next_gw": 4, "state": "live"},
+    )
+    assert live["month_current"]["month"] == "SEP"          # the trap
+    headings = [b["heading"] for b in live["summary"]["blocks"]]
+    assert "August — running" in headings
+    running = "\n".join(
+        line for b in live["summary"]["blocks"] if b["heading"] == "August — running" for line in b["lines"]
+    )
+    assert "August is 2 of 3 gameweeks in" in running
+    assert "Nothing settles until GW3 is final." in running

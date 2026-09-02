@@ -88,7 +88,6 @@ const TABS = ["gw", "season"];
  * league table drops to three columns and the rest goes behind a tap. */
 const MOBILE_BREAKPOINT = 720;
 const MOBILE_NAV = "bottom";      /* "bottom" | "top" — where the tabs live on a phone */
-const DENSITY = "comfortable";    /* "comfortable" | "compact" — row padding and stack type */
 const BARS_ON_MOBILE = false;     /* a bar chart squeezed into 360px is a decoration */
 
 function tabFromHash() {
@@ -418,10 +417,18 @@ class Dashboard {
     };
     try {
       if (navigator.share) {
-        // Dismissing the sheet rejects, which is not a failure — but it is
-        // indistinguishable from one here, so fall back to copying rather
-        // than reporting an error the reader did not cause.
-        navigator.share({ title:"SuperF gameweek summary", text }).then(() => done("sent"), copy);
+        // Dismissing the sheet rejects with AbortError. That is a choice, not
+        // a failure: reset quietly. Anything else means the sheet could not
+        // do the job, so try the clipboard — but on iOS the tap that opened
+        // the sheet no longer authorises a copy, so this path can still land
+        // on "failed", which is then true.
+        navigator.share({ title:"SuperF gameweek summary", text }).then(
+          () => done("sent"),
+          (error) => {
+            if (error && error.name === "AbortError") { this.setState({ shared:false }); return; }
+            copy();
+          }
+        );
         return;
       }
     } catch (error) { /* fall through */ }
@@ -486,7 +493,7 @@ class Dashboard {
      * it shows fewer columns and puts the rest behind a tap, and that is a
      * data decision, not a CSS one. `mob` is the only thing the template asks
      * about — everything else it needs comes out of LAY already resolved. */
-    const mob = S.vw < MOBILE_BREAKPOINT, dense = DENSITY === "compact";
+    const mob = S.vw < MOBILE_BREAKPOINT;
     const LAY = {
       isMob: mob, isDesk: !mob,
       metaShow: mob ? "none" : "block",
@@ -496,9 +503,7 @@ class Dashboard {
       showBottomNav: mob && MOBILE_NAV === "bottom",
       /* The bottom bar is fixed, so the page has to end above it or the last
        * row of the last table is unreachable. */
-      padBottom: (mob && MOBILE_NAV === "bottom") ? "104px" : "72px",
-      rowPad: dense ? "7px 0" : "11px 0",
-      stackFont: dense ? "13.5px" : "15px"
+      padBottom: (mob && MOBILE_NAV === "bottom") ? "104px" : "72px"
     };
     const byId = {}; D.managers.forEach(m => { byId[m.id] = m; });
     const monthCurrent = D["month_current"] ||
@@ -608,11 +613,7 @@ class Dashboard {
       /* The bottom bar sits on the surface rather than in a track, so the
        * selected tab has to be solid to read as selected at a glance. */
       navBg: S.tab === k ? "var(--ink-1)" : "var(--surface-2)",
-      navInk: S.tab === k ? "var(--plane)" : "var(--ink-2)",
-      /* The bottom bar is a nav, not a tablist — its buttons move the page
-       * rather than switch panels in place, so aria-current is the right
-       * word for "this is the one you are on". */
-      current: S.tab === k ? "page" : "false"
+      navInk: S.tab === k ? "var(--plane)" : "var(--ink-2)"
     }));
 
     /* stale-data banner (§9.5) — time comparison only */
@@ -783,7 +784,7 @@ class Dashboard {
           arrowLabel: mv > 0 ? "up " + mv + " place" + (mv > 1 ? "s" : "")
             : mv < 0 ? "down " + (-mv) + " place" + (mv < -1 ? "s" : "") : "no change",
           gw: gwTxt,
-          gwInk: dns ? "var(--crit)" : "var(--ink-1)", gwWeight: dns ? 620 : 450,
+          gwInk: dns ? "var(--crit)" : "var(--ink-1)",
           total: D.totals[id], gap,
           wonTxt: wonN ? "★ " + wonN : "—",
           chip: chip ? "◆ " + chip : "—",
@@ -1249,19 +1250,30 @@ class Dashboard {
      * both settled upstream. The view still does not add money up.
      */
     const monthRecs = {}; (D.months || []).forEach(mb => { monthRecs[mb.month] = mb; });
+    /* SEN, from `months[].ledger` — what that manager's line in the book says
+     * for that month. The obvious shortcut, "paid places get `net`, everyone
+     * else pays `stake`", is wrong twice: the stake is per gameweek a manager
+     * was active for (§3.8.6), so a mid-bucket joiner owes less, and the third
+     * name in a three-way tie for first is paid, not charged. */
     const moneyOfMonth = (rec, id) => {
-      if (!rec) return null;
-      const place = rec.order.indexOf(id);
-      if (place < 0) return null;
-      return place < rec.net.length ? rec.net[place] : -rec.stake;
+      if (!rec || !rec.ledger || rec.ledger[id] === undefined) return null;
+      return rec.ledger[id];
     };
     const mtCols = [];
     playedMonths.forEach(mb => {
       const gws = settledGWs.filter(g => g.month === mb.month);
+      const rec = monthRecs[mb.month];
+      /* A month that is still running has no record — nothing has settled on
+       * it — so it gets no column of its own. Its gameweeks show instead,
+       * always open: there is no total to fold them behind yet. */
+      if (!rec) {
+        gws.forEach(g => mtCols.push({ kind:"gw", gw:g, label:"GW" + g.gw, isGW:true, isMonth:false }));
+        return;
+      }
       const open = !!S.mOpen[mb.month];
       if (open) gws.forEach(g => mtCols.push({ kind:"gw", gw:g, label:"GW" + g.gw, isGW:true, isMonth:false }));
       mtCols.push({
-        kind:"month", month:mb.month, rec:monthRecs[mb.month], gws, open,
+        kind:"month", month:mb.month, rec, gws, open,
         isGW:false, isMonth:true,
         label: this.monthName(mb.month), caret: open ? "▼" : "▶",
         expanded: open ? "true" : "false",
@@ -1291,7 +1303,7 @@ class Dashboard {
       hasMonths: mtCols.length > 0,
       empty: mtCols.length === 0,
       sub: "Points by month, money underneath. Tap a month to open its gameweeks.",
-      emptyNote: "Nothing here until a month finishes. A month only settles when its last gameweek go final — August need both GW1 and GW2 before anybody owe anything on it.",
+      emptyNote: "Nothing here until a gameweek settles.",
       cols: mtCols,
       rows: D.rank.map(id => ({
         name: byId[id].display_name, ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id), mark: markOf(id),
@@ -1303,14 +1315,14 @@ class Dashboard {
           const pts = rec && rec.totals && rec.totals[id] !== undefined ? rec.totals[id] : null;
           return {
             text: pts === null ? "—" : String(pts),
-            sub: money === null ? "" : rm(money),
+            sub: money === null ? "" : this.sen(money),
             subInk: money > 0 ? "var(--pos)" : money < 0 ? "var(--neg)" : "var(--ink-muted)",
             bg: place === 0 ? "var(--tint)" : "transparent",
             ink: place === 0 ? "var(--good)" : "var(--ink-1)",
             weight: place >= 0 && place < 2 ? 640 : 450,
             title: byId[id].short + " " + this.monthName(c.month) + " — " + (pts === null ? "no scores" : pts + " pts") +
               (place >= 0 ? ", " + (place + 1) + " of " + rec.order.length : "") +
-              (money === null ? "" : ", " + rm(money))
+              (money === null ? "" : ", " + this.sen(money))
           };
         }),
         total: D.totals[id], pnl: this.sen(D.ledger[id].accrued),
@@ -1334,14 +1346,15 @@ class Dashboard {
               return {
                 label: this.monthName(mb.month),
                 pts: pts === null ? "—" : pts + " pts",
-                money: money === null ? "—" : rm(money),
+                money: money === null ? "—" : this.sen(money),
                 ink: money > 0 ? "var(--pos)" : money < 0 ? "var(--neg)" : "var(--ink-2)"
               };
             })
           };
         }),
       foot: "★ won the weekly pot · ✕ never set team, still pay RM" + D.stakes.weekly.stake +
-        " · ◆ chip played. Month money is 70/30 of that month's pot; everybody else pays their stake. Every column adds back to RM0 because the league keeps nothing."
+        " · ◆ chip played. A month gets its own column once its last gameweek go final; until then its gameweeks show on their own. Month money is 70/30 of that month's pot, everybody else pays RM" +
+        D.stakes.monthly.stake_per_gw + " a gameweek they were in. Every column adds back to RM0 because the league keeps nothing."
     };
 
 

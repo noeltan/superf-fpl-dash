@@ -162,6 +162,9 @@ Two things worth stating plainly:
       "stake": 10, "pot": 80, "split": [0.70, 0.30], "net": [46, 14],  // ← stake/net not in §5
       "totals": { "noel": 114 },
       "order": ["soonlee", "jack"],
+      "winners": ["soonlee"],     // ← not in §5: a list — a level-5 tie splits the month
+      "runners_up": ["jack"],     // ← not in §5: empty when a tie swallowed second
+      "ledger": { "noel": -1000, "soonlee": 4600 },   // ← not in §5: SEN, per manager
       "gap_to_first": 3,          // ← not in §5: first's margin over second
       "callout": "August settled. …" },                                // ← not in §5
   ],
@@ -175,12 +178,20 @@ Two things worth stating plainly:
 entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 `month_current` instead.
 
+**`ledger` is what each manager's line in the book says for that month**, and
+it is the only correct source for a per-manager month figure. "Paid places get
+`net`, everyone else pays `stake`" is wrong twice: the stake is per gameweek a
+manager was active for (§3.8.6), so somebody who joined mid-bucket owes less,
+and the third name in a three-way tie for first is paid, not charged. The page
+and the summary both read `ledger`; `net` and `stake` are the headline figures
+for the card.
+
 ### Standings and ledger
 
 ```jsonc
   "totals":    { "noel": 114 },              // season points
   "rank":      ["soonlee", "jack"],          // ordered ids, §3.5 applied
-  "rank_prev": { "noel": 6 },                // rank before the last settled gameweek
+  "rank_prev": { "noel": 6 },                // rank before the last settled gameweek; {} until two have
   "behind":    { "noel": 27 },               // ← not in §5
   "podiums":   { "noel": 1 },                // top-3 finishes, display only (§2)
   "weeks_won": { "soonlee": 2 },             // ← not in §5
