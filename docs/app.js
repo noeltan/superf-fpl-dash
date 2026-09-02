@@ -1,11 +1,21 @@
 /* SuperF — FPL League Dashboard.
  *
  * The view below (renderVals and everything it builds) is the prototype's own
- * code, unchanged except where noted in the commit that introduced this file:
- * the mock DATA / LIVE / PREDICTION objects are replaced by fetch(), the dev
- * state switcher is gone, `locked` was added to the state map because §11.1
- * defines five states and the map only had four, and two table cells learned to
- * render a dash for a manager who was not in the league yet.
+ * code, with the mock DATA / LIVE / PREDICTION objects replaced by fetch(), no
+ * dev state switcher, `locked` added to the state map because §11.1 defines
+ * five states and the map only had four, and cells that render a dash for a
+ * manager who was not in the league yet.
+ *
+ * Reshaped by the design's 2 Sep layout revision ("cluttered, table must be
+ * prominent"): the league table is the top of the Gameweek tab and carries the
+ * deadline and the summary button in its header; the countdown card is gone;
+ * the season calendar, the international break and the Premier League table
+ * are behind one REFERENCE toggle; the Season tab leads with the accrued hero
+ * and then one month-by-month table in place of the diverging ledger chart,
+ * the 38-column gameweek grid and its range picker; and the third tab went
+ * with the "How the money works" card it was built from. Below
+ * MOBILE_BREAKPOINT the tabs move to a bottom bar and the wide tables become
+ * tap-to-expand lists.
  *
  * Money vocabulary follows §3.9.1 exactly: nothing is paid until May, so the
  * running figure is "owes" / "is owed" and never "won" or "collected".
@@ -65,8 +75,21 @@ function savePrefs(patch) {
 
 /* The tab lives in the URL so it survives a reload and can be linked to. It is
  * the only piece of state worth a history entry: "look at how it works" is a
- * thing people send each other, "look at the season tab" is not. */
-const TABS = ["gw", "season", "rules"];
+ * thing people send each other, "look at the season tab" is not.
+ *
+ * Two tabs since the 2 Sep layout revision: the "How the money works" card the
+ * third tab was built from is gone, and what it explained now sits as footnotes
+ * under the tables that need it. */
+const TABS = ["gw", "season"];
+
+/* The design canvas exposed these as component props; here they are constants,
+ * because a static page has nobody to set them. The values are the design's own
+ * defaults. Changing MOBILE_BREAKPOINT is the one that matters: below it the
+ * league table drops to three columns and the rest goes behind a tap. */
+const MOBILE_BREAKPOINT = 720;
+const MOBILE_NAV = "bottom";      /* "bottom" | "top" — where the tabs live on a phone */
+const DENSITY = "comfortable";    /* "comfortable" | "compact" — row padding and stack type */
+const BARS_ON_MOBILE = false;     /* a bar chart squeezed into 360px is a decoration */
 
 function tabFromHash() {
   const hash = location.hash.replace(/^#/, "");
@@ -157,17 +180,20 @@ class Dashboard {
         ? data.current.next_gw
         : data.current.gameweek,
       theme: this.detectTheme(),
-      detailRange: "all",
-      // Viewport width, tracked in state: below 560px the pot and ledger bar
-      // charts become lists, because a bar chart squeezed into a phone is a
-      // decoration, not a reading of who owes what.
+      // Viewport width, tracked in state rather than read from a media query:
+      // below MOBILE_BREAKPOINT the page is a different page — three columns
+      // instead of eight, tabs at the bottom, bars as lists — and that is a
+      // decision renderVals has to make, not the stylesheet.
       vw: typeof window === "undefined" ? 1200 : window.innerWidth,
       potView: "chart",
-      ledgerView: "chart",
       showProj: false,
-      moneyOpen: null,
       tick: 0,
       liveSince: Date.now(),
+      refOpen: false,
+      openRow: null,
+      mOpen: {},
+      mRow: null,
+      shared: false,
     };
 
     this.render();
@@ -332,69 +358,74 @@ class Dashboard {
     }
   }
 
-  state = { tab:"gw", you:null, fxGW:null, theme:"light", detailRange:"all", vw:1200, potView:"chart", ledgerView:"chart",
-            showProj:false, moneyOpen:null, tick:0, liveSince:Date.now(), notify:"unavailable",
-            summaryOpen:false, summaryCopy:"idle" };
+  state = { tab:"gw", you:null, fxGW:null, theme:"light", vw:1200, potView:"chart",
+            showProj:false, tick:0, liveSince:Date.now(), notify:"unavailable",
+            /* refOpen — the reference drawer (calendar, breaks, PL table).
+             * openRow — which league-table row is expanded on a phone.
+             * mOpen / mRow — which month column, and which manager, is open on
+             *   "Who is up, who is down".
+             * shared — transient feedback on the summary button. */
+            refOpen:false, openRow:null, mOpen:{}, mRow:null, shared:false };
 
   /* ---- the gameweek summary ----
    *
    * The text is `data.summary.text`, composed by the emitter. Nothing here
    * builds or reformats it: a message assembled in the browser would be a
    * second derivation of the ledger, and two derivations of the same money is
-   * exactly the failure this repo is built to avoid. The view copies a string.
+   * exactly the failure this repo is built to avoid. The view sends a string.
+   *
+   * One button, three routes down. The share sheet is what a phone wants and
+   * it is the only one that reaches WhatsApp in a tap; the async clipboard is
+   * the desktop answer; execCommand is deprecated and still the only thing
+   * that works on an iPhone opened over plain http on the home wifi, which is
+   * how half this league loads the site. Each falls back to the next, and the
+   * label says which one happened.
    */
-  summaryText(){
-    return this.data && this.data.summary ? this.data.summary.text : "";
-  }
-
-  async copySummary(){
-    const text = this.summaryText();
+  sendSummary(text){
     if (!text) return;
-    let ok = false;
+    const done = (how) => {
+      this.setState({ shared: how });
+      clearTimeout(this._shareTimer);
+      this._shareTimer = setTimeout(() => this.setState({ shared:false }, true), 4000);
+    };
+    const legacy = () => {
+      let ok = false;
+      try {
+        const field = document.createElement("textarea");
+        field.value = text;
+        // Off-screen but focusable: display:none cannot be selected, and a
+        // visible one scrolls the page out from under the tap.
+        field.setAttribute("readonly", "");
+        field.style.cssText = "position:fixed;top:0;left:-9999px;opacity:0";
+        document.body.appendChild(field);
+        field.select();
+        field.setSelectionRange(0, text.length);
+        ok = document.execCommand("copy");
+        field.remove();
+      } catch (error) {
+        ok = false;
+      }
+      done(ok ? "copied" : "failed");
+    };
+    const copy = () => {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => done("copied"), legacy);
+          return;
+        }
+      } catch (error) { /* fall through */ }
+      legacy();
+    };
     try {
-      await navigator.clipboard.writeText(text);
-      ok = true;
-    } catch (error) {
-      /* The async clipboard needs a secure context and a permission this page
-       * may not have — an iPhone opened over plain http on the home wifi has
-       * neither. execCommand is deprecated and still the only thing that works
-       * there, so it stays as the fallback rather than the button failing on
-       * the one device the league actually reads this on. */
-      ok = this.copyFallback(text);
-    }
-    this.setState({ summaryCopy: ok ? "copied" : "failed" });
-    clearTimeout(this._copyTimer);
-    this._copyTimer = setTimeout(() => this.setState({ summaryCopy: "idle" }, true), 6000);
-  }
-
-  copyFallback(text){
-    try {
-      const field = document.createElement("textarea");
-      field.value = text;
-      // Off-screen but focusable: display:none or hidden cannot be selected,
-      // and a visible one scrolls the page out from under the tap.
-      field.setAttribute("readonly", "");
-      field.style.cssText = "position:fixed;top:0;left:-9999px;opacity:0";
-      document.body.appendChild(field);
-      field.select();
-      field.setSelectionRange(0, text.length);
-      const ok = document.execCommand("copy");
-      field.remove();
-      return ok;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async shareSummary(){
-    const summary = this.data && this.data.summary;
-    if (!summary) return;
-    try {
-      await navigator.share({ title: summary.title, text: summary.text });
-    } catch (error) {
-      /* Dismissing the share sheet rejects. That is not an error and must not
-       * put a failure message on the card. */
-    }
+      if (navigator.share) {
+        // Dismissing the sheet rejects, which is not a failure — but it is
+        // indistinguishable from one here, so fall back to copying rather
+        // than reporting an error the reader did not cause.
+        navigator.share({ title:"SuperF gameweek summary", text }).then(() => done("sent"), copy);
+        return;
+      }
+    } catch (error) { /* fall through */ }
+    copy();
   }
 
   /* FPL's chip codes are not words anybody says out loud. Unknown codes pass
@@ -447,6 +478,28 @@ class Dashboard {
   renderVals(){
     const S = this.state, D = this.D, F = this.feed, cur = this.cur, T = D.teams;
     const rm = v => this.rm(v), N = D.league.players;
+
+    /* ---- layout ----
+     *
+     * One breakpoint, decided here and passed to the markup, rather than a
+     * pile of media queries: the phone layout is not the desktop one reflowed,
+     * it shows fewer columns and puts the rest behind a tap, and that is a
+     * data decision, not a CSS one. `mob` is the only thing the template asks
+     * about — everything else it needs comes out of LAY already resolved. */
+    const mob = S.vw < MOBILE_BREAKPOINT, dense = DENSITY === "compact";
+    const LAY = {
+      isMob: mob, isDesk: !mob,
+      metaShow: mob ? "none" : "block",
+      headWrap: mob ? "nowrap" : "wrap",
+      headScroll: mob ? "auto" : "visible",
+      showTopTabs: !mob || MOBILE_NAV === "top",
+      showBottomNav: mob && MOBILE_NAV === "bottom",
+      /* The bottom bar is fixed, so the page has to end above it or the last
+       * row of the last table is unreachable. */
+      padBottom: (mob && MOBILE_NAV === "bottom") ? "104px" : "72px",
+      rowPad: dense ? "7px 0" : "11px 0",
+      stackFont: dense ? "13.5px" : "15px"
+    };
     const byId = {}; D.managers.forEach(m => { byId[m.id] = m; });
     const monthCurrent = D["month_current"] ||
       { month:"\u2014", gameweeks:0, opens_gw:0, stake:0, pot:0, net:[0,0], note:"" };
@@ -530,7 +583,7 @@ class Dashboard {
     /* A tablist, not three buttons: left/right move between tabs and only the
      * selected one is in the tab order, which is what a screen reader and a
      * keyboard both expect of something shaped like this. */
-    const tabLabels = { gw:"Gameweek", season:"Season & money", rules:"How it works" };
+    const tabLabels = { gw:"Gameweek", season:"Season & money" };
     const tabs = TABS.map(k => ({
       key: k, label: tabLabels[k],
       selected: S.tab === k, tabindex: S.tab === k ? 0 : -1,
@@ -551,7 +604,15 @@ class Dashboard {
       bg: S.tab === k ? "var(--surface-1)" : "transparent",
       ink: S.tab === k ? "var(--ink-1)" : "var(--ink-2)",
       weight: S.tab === k ? 620 : 520,
-      shadow: S.tab === k ? "0 1px 3px rgba(0,0,0,.08)" : "none"
+      shadow: S.tab === k ? "0 1px 3px rgba(0,0,0,.08)" : "none",
+      /* The bottom bar sits on the surface rather than in a track, so the
+       * selected tab has to be solid to read as selected at a glance. */
+      navBg: S.tab === k ? "var(--ink-1)" : "var(--surface-2)",
+      navInk: S.tab === k ? "var(--plane)" : "var(--ink-2)",
+      /* The bottom bar is a nav, not a tablist — its buttons move the page
+       * rather than switch panels in place, so aria-current is the right
+       * word for "this is the one you are on". */
+      current: S.tab === k ? "page" : "false"
     }));
 
     /* stale-data banner (§9.5) — time comparison only */
@@ -565,7 +626,15 @@ class Dashboard {
       }
     }
 
-    /* ---- A. countdown ---- */
+    /* ---- the deadline ----
+     *
+     * This used to be a hero card two-thirds the height of a phone screen,
+     * above the table everybody actually opens the site for. It is a strip in
+     * the league-table header now (2 Sep revision): the same three facts, one
+     * line, and the table starts at the top of the page.
+     *
+     * Still MYT-first (§9.4). UTC is gone with the card — nobody in this
+     * league reads a deadline in UTC, and the strip has room for one. */
     const nextEv = D.events.find(e => e.gw === cur.next_gw) || D.events[0];
     const ms = new Date(nextEv.deadline).getTime() - Date.now();
     let big = "LOCKED";
@@ -573,14 +642,13 @@ class Dashboard {
       const d = Math.floor(ms/864e5), h = Math.floor(ms/36e5) % 24, m = Math.floor(ms/6e4) % 60;
       big = d > 0 ? d + "d " + h + "h " + m + "m" : h + "h " + m + "m";
     }
-    const cd = {
+    const dl = {
       label: "GW" + nextEv.gw + " DEADLINE",
-      big,
-      myt: this.dayKey(nextEv.deadline) + ", " + this.hhmm(nextEv.deadline),
-      utc: nextEv.deadline.slice(11,16),
-      note: nextEv.gw === 1
-        ? "First deadline of the season, lock at 01:30 Saturday morning here. Set your team Friday night lah, don't sleep first then cry after."
-        : "Malaysia time first, UTC after. Every kickoff this round lands between 19:30 and 03:00 our side — so ya, some of us watching at 3am again."
+      when: this.dayKey(nextEv.deadline) + ", " + this.hhmm(nextEv.deadline) + " MYT",
+      left: ms > 0 ? "in " + big : "locked",
+      /* Inside a day is the point at which "Saturday" stops being useful and
+       * "in 4h 12m" starts, so that is where it stops being muted. */
+      leftInk: ms <= 0 ? "var(--crit)" : ms < 864e5 ? "var(--warn-ink)" : "var(--ink-muted)"
     };
 
     const brkRec = D.breaks.find(b => b.after_gw >= cur.next_gw) || D.breaks[D.breaks.length - 1];
@@ -657,89 +725,114 @@ class Dashboard {
         " per gameweek and every gameweek in the season carries the same RM" + (D.stakes.monthly.stake_per_gw * N) + " of monthly pot, fair for everybody."
     };
 
-    /* ---- standings ---- */
+    /* ---- the league table ----
+     *
+     * The hero of the Gameweek tab since the 2 Sep revision: full width, at the
+     * top, carrying the deadline and the summary button in its header. Eight
+     * columns on a desktop; on a phone three, with the other five behind a tap
+     * on the row (`hidden`), because a horizontally-scrolling table is a table
+     * nobody scrolls.
+     *
+     * ★ counts weekly pots won, not podiums. Podiums were a bragging column on
+     * a page whose other seven columns are money; weeks won is the one that
+     * explains the accrued figure sitting next to it.
+     */
     const standings = {
       sub: isPre ? N + " managers signed up" : "Overall points after GW" + D.settled.through_gw +
-        (isLive || isProv ? " — settled figures, GW" + cur.gameweek + " is live above" : ""),
+        (isLive || isProv ? " — settled figures, GW" + cur.gameweek + " is live below" : ""),
       empty: isPre, hasRows: !isPre,
       /* "Nobody has scored yet" is written for pre-season, and stops being
-       * true the moment a ball is kicked — mid-GW1 the live table directly
-       * above this card is showing real points. This card is the book of
-       * record and only moves when a gameweek goes final, so say that instead
-       * of contradicting the table above it. */
+       * true the moment a ball is kicked — mid-GW1 the live table below this
+       * card is showing real points. This card is the book of record and only
+       * moves when a gameweek goes final, so say that instead of contradicting
+       * the table under it. */
       emptyTitle: isProv ? "GW" + cur.gameweek + " played — waiting for FPL to confirm"
         : isLive ? "GW" + cur.gameweek + " is still being played"
         : "Nobody has scored yet",
       emptyNote: isLive || isProv
-        ? "The live table above has the running numbers. This one is the book of record — " +
+        ? "The live table below has the running numbers. This one is the book of record — " +
           "it only fills in once the gameweek goes final and the RM" + D.stakes.weekly.pot +
           " weekly pot settles, because bonus and auto-subs can still move who gets paid."
         : "Standings only fill up after GW1 final. First RM" + D.stakes.weekly.pot +
           " weekly pot settle same night, so don't forget to set team ah.",
       signups: D.managers.map(m => ({ name:m.display_name, team:m.team_name, ink:inkOf(m.id), weight:wOf(m.id) })),
       head: [ {label:"#",align:"left"}, {label:"Manager",align:"left"}, {label:"GW" + (lastGW ? lastGW.gw : ""),align:"right"},
-              {label:"Total",align:"right"}, {label:"Behind",align:"right"}, {label:"★ Top 3",align:"right"}, {label:"Accrued",align:"right"} ],
+              {label:"Total",align:"right"}, {label:"Gap",align:"right"}, {label:"Accrued",align:"right"},
+              {label:"★ Won",align:"right"}, {label:"Chip",align:"left"} ],
       rows: D.rank.map((id, i) => {
         const sc = lastGW ? lastGW.scores[id] : null;
         const dns = sc ? sc.did_not_set : false;
         const pnl = D.ledger[id].accrued;
+        /* Movement is places gained since the gameweek before last, which is
+         * what `rank_prev` holds. It is empty pre-season and on GW1, where
+         * there is no "before" to have moved from. */
+        const prev = D.rank_prev ? D.rank_prev[id] : null;
+        const mv = (prev && !isPre) ? prev - (i + 1) : 0;
+        const wonN = D.weeks_won ? D.weeks_won[id] : 0;
+        const chip = sc && sc.chip ? this.chipLabel(sc.chip) : "";
+        const gap = D.behind[id] === 0 ? "—" : "\u2212" + D.behind[id];
+        const gwTxt = dns ? "0 ✕" : (sc && sc.points !== null && sc.points !== undefined ? sc.points : "—");
+        const pnlTxt = this.sen(pnl);
+        const pnlInk = pnl > 0 ? "var(--good)" : pnl < 0 ? "var(--crit)" : "var(--ink-2)";
+        const open = S.openRow === id;
         return {
           pos: i + 1, name: byId[id].display_name, team: byId[id].team_name,
           ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id), mark: markOf(id),
-          gw: dns ? "0 ✕" : (sc && sc.points !== null && sc.points !== undefined ? sc.points : "—"),
+          arrow: mv > 0 ? "▲" + mv : mv < 0 ? "▼" + (-mv) : "·",
+          arrowInk: mv > 0 ? "var(--good)" : mv < 0 ? "var(--crit)" : "var(--ink-muted)",
+          arrowLabel: mv > 0 ? "up " + mv + " place" + (mv > 1 ? "s" : "")
+            : mv < 0 ? "down " + (-mv) + " place" + (mv < -1 ? "s" : "") : "no change",
+          gw: gwTxt,
           gwInk: dns ? "var(--crit)" : "var(--ink-1)", gwWeight: dns ? 620 : 450,
-          total: D.totals[id], behind: D.behind[id] === 0 ? "—" : D.behind[id],
-          podiums: D.podiums[id] === 0 ? "—" : D.podiums[id],
-          pnl: this.sen(pnl),
-          pnlInk: pnl > 0 ? "var(--good)" : pnl < 0 ? "var(--crit)" : "var(--ink-2)"
+          total: D.totals[id], gap,
+          wonTxt: wonN ? "★ " + wonN : "—",
+          chip: chip ? "◆ " + chip : "—",
+          chipInk: chip ? "var(--accent)" : "var(--ink-muted)",
+          pnl: pnlTxt, pnlInk,
+          open, caret: open ? "▼" : "▶",
+          expanded: open ? "true" : "false",
+          rowLabel: byId[id].display_name + ", " + (open ? "hide" : "show") + " the rest of the row",
+          onToggle: () => this.setState({ openRow: open ? null : id }),
+          /* The five columns a phone cannot fit, as a labelled list — the same
+           * values, not a summary of them. */
+          hidden: [
+            { label:"Team", value: byId[id].team_name, ink:"var(--ink-1)" },
+            { label:"Gap to leader", value: gap, ink:"var(--ink-2)" },
+            { label:"Accrued", value: pnlTxt, ink: pnlInk },
+            { label:"★ Weeks won", value: wonN ? String(wonN) : "none yet", ink:"var(--ink-2)" },
+            { label:"Chip this week", value: chip || "none", ink: chip ? "var(--accent)" : "var(--ink-2)" }
+          ]
         };
       }),
-      foot: "★ counts top-three finishes — for bragging only, no money. Miss the deadline also never mind — FPL roll your last team over and it score as usual. 0 ✕ only show up if somebody never enter a team at all, and that one still pay RM" +
+      foot: "★ counts weekly pots won. Miss the deadline also never mind — FPL roll your last team over and it score as usual. 0 ✕ only show up if somebody never enter a team at all, and that one still pay RM" +
         D.stakes.weekly.stake + ". Accrued only ah — nobody pay anything yet, we settle in May."
     };
 
     /* ---- the gameweek summary ----
      *
-     * The message the league actually reads. It arrives composed in
-     * `data.summary` — headings, lines and the pasteable text — so this block
-     * chooses what is on screen and nothing else. Absent until a gameweek has
-     * settled, because there is no result to send before then.
+     * One button in the league-table header, not a card: the 2 Sep revision is
+     * about the table being the page, and twenty lines of pasteable text above
+     * it is exactly the clutter it removed. What the button sends is the whole
+     * message — weekly winners, every score, the month once it settles, the
+     * season — because `data.summary.text` is composed in the emitter and this
+     * has no opinion about it.
      *
-     * The block flagged `fold` is one line per manager, and is folded away by
-     * default: the card has to stay glanceable at any league size, and the
-     * person sending it does not need to read what they are about to paste.
+     * Absent until a gameweek has settled: there is no result to send before
+     * then, and a dead button is worse than none.
      */
     const SC = D.summary || null;
-    const copyState = S.summaryCopy;
-    const summary = {
+    const share = {
       show: !!SC,
-      title: SC ? SC.title : "",
-      sub: SC
-        ? (SC.monthly_settled
-            ? SC.headline + " — and the month settled with it. Send it to the group."
-            : SC.headline + ". Send it to the group.")
-        : "",
-      blocks: SC ? SC.blocks.filter(b => S.summaryOpen || !b.fold) : [],
-      footer: SC ? SC.footer : "",
-      /* Every browser here can copy; only some can hand off to a share sheet,
-       * and a Share button that does nothing on a laptop is worse than no
-       * button. Copy is therefore the primary and share is the extra. */
-      canShare: typeof navigator !== "undefined" && typeof navigator.share === "function",
-      onShare: () => this.shareSummary(),
-      onCopy: () => this.copySummary(),
-      copyLabel: copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : "Copy summary",
-      copyAria: "Copy the GW" + (SC ? SC.gw : "") + " summary to the clipboard",
-      copyInk: copyState === "copied" ? "var(--good)" : copyState === "failed" ? "var(--crit)" : "var(--ink-1)",
-      copyRule: copyState === "copied" ? "var(--good)" : copyState === "failed" ? "var(--crit)" : "var(--border)",
-      /* aria-live, so a screen reader hears that the copy landed — the label
-       * change alone is silent, and the clipboard gives no other feedback. */
-      status: copyState === "copied" ? "Copied. Paste it straight into the group chat."
-        : copyState === "failed" ? "This browser would not let the page copy. Select the text above and copy it by hand."
-        : "",
-      hasStatus: copyState !== "idle",
-      statusInk: copyState === "failed" ? "var(--crit)" : "var(--good)",
-      toggleLabel: S.summaryOpen ? "Hide every score" : "Show every score",
-      onToggle: () => this.setState({ summaryOpen: !S.summaryOpen }),
+      label: !SC ? ""
+        : S.shared === "sent" ? "Summary sent"
+        : S.shared === "copied" ? "Summary copied — paste it in the group"
+        : S.shared === "failed" ? "Could not copy — try again"
+        : "Send GW" + SC.gw + " summary",
+      title: SC ? SC.headline + " — share it, or copy it to paste into the group chat" : "",
+      aria: SC ? "Send the GW" + SC.gw + " summary" : "",
+      ink: S.shared === "failed" ? "var(--crit)" : S.shared ? "var(--good)" : "var(--ink-2)",
+      border: S.shared === "failed" ? "var(--crit)" : S.shared ? "var(--good)" : "var(--border)",
+      onClick: () => this.sendSummary(SC ? SC.text : "")
     };
 
     /* ---- PL table ---- */
@@ -949,87 +1042,21 @@ class Dashboard {
       pred.record = "No calls yet";
     }
 
-    /* ---- rules tab (§7.2F) — explains the money, never restates it ----
-     * Everything here reads out of D.rules, which build.py derives from N and
-     * the real calendar. Nothing is typed in: a thirteenth manager rewrites
-     * every figure on this tab without anyone touching copy. */
-    const R = D.rules;
-    const byPot = R.months.slice().sort((a, b) => a.pot - b.pot);
-    const monthlyLow = byPot[0], monthlyHigh = byPot[byPot.length - 1];
-    const potRow = (name, stake, pot, split, net, note) => ({
-      name, stake, pot: this.rmFlat(pot),
-      split: split.map(x => Math.round(x * 100) + "%").join(" / "),
-      pays: net.map(v => rm(v)).join(" · "), note
-    });
-    const rules = {
-      intro: "Every gameweek cost RM" + R.gameweek_cost + " — RM" + R.weekly_stake +
-        " to the week, RM" + R.monthly_stake_per_gw + " to the month. Plus RM" +
-        R.season_stake + " once for the season. Over " + D.checks.gameweeks_expected +
-        " gameweeks that come to " + this.rmFlat(D.exposure.staked) + " each.",
-      zeroSum: "League keep nothing. Every ringgit that leave one column land in somebody else column, " +
-        "which is why every table here add up to RM0. If it ever don't, the site refuse to publish " +
-        "instead of showing you a wrong number.",
-      pots: [
-        potRow("Weekly", "RM" + R.weekly_stake + " × " + N, D.stakes.weekly.pot,
-               D.stakes.weekly.split, D.stakes.weekly.net,
-               D.checks.gameweeks_expected + " times a season"),
-        // The monthly pot is not one number — it follows how many gameweeks the
-        // month has. Showing the current bucket here would read as "the"
-        // monthly figure, so the rules tab shows the range and the table below
-        // breaks it down month by month.
-        {
-          name: "Monthly", stake: "RM" + R.monthly_stake_per_gw + " per gameweek",
-          pot: this.rmFlat(monthlyLow.pot) + "–" + this.rmFlat(monthlyHigh.pot),
-          split: D.stakes.monthly.split.map(x => Math.round(x * 100) + "%").join(" / "),
-          pays: rm(monthlyLow.net[0]) + " … " + rm(monthlyHigh.net[0]),
-          note: R.months.length + " buckets, Aug to May — depend how many gameweeks"
-        },
-        potRow("Season", "RM" + R.season_stake + " × " + N, D.stakes.season.pot,
-               D.stakes.season.split, D.stakes.season.net, "Only settle after GW38")
-      ],
-      months: R.months.map(m => ({
-        name: this.monthName(m.month), gws: m.gameweeks,
-        stake: this.rmFlat(m.stake), pot: this.rmFlat(m.pot),
-        first: rm(m.net[0]), second: rm(m.net[1]), rest: rm(-m.stake)
-      })),
-      monthsNote: "Stake is per gameweek, not per month. December got " +
-        Math.max.apply(null, R.months.map(m => m.gameweeks)) + " gameweeks and August got " +
-        Math.min.apply(null, R.months.map(m => m.gameweeks)) +
-        " — flat monthly fee would make one August gameweek worth a few December ones for the same effort.",
-      tiebreak: R.tiebreak.map(t => ({
-        level: t.level, label: t.label.charAt(0).toUpperCase() + t.label.slice(1), who: t.direction
-      })).concat([{ level: R.tiebreak.length + 1, label: "Split the pot", who: "ours" }]),
-      floors: R.floors.map(f => ({
-        n: f.n,
-        seasonThird: rm(f.season_third), seasonInk: f.season_third < 0 ? "var(--crit)" : "var(--good)",
-        weeklySecond: rm(f.weekly_second), weeklyInk: f.weekly_second < 0 ? "var(--crit)" : "var(--good)",
-        mark: f.is_us ? "us" : "", isUs: f.is_us,
-        rowBg: f.is_us ? "var(--tint)" : "transparent"
-      })),
-      floorNote: "Any paid place only worth having while its share beat one stake. It get safer as we grow " +
-        "and break if we shrink. Build check every pot every run and stop rather than publish a podium that cost money.",
-      settleNote: N + " people settling one by one could be " + R.naive_payments +
-        " separate payments. Site work out the shortest set instead: at most " + R.max_payments +
-        ". Same answer every time it run, so nothing to negotiate.",
-      steps: [
-        "Each weekly pot, as soon as that gameweek final.",
-        "Each monthly pot, but only once every gameweek in that month final.",
-        "The season pot, only after GW" + D.checks.gameweeks_expected + ".",
-        "Your balance — those three added up, and checked to sum to RM0 across the league."
-      ],
-      best: this.rm(D.exposure.best), worst: this.rm(D.exposure.worst),
-      staked: this.rmFlat(D.exposure.staked),
-      bestNote: "Best case break down as " + this.rmFlat(R.best_breakdown.weekly) + " from the weekly pots, " +
-        this.rmFlat(R.best_breakdown.monthly) + " from the monthly, " + this.rmFlat(R.best_breakdown.season) +
-        " from the season. Nobody going to do that — it just show the shape: downside is capped and known " +
-        "from day one, upside is a few times bigger.",
-      terms: [
-        { term: "Provisional", meaning: "Live, mid-match, still can change. Bonus not confirmed until the match end, auto-subs and vice captain only apply when the whole gameweek close." },
-        { term: "Accrued", meaning: "Settled maths, already in the book. You owe or you are owed. Won't change unless a correction get posted, and corrections come in as their own visible row." },
-        { term: "Projected", meaning: "What something would pay if it end today. Deliberately kept OUT of your balance. Season pot sit here until GW38." },
-        { term: "Settled", meaning: "Actually paid. That happen once, in May." }
-      ]
+    /* ---- the reference drawer ----
+     *
+     * The season calendar, the international break and the Premier League table
+     * are background: read once in August, glanced at in March. They were
+     * three cards deep in the page everybody opens twice a week for one table.
+     * Collapsed by default now, one tap to open, and nothing about them is
+     * lost — they are the same three cards, one level down.
+     */
+    const ref = {
+      open: S.refOpen,
+      toggleLabel: S.refOpen ? "Hide" : "Show",
+      expanded: S.refOpen ? "true" : "false",
+      onToggle: () => this.setState({ refOpen: !S.refOpen })
     };
+
 
     /* ---- season tab ---- */
     const L = D.ledger[you];
@@ -1072,10 +1099,10 @@ class Dashboard {
           moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
         })),
         isTable: S.potView === "table",
-        isChart: S.potView === "chart" && S.vw >= 560,
-        isList: S.potView === "chart" && S.vw < 560,
+        isChart: S.potView === "chart" && (!mob || BARS_ON_MOBILE),
+        isList: S.potView === "chart" && mob && !BARS_ON_MOBILE,
         onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
-        viewLabel: S.potView === "chart" ? "Table view" : (S.vw < 560 ? "List view" : "Chart view"),
+        viewLabel: S.potView === "chart" ? "Table view" : (mob && !BARS_ON_MOBILE ? "List view" : "Chart view"),
         callout: mp.callout, calloutBg:"var(--tint-warn)",
         foot: "Money shown is what each position would pay if the month end right now. Only settle when the last gameweek in the bucket is final."
       };
@@ -1100,10 +1127,10 @@ class Dashboard {
           moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
         })),
         isTable: S.potView === "table",
-        isChart: S.potView === "chart" && S.vw >= 560,
-        isList: S.potView === "chart" && S.vw < 560,
+        isChart: S.potView === "chart" && (!mob || BARS_ON_MOBILE),
+        isList: S.potView === "chart" && mob && !BARS_ON_MOBILE,
         onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
-        viewLabel: S.potView === "chart" ? "Table view" : (S.vw < 560 ? "List view" : "Chart view"),
+        viewLabel: S.potView === "chart" ? "Table view" : (mob && !BARS_ON_MOBILE ? "List view" : "Chart view"),
         callout: byId[pm.order[0]].short + " leads the " + this.monthName(pm.month) + " pot on " +
           pm.totals[pm.order[0]] + (pm.remaining > 0
             ? ", with GW" + PB.gw + " still to be confirmed and " + pm.remaining +
@@ -1127,10 +1154,10 @@ class Dashboard {
           moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
         })),
         isTable: S.potView === "table",
-        isChart: S.potView === "chart" && S.vw >= 560,
-        isList: S.potView === "chart" && S.vw < 560,
+        isChart: S.potView === "chart" && (!mob || BARS_ON_MOBILE),
+        isList: S.potView === "chart" && mob && !BARS_ON_MOBILE,
         onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
-        viewLabel: S.potView === "chart" ? "Table view" : (S.vw < 560 ? "List view" : "Chart view"),
+        viewLabel: S.potView === "chart" ? "Table view" : (mob && !BARS_ON_MOBILE ? "List view" : "Chart view"),
         callout: settledMonth.callout, calloutBg:"var(--tint)",
         foot: monthCurrent.note
       };
@@ -1147,28 +1174,6 @@ class Dashboard {
         foot: "Bars only fill up once GW" + monthCurrent.opens_gw + " scores come in. Nobody owe anybody before that."
       };
     }
-
-    const maxAbs = Math.max.apply(null, D.managers.map(m => Math.abs(D.ledger[m.id].accrued))) || 1;
-    const ledgerRows = D.managers.slice().sort((a,b) => D.ledger[b.id].accrued - D.ledger[a.id].accrued).map(m => {
-      const v = D.ledger[m.id].accrued, w = Math.round(Math.abs(v) / maxAbs * 100) + "%";
-      return {
-        name: byId[m.id].display_name, ink: inkOf(m.id), weight: wOf(m.id),
-        negW: v < 0 ? w : "0%", posW: v > 0 ? w : "0%",
-        negFill: v < 0 ? "var(--neg)" : "transparent", posFill: v > 0 ? "var(--pos)" : "transparent",
-        value: this.sen(v), valInk: v > 0 ? "var(--pos)" : v < 0 ? "var(--neg)" : "var(--ink-2)",
-        weeklyTxt: this.sen(D.ledger[m.id].weekly), monthlyTxt: this.sen(D.ledger[m.id].monthly),
-        title: byId[m.id].display_name + " — weekly " + this.sen(D.ledger[m.id].weekly) +
-          ", monthly " + this.sen(D.ledger[m.id].monthly) + ", accrued " + this.sen2(v)
-      };
-    });
-    const ledger = { rows: ledgerRows,
-      isChart: S.ledgerView === "chart" && S.vw >= 560,
-      isList: S.ledgerView === "chart" && S.vw < 560,
-      isTable: S.ledgerView === "table",
-      onView: () => this.setState({ ledgerView: S.ledgerView === "chart" ? "table" : "chart" }),
-      viewLabel: S.ledgerView === "chart" ? "Table view" : "Chart view",
-      sub: "Accrued weekly and monthly pots, centred on RM0 — none of it paid yet",
-      foot: "Blue side is owed money, red side owe money, and both sides always equal — every ringgit came out of the eight stakes. League keep nothing, and nothing move until May." };
 
     /* A provisional round belongs at the top of this list, not missing from it:
      * it is the pot people are actually arguing about. It is not in the book,
@@ -1224,72 +1229,121 @@ class Dashboard {
     };
 
     const playedMonths = D.month_buckets.filter(mb => settledGWs.some(g => g.month === mb.month));
-    const range = playedMonths.some(mb => mb.month === S.detailRange) ? S.detailRange : "all";
-    const shownGWs = range === "all" ? settledGWs : settledGWs.filter(g => g.month === range);
-    const detail = {
-      rangeOptions: [{ v:"all", label:"All " + settledGWs.length + " GWs" }]
-        .concat(playedMonths.map(mb => ({ v:mb.month, label:this.monthName(mb.month) })))
-        .map(o => ({ label:o.label, key:o.v, selected: range === o.v,
-          onClick:() => this.setState({ detailRange:o.v }),
-          bg: range === o.v ? "var(--ink-1)" : "var(--surface-1)",
-          ink: range === o.v ? "var(--plane)" : "var(--ink-2)",
-          border: range === o.v ? "var(--ink-1)" : "var(--border)" })),
-      rangeNote: range === "all"
-        ? "Showing every settled gameweek. Weekly, monthly and accrued columns are always season to date."
-        : "Showing " + this.monthName(range) + " only — " + shownGWs.length +
-          " gameweek(s). Weekly, monthly and accrued columns stay season to date, not filtered.",
-      cols: shownGWs.map(g => "GW" + g.gw),
-      pots: shownGWs.map(g => this.rmFlat(g.pot)),
+
+    /* ---- who is up, who is down ----
+     *
+     * This one card replaces three: the diverging ledger chart, the 38-column
+     * gameweek grid, and the gameweek-range picker that existed to make the
+     * grid readable. The unit is the month, because the month is the unit
+     * money settles in — a column per month, points above and that month's
+     * money underneath, and a tap on a month header opens its gameweeks in
+     * place. The range picker was a way of asking the same question; the
+     * expansion answers it without leaving the row you were reading.
+     *
+     * On a phone the columns become a ranked accrued list, tap for the month
+     * breakdown. Thirteen managers × ten months does not fit any phone, and a
+     * table that has to be scrolled sideways to be read is not read.
+     *
+     * Month money is a LOOKUP, never an aggregation: `months[].order` gives
+     * the position and `months[].net` / `.stake` give what that position took,
+     * both settled upstream. The view still does not add money up.
+     */
+    const monthRecs = {}; (D.months || []).forEach(mb => { monthRecs[mb.month] = mb; });
+    const moneyOfMonth = (rec, id) => {
+      if (!rec) return null;
+      const place = rec.order.indexOf(id);
+      if (place < 0) return null;
+      return place < rec.net.length ? rec.net[place] : -rec.stake;
+    };
+    const mtCols = [];
+    playedMonths.forEach(mb => {
+      const gws = settledGWs.filter(g => g.month === mb.month);
+      const open = !!S.mOpen[mb.month];
+      if (open) gws.forEach(g => mtCols.push({ kind:"gw", gw:g, label:"GW" + g.gw, isGW:true, isMonth:false }));
+      mtCols.push({
+        kind:"month", month:mb.month, rec:monthRecs[mb.month], gws, open,
+        isGW:false, isMonth:true,
+        label: this.monthName(mb.month), caret: open ? "▼" : "▶",
+        expanded: open ? "true" : "false",
+        aria: (open ? "Hide" : "Show") + " the " + this.monthName(mb.month) + " gameweeks",
+        onToggle: () => { const next = Object.assign({}, S.mOpen); next[mb.month] = !open; this.setState({ mOpen: next }); }
+      });
+    });
+    const gwCell = (g, id) => {
+      const sc = g.scores[id];
+      if (!sc || !sc.active) {
+        return { text:"—", sub:"", bg:"transparent", subInk:"var(--ink-muted)",
+          title: byId[id].short + " was not in the league for GW" + g.gw,
+          ink:"var(--ink-muted)", weight:450 };
+      }
+      const won = g.winners.indexOf(id) >= 0, second = (g.runners_up || []).indexOf(id) >= 0;
+      return {
+        text: sc.did_not_set ? "0 ✕" : sc.points + (won ? " ★" : "") + (sc.chip ? " ◆" : ""),
+        sub:"", bg:"transparent", subInk:"var(--ink-muted)",
+        title: byId[id].short + " GW" + g.gw + " — " + (sc.did_not_set ? "never set team" : sc.points + " pts") +
+          (sc.hits ? ", " + sc.hits + " pt hit" : "") + ", " + sc.transfers + " transfer(s)" +
+          (sc.chip ? ", played " + this.chipLabel(sc.chip) : "") + (g.note ? " · " + g.note : ""),
+        ink: sc.did_not_set ? "var(--crit)" : won ? "var(--good)" : "var(--ink-1)",
+        weight: won || second || sc.did_not_set ? 640 : 450
+      };
+    };
+    const mt = {
+      hasMonths: mtCols.length > 0,
+      empty: mtCols.length === 0,
+      sub: "Points by month, money underneath. Tap a month to open its gameweeks.",
+      emptyNote: "Nothing here until a month finishes. A month only settles when its last gameweek go final — August need both GW1 and GW2 before anybody owe anything on it.",
+      cols: mtCols,
       rows: D.rank.map(id => ({
         name: byId[id].display_name, ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id), mark: markOf(id),
         stickyBg: id === you ? "var(--surface-2)" : "var(--surface-1)",
-        cells: shownGWs.map(g => {
-          const sc = g.scores[id] || {}, won = g.winners.indexOf(id) >= 0;
-          const absent = sc.points === null || sc.points === undefined;
-          return { text: sc.did_not_set ? "0 ✕" : absent ? "—" : sc.points + (won ? " ★" : "") + (sc.chip ? " ◆" : ""),
-            title: byId[id].short + " GW" + g.gw + " — " + (sc.did_not_set ? "never set team" : absent ? "not in the league yet" : sc.points + " pts") +
-              (sc.hits ? ", " + sc.hits + " pt hit" : "") + ", " + (sc.transfers || 0) + " transfer(s)" +
-              (sc.chip ? ", played " + sc.chip : "") + (g.note ? " · " + g.note : ""),
-            ink: sc.did_not_set ? "var(--crit)" : absent ? "var(--ink-muted)" : won ? "var(--good)" : "var(--ink-1)",
-            weight: won || sc.did_not_set ? 640 : 450 };
+        cells: mtCols.map(c => {
+          if (c.kind === "gw") return gwCell(c.gw, id);
+          const rec = c.rec, place = rec ? rec.order.indexOf(id) : -1;
+          const money = moneyOfMonth(rec, id);
+          const pts = rec && rec.totals && rec.totals[id] !== undefined ? rec.totals[id] : null;
+          return {
+            text: pts === null ? "—" : String(pts),
+            sub: money === null ? "" : rm(money),
+            subInk: money > 0 ? "var(--pos)" : money < 0 ? "var(--neg)" : "var(--ink-muted)",
+            bg: place === 0 ? "var(--tint)" : "transparent",
+            ink: place === 0 ? "var(--good)" : "var(--ink-1)",
+            weight: place >= 0 && place < 2 ? 640 : 450,
+            title: byId[id].short + " " + this.monthName(c.month) + " — " + (pts === null ? "no scores" : pts + " pts") +
+              (place >= 0 ? ", " + (place + 1) + " of " + rec.order.length : "") +
+              (money === null ? "" : ", " + rm(money))
+          };
         }),
-        total: D.totals[id], weekly: this.sen(D.ledger[id].weekly), monthly: this.sen(D.ledger[id].monthly),
-        pnl: this.sen(D.ledger[id].accrued),
+        total: D.totals[id], pnl: this.sen(D.ledger[id].accrued),
         pnlInk: D.ledger[id].accrued > 0 ? "var(--good)" : D.ledger[id].accrued < 0 ? "var(--crit)" : "var(--ink-2)"
-      }))
+      })),
+      mobRows: D.managers.slice()
+        .sort((a, b) => D.ledger[b.id].accrued - D.ledger[a.id].accrued)
+        .map((m, i) => {
+          const id = m.id, v = D.ledger[id].accrued, open = S.mRow === id;
+          return {
+            pos: i + 1, name: byId[id].display_name, ink: inkOf(id), weight: wOf(id), rowBg: rowBgOf(id),
+            value: this.sen(v), valInk: v > 0 ? "var(--pos)" : v < 0 ? "var(--neg)" : "var(--ink-2)",
+            open, caret: open ? "▼" : "▶",
+            expanded: open ? "true" : "false",
+            rowLabel: byId[id].display_name + ", " + (open ? "hide" : "show") + " the month breakdown",
+            onToggle: () => this.setState({ mRow: open ? null : id }),
+            split: "weekly " + this.sen(D.ledger[id].weekly) + " · monthly " + this.sen(D.ledger[id].monthly),
+            months: playedMonths.map(mb => {
+              const rec = monthRecs[mb.month], money = moneyOfMonth(rec, id);
+              const pts = rec && rec.totals && rec.totals[id] !== undefined ? rec.totals[id] : null;
+              return {
+                label: this.monthName(mb.month),
+                pts: pts === null ? "—" : pts + " pts",
+                money: money === null ? "—" : rm(money),
+                ink: money > 0 ? "var(--pos)" : money < 0 ? "var(--neg)" : "var(--ink-2)"
+              };
+            })
+          };
+        }),
+      foot: "★ won the weekly pot · ✕ never set team, still pay RM" + D.stakes.weekly.stake +
+        " · ◆ chip played. Month money is 70/30 of that month's pot; everybody else pays their stake. Every column adds back to RM0 because the league keeps nothing."
     };
 
-    const moneyOpen = S.moneyOpen === null ? (isPre || settledGWs.length <= 3) : S.moneyOpen;
-    const st = D.stakes;
-    const money = {
-      sub: "Read straight from the stakes, so when somebody new join the numbers fix themselves",
-      onToggle: () => this.setState({ moneyOpen: !moneyOpen }),
-      toggleLabel: moneyOpen ? "Collapse" : "Expand",
-      expanded: moneyOpen,
-      open: moneyOpen,
-      pots: [
-        { name:"Weekly", stake:"RM" + st.weekly.stake + " × " + N, prize: rm(st.weekly.net[0]) + " · " + rm(st.weekly.net[1]),
-          note:"70/30 of " + this.rmFlat(st.weekly.pot) + ", 38 times a season" },
-        { name:"Monthly", stake:"RM" + st.monthly.stake_per_gw + " per gameweek", prize: rm(st.monthly.net[0]) + " · " + rm(st.monthly.net[1]),
-          note:"70/30 of RM" + st.monthly.stake_per_gw + " × gameweeks × " + N + " — ten buckets, Aug all the way to May" },
-        { name:"Season", stake:"RM" + st.season.stake + " × " + N, prize: rm(st.season.net[0]) + " · " + rm(st.season.net[1]) + " · " + rm(st.season.net[2]),
-          note:"60/25/15 of " + this.rmFlat(st.season.pot) + ", only settle after GW38" }
-      ],
-      oneLiner: "Every gameweek cost RM15 — RM10 to the week, RM5 to the month. Every pot last paid place stay above 1/" + N + " of that pot, so nobody get paid and still lose money.",
-      staked: this.rmFlat(D.exposure.staked), best: rm(D.exposure.best), worst: rm(D.exposure.worst),
-      zeroInk: (isLive || isProv) ? "var(--ink-muted)" : D.checks.zero_sum ? "var(--good)" : "var(--crit)",
-      zeroLabel: (isLive || isProv) ? "Settles at full time"
-        : D.checks.zero_sum ? "Book balances · RM0" : "Book does not balance",
-      settledLine: isPre ? "Nothing settled yet · " + D.checks.gameweeks_present + " of " + D.checks.gameweeks_expected + " gameweeks scheduled"
-        : "Settled through GW" + D.settled.through_gw + " · " + D.settled.projected,
-      ties: [
-        {n:1,rule:"Goals scored in the gameweek",dir:"most"},
-        {n:2,rule:"Assists in the gameweek",dir:"most"},
-        {n:3,rule:"Goals conceded, first XI only",dir:"fewest"},
-        {n:4,rule:"Yellow and red cards",dir:"fewest"},
-        {n:5,rule:"Split the pot",dir:"ours"}
-      ]
-    };
 
     /* §7.2G statement — accrual ledger, per manager */
     const stRows = (D.ledger[you].statement || []).map(r => ({
@@ -1376,12 +1430,12 @@ class Dashboard {
       chrome: { dot: sm.dot, dotAnim: sm.anim, dotInk: sm.ink, stateText: sm.text, stateSub: stateSub,
                 themeLabel: S.theme === "dark" ? "Light" : "Dark",
                 themeAria: S.theme === "dark" ? "Switch to the light theme" : "Switch to the dark theme" },
-      tabs, banner, notify,
-      isGW: S.tab === "gw", isSeason: S.tab === "season", isRules: S.tab === "rules",
+      tabs, banner, notify, L: LAY, isMob: mob, isDesk: !mob,
+      isGW: S.tab === "gw", isSeason: S.tab === "season",
       activeTabId: "tab-" + S.tab,
-      showCountdown: !showLive, cd, brk,
-      showLive, live, provPot, fx, cal, standings, summary, pl, pred,
-      hero, pot, ledger, weekly, detail, stmt, settle, money, season, rules,
+      brk, dl, share, ref,
+      showLive, live, provPot, fx, cal, standings, pl, pred,
+      hero, pot, weekly, mt, stmt, settle, season,
       footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +
         " of " + D.checks.gameweeks_expected + " gameweeks in the calendar · " +

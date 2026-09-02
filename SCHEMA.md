@@ -7,7 +7,8 @@ to keep it from drifting is that `tests/test_schema.py` asserts the emitter
 against these shapes, so a change here that nobody implements fails the build.
 
 If a number appears on screen it exists in one of these files. The page never
-computes money.
+computes money. The reverse does not hold: `rules` is still emitted and still
+asserted, but since the 2 Sep layout revision no card reads it (see below).
 
 ---
 
@@ -245,12 +246,17 @@ entry `SETTLED`. A bucket mid-flight would therefore lie; it lives in
 > disputes their total must be able to find the single row they disagree with
 > (§3.9.2) — a statement that does not reconcile is worse than none.
 
-**`rules` drives the "How it works" tab** and is derived, never written down:
+**`rules` is derived, never written down**, and since the 2 Sep layout revision
+**nothing on the page reads it**: the "How the money works" card the third tab
+was built from is gone, and what it explained now sits as footnotes under the
+tables that need it. The block is still emitted and still asserted, because it
+costs nothing to keep correct and a tab that comes back should not need a
+rebuild of the whole season to fill it. What it holds:
 per-month stakes and pots from the real calendar, the paid-place floor table
 around the current league size, the tiebreak ladder with each level's direction
 read out of `TiebreakStats.key`, and the best-case breakdown. A thirteenth
-manager rewrites every figure on that tab without anyone touching copy — which
-is the point, because a tab that explains the money is the worst place for a
+manager rewrites every figure in it without anyone touching copy — which was
+the point, because a tab that explains the money is the worst place for a
 hardcoded number to go stale.
 
 **`runners_up` is empty when a tie for first swallowed second place.** The tied
@@ -281,8 +287,8 @@ the string; it never builds one.
 
 - **`blocks[]`** are `{ heading, lines[] }`, in order: the gameweek, `Every
   score`, the month, then `Season so far`. A block with no lines is dropped.
-  `fold: true` marks the one block the card hides behind "Show every score" —
-  a flag rather than a heading match, because the heading is copy.
+  The page does not render them — it sends `text`. They are here because `text`
+  is assembled from them, so the two cannot disagree.
 - **The month block is `— settled` only when the bucket's last gameweek is
   Final.** Otherwise it is `— running`: a standing, what first *would* take,
   and no accrual anywhere in it. This is the same `months[]` /

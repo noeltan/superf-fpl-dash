@@ -181,11 +181,7 @@ def _table_block(gameweek: Mapping, names: Mapping[str, str], ledger_row: Mappin
         lines.append(
             f"{place}. {names.get(manager, manager)} — {score['points']} pts{money}{tail}"
         )
-    # `fold` is the one presentation hint in the payload: thirteen lines is the
-    # right amount of detail in a pasted message and the wrong amount on a card
-    # somebody is glancing at. The heading is copy and may be reworded; this
-    # flag is the contract the view reads.
-    return {"heading": "Every score", "lines": lines, "fold": True}
+    return {"heading": "Every score", "lines": lines}
 
 
 def _settled_month_block(month: Mapping, names: Mapping[str, str]) -> dict:
