@@ -318,6 +318,10 @@ function monthPot(data, gw, liveManagers) {
     order,
     callout: second === undefined
       ? `${nameOf(leader)} leads the ${bucket.month} pot on ${totals[leader]}, live points included.`
+      // Level at the top is common in a bucket's first gameweek, and "0 ahead
+      // of Bob" both reads as broken and names one of a pair arbitrarily.
+      : gap === 0
+      ? `${nameOf(leader)} and ${nameOf(second)} are level at the top of the ${bucket.month} pot on ${totals[leader]}, live points included — ${remaining} gameweek${remaining === 1 ? "" : "s"} still to come.`
       : `${nameOf(leader)} leads the ${bucket.month} pot on ${totals[leader]}, ${gap} ahead of ${nameOf(second)} — live points included, ${remaining} gameweek${remaining === 1 ? "" : "s"} still to come.`,
   };
 }

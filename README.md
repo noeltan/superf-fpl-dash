@@ -145,7 +145,7 @@ this is merged.
 | `superf/corrections.py` | §3.9.4 adjusting entries that never rewrite history |
 | `superf/backup.py` | CSV + Sheets, including the end-of-season settle-up |
 | `docs/runtime.js` | the template runtime the prototype needed and did not ship with |
-| `superf/emit.py` → `rules_block` | the money explained, derived from N so it cannot go stale — no longer rendered, still asserted |
+| `superf/emit.py` → `rules_block` | the "How it works" tab, derived from N so it cannot go stale |
 | `tools/gen_workflows.py` | regenerates both workflows from the real calendar |
 | `worker/push.js` | VAPID-signed Web Push, without payload encryption |
 | `docs/sw.js` | the service worker that writes the reminder from `data.json` |
@@ -237,11 +237,11 @@ rearranged both tabs, and that did move markup:
 - The season calendar, the international break and the Premier League table
   are background, so they are behind one **REFERENCE** toggle rather than
   three cards deep in the page.
-- The **Season tab** leads with your accrued balance, then *Who is up, who is
-  down* — a column per month, points above and that month's money underneath,
-  tap a month header to open its gameweeks in place. That one table replaced
-  the diverging ledger chart, the 38-column gameweek grid, and the range
-  picker that existed to make the grid readable.
+- The **Season tab** leads with *Who is up, who is down* — a column per month,
+  points above and that month's money underneath, tap a month header to open
+  its gameweeks in place. That one table replaced the diverging ledger chart,
+  the 38-column gameweek grid, and the range picker that existed to make the
+  grid readable.
 - **The "How it works" tab stays.** It explains the money to the people who
   did not write the rules, and every figure on it is derived from `N` and the
   real calendar by `rules_block`, so a new manager rewrites the whole tab
@@ -262,21 +262,20 @@ trail exists, it just is not a card on a public page.
 
 Since then the chrome has been worked on, which did touch the markup:
 
-**Three things it forgot on every reload** — which manager you are, who you
-compare against, and the theme — now live in `localStorage` under
+**The theme is remembered** across reloads in `localStorage` under
 `superf.prefs`, and the tab lives in the URL fragment (`#season`, `#rules`) so
 it survives a reload, links, and the back button. Preferences only: nothing
-stored changes what the page *says*, a remembered manager is checked against the
-current roster before it is trusted, and every access is guarded because storage
-throws outright in a locked-down browser. A one-liner in `<head>` reads the
-theme back before first paint, so a remembered dark theme does not arrive as a
-white flash.
+stored changes what the page *says*, and every access is guarded because
+storage throws outright in a locked-down browser. A one-liner in `<head>` reads
+the theme back before first paint, so a remembered dark theme does not arrive
+as a white flash. (It used to remember which manager you were as well; the page
+no longer asks.)
 
 **The tabs are a tablist**, not three buttons: left/right/Home/End move between
 them, only the selected one is in the tab order, and the panel is labelled by
 its tab. Alongside it, the page grew an `<h1>`, `header`/`main`/`footer`
-landmarks, a skip link, `scope="col"` on 52 column headers, labels on the four
-pickers, a focus ring — every control is inline-styled with `border:none` and
+landmarks, a skip link, `scope="col"` on its column headers, labels on the
+pickers that remain, a focus ring — every control is inline-styled with `border:none` and
 half of them had lost the browser's — and a `prefers-reduced-motion` rule, since
 the live dot pulses for as long as a match is on.
 

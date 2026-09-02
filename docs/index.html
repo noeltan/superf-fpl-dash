@@ -56,16 +56,18 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
 *{box-sizing:border-box}
 /* Stop the scroll at the end of the page.
  *
- * Two separate things made it feel like it never ended. `overscroll-behavior`
- * kills the rubber-band past the last row and, more importantly, stops a
- * scroll that began inside a card from chaining out to the document once that
- * card runs out. The `overflow-y` rule is the other half: CSS computes
- * `overflow-y` to `auto` whenever `overflow-x` is not `visible`, so every card
- * that scrolls its table sideways had quietly become a vertical scroll
- * container as well, each one able to swallow a flick and hand back the rest.
- * They only ever needed the horizontal axis. */
-html,body{overscroll-behavior-y:contain}
-[style*="overflow-x:auto"]{overflow-y:hidden}
+ * CSS computes `overflow-y` to `auto` whenever `overflow-x` is not `visible`,
+ * so every card that scrolls its table sideways had quietly become a vertical
+ * scroll container as well, each one able to swallow a flick and hand back the
+ * rest. They only ever needed the horizontal axis. `overscroll-behavior` then
+ * stops a scroll that begins inside a card from chaining out to the document
+ * once that card runs out.
+ *
+ * Deliberately NOT on html/body: iOS ignores it for the document rubber-band,
+ * and on Android it would turn off pull-to-refresh, which is the one gesture
+ * that refreshes a page that otherwise polls on its own clock. The real cause
+ * of the endless scroll was `100vh`, fixed on the wrapper below. */
+[style*="overflow-x:auto"]{overflow-y:hidden;overscroll-behavior:contain}
 body{margin:0;background:var(--plane);color:var(--ink-1);
   font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;
   text-wrap:pretty}
@@ -794,6 +796,26 @@ select,button{font:inherit}
   </div>
   </sc-if>
 
+  <!-- §3.9.4. Only here when one has been posted, which is almost never — but
+       a correction moves every accrued figure above it, so it cannot move them
+       silently. -->
+  <sc-if value="{{corrections.show}}" hint-placeholder-val="{{ false }}">
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:14px;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);margin-bottom:18px">
+    <h2 style="margin:0;font-size:15px;font-weight:660">Corrections posted</h2>
+    <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.55">{{corrections.sub}}</div>
+    <sc-for list="{{corrections.rows}}" as="c" hint-placeholder-count="1">
+      <div style="margin-top:13px;padding-top:12px;border-top:1px solid var(--grid)">
+        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+          <span style="font-size:11.5px;font-weight:660;letter-spacing:.07em;color:var(--ink-muted);font-variant-numeric:tabular-nums">{{c.date}}</span>
+          <span style="font-size:11.5px;color:var(--ink-muted)">affects {{c.affects}}</span>
+        </div>
+        <div style="font-size:13.5px;color:var(--ink-1);margin-top:5px;line-height:1.55">{{c.reason}}</div>
+        <div style="font-size:13px;color:var(--ink-2);margin-top:5px;font-variant-numeric:tabular-nums">{{c.moves}}</div>
+      </div>
+    </sc-for>
+  </div>
+  </sc-if>
+
   <!-- The pot and the weekly list stand on their own: a round at full time
        with bonus pending has a pot standing to show even though nothing has
        settled, and the empty state above is what covers the accrued balance. -->
@@ -965,6 +987,16 @@ select,button{font:inherit}
      without anyone touching copy. -->
 <sc-if value="{{isRules}}" hint-placeholder-val="{{ false }}">
 
+  <!-- Every figure below is derived from N and the real calendar. If the
+       emitter could not produce them the tab says so rather than rendering a
+       shell of empty labels — and only this tab is affected. -->
+  <sc-if value="{{rules.missing}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:clamp(16px,4vw,22px) clamp(14px,4vw,24px);font-size:13.5px;line-height:1.6;color:var(--ink-2)">{{rules.missingNote}}</div>
+  </sc-if>
+
+  <sc-if value="{{rules.has}}" hint-placeholder-val="{{ true }}">
+  <div>
+
   <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;overflow-x:auto;padding:clamp(15px,4vw,20px) clamp(13px,4vw,22px);margin-bottom:18px">
     <div style="font-size:16px;font-weight:640;letter-spacing:-.01em">How the money works</div>
     <div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px;line-height:1.6">Rules, not results — every figure here is worked out from the league size, so it stay correct when somebody join</div>
@@ -1105,6 +1137,8 @@ select,button{font:inherit}
     </sc-for>
   </div>
 
+  </div>
+  </sc-if>
 </sc-if>
 
 </main>
@@ -1114,9 +1148,9 @@ select,button{font:inherit}
      read to judge whether the numbers are stale. -->
 <footer style="max-width:1280px;margin:26px auto 0;padding:16px clamp(12px,3vw,24px) {{L.padBottom}};border-top:1px solid var(--border);font-size:12px;color:var(--ink-muted);line-height:1.7">{{footer}}</footer>
 
-<!-- On a phone the tabs move to the bottom, where a thumb is. Two tabs, so
-     they split the width; env(safe-area-inset-bottom) keeps them clear of the
-     home indicator on an iPhone. -->
+<!-- On a phone the tabs move to the bottom, where a thumb is. They share the
+     width evenly and use the short labels, so three of them stay on one line;
+     env(safe-area-inset-bottom) keeps them clear of the home indicator. -->
 <sc-if value="{{L.showBottomNav}}" hint-placeholder-val="{{ false }}">
 <div role="tablist" aria-label="Dashboard sections" style="position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface-1);border-top:1px solid var(--border);padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:flex;gap:8px">
   <sc-for list="{{tabs}}" as="t" hint-placeholder-count="2">

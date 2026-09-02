@@ -1060,83 +1060,102 @@ class Dashboard {
      * Everything here reads out of D.rules, which build.py derives from N and
      * the real calendar. Nothing is typed in: a thirteenth manager rewrites
      * every figure on this tab without anyone touching copy. */
-    const R = D.rules;
-    const byPot = R.months.slice().sort((a, b) => a.pot - b.pot);
-    const monthlyLow = byPot[0], monthlyHigh = byPot[byPot.length - 1];
-    const potRow = (name, stake, pot, split, net, note) => ({
-      name, stake, pot: this.rmFlat(pot),
-      split: split.map(x => Math.round(x * 100) + "%").join(" / "),
-      pays: net.map(v => rm(v)).join(" · "), note
-    });
-    const rules = {
-      intro: "Every gameweek cost RM" + R.gameweek_cost + " — RM" + R.weekly_stake +
-        " to the week, RM" + R.monthly_stake_per_gw + " to the month. Plus RM" +
-        R.season_stake + " once for the season. Over " + D.checks.gameweeks_expected +
-        " gameweeks that come to " + this.rmFlat(D.exposure.staked) + " each.",
-      zeroSum: "League keep nothing. Every ringgit that leave one column land in somebody else column, " +
-        "which is why every table here add up to RM0. If it ever don't, the site refuse to publish " +
-        "instead of showing you a wrong number.",
-      pots: [
-        potRow("Weekly", "RM" + R.weekly_stake + " × " + N, D.stakes.weekly.pot,
-               D.stakes.weekly.split, D.stakes.weekly.net,
-               D.checks.gameweeks_expected + " times a season"),
-        // The monthly pot is not one number — it follows how many gameweeks the
-        // month has. Showing the current bucket here would read as "the"
-        // monthly figure, so the rules tab shows the range and the table below
-        // breaks it down month by month.
-        {
-          name: "Monthly", stake: "RM" + R.monthly_stake_per_gw + " per gameweek",
-          pot: this.rmFlat(monthlyLow.pot) + "–" + this.rmFlat(monthlyHigh.pot),
-          split: D.stakes.monthly.split.map(x => Math.round(x * 100) + "%").join(" / "),
-          pays: rm(monthlyLow.net[0]) + " … " + rm(monthlyHigh.net[0]),
-          note: R.months.length + " buckets, Aug to May — depend how many gameweeks"
-        },
-        potRow("Season", "RM" + R.season_stake + " × " + N, D.stakes.season.pot,
-               D.stakes.season.split, D.stakes.season.net, "Only settle after GW38")
-      ],
-      months: R.months.map(m => ({
-        name: this.monthName(m.month), gws: m.gameweeks,
-        stake: this.rmFlat(m.stake), pot: this.rmFlat(m.pot),
-        first: rm(m.net[0]), second: rm(m.net[1]), rest: rm(-m.stake)
-      })),
-      monthsNote: "Stake is per gameweek, not per month. December got " +
-        Math.max.apply(null, R.months.map(m => m.gameweeks)) + " gameweeks and August got " +
-        Math.min.apply(null, R.months.map(m => m.gameweeks)) +
-        " — flat monthly fee would make one August gameweek worth a few December ones for the same effort.",
-      tiebreak: R.tiebreak.map(t => ({
-        level: t.level, label: t.label.charAt(0).toUpperCase() + t.label.slice(1), who: t.direction
-      })).concat([{ level: R.tiebreak.length + 1, label: "Split the pot", who: "ours" }]),
-      floors: R.floors.map(f => ({
-        n: f.n,
-        seasonThird: rm(f.season_third), seasonInk: f.season_third < 0 ? "var(--crit)" : "var(--good)",
-        weeklySecond: rm(f.weekly_second), weeklyInk: f.weekly_second < 0 ? "var(--crit)" : "var(--good)",
-        mark: f.is_us ? "us" : "", isUs: f.is_us,
-        rowBg: f.is_us ? "var(--tint)" : "transparent"
-      })),
-      floorNote: "Any paid place only worth having while its share beat one stake. It get safer as we grow " +
-        "and break if we shrink. Build check every pot every run and stop rather than publish a podium that cost money.",
-      settleNote: N + " people settling one by one could be " + R.naive_payments +
-        " separate payments. Site work out the shortest set instead: at most " + R.max_payments +
-        ". Same answer every time it run, so nothing to negotiate.",
-      steps: [
-        "Each weekly pot, as soon as that gameweek final.",
-        "Each monthly pot, but only once every gameweek in that month final.",
-        "The season pot, only after GW" + D.checks.gameweeks_expected + ".",
-        "Your balance — those three added up, and checked to sum to RM0 across the league."
-      ],
-      best: this.rm(D.exposure.best), worst: this.rm(D.exposure.worst),
-      staked: this.rmFlat(D.exposure.staked),
-      bestNote: "Best case break down as " + this.rmFlat(R.best_breakdown.weekly) + " from the weekly pots, " +
-        this.rmFlat(R.best_breakdown.monthly) + " from the monthly, " + this.rmFlat(R.best_breakdown.season) +
-        " from the season. Nobody going to do that — it just show the shape: downside is capped and known " +
-        "from day one, upside is a few times bigger.",
-      terms: [
-        { term: "Provisional", meaning: "Live, mid-match, still can change. Bonus not confirmed until the match end, auto-subs and vice captain only apply when the whole gameweek close." },
-        { term: "Accrued", meaning: "Settled maths, already in the book. You owe or you are owed. Won't change unless a correction get posted, and corrections come in as their own visible row." },
-        { term: "Projected", meaning: "What something would pay if it end today. Deliberately kept OUT of your balance. Season pot sit here until GW38." },
-        { term: "Settled", meaning: "Actually paid. That happen once, in May." }
-      ]
-    };
+    /* Guarded because this runs on every render, not only on its own tab: an
+     * empty or missing `rules` used to throw here and blank the league table
+     * too. The emitter always writes it, so the guard is about blast radius,
+     * not about expecting it to be absent. */
+    const R = D.rules && D.rules.months && D.rules.months.length ? D.rules : null;
+    let rules = { has: false, missing: true, missingNote:
+      "The money rules could not be derived from this build — the figures on this tab all come " +
+      "from the calendar and the league size, and one of them is missing. Nothing else on the site " +
+      "is affected: the table and the money above are read straight from the settled book." };
+    if (R) {
+      // Assigns the outer `rules` — a `const` here would shadow it and leave
+      // the tab empty on data that is entirely fine.
+      const byPot = R.months.slice().sort((a, b) => a.pot - b.pot);
+      const monthlyLow = byPot[0], monthlyHigh = byPot[byPot.length - 1];
+      const potRow = (name, stake, pot, split, net, note) => ({
+        name, stake, pot: this.rmFlat(pot),
+        split: split.map(x => Math.round(x * 100) + "%").join(" / "),
+        pays: net.map(v => rm(v)).join(" · "), note
+      });
+      rules = {
+        has: true, missing: false, missingNote: "",
+        intro: "Every gameweek cost RM" + R.gameweek_cost + " — RM" + R.weekly_stake +
+          " to the week, RM" + R.monthly_stake_per_gw + " to the month. Plus RM" +
+          R.season_stake + " once for the season. Over " + D.checks.gameweeks_expected +
+          " gameweeks that come to " + this.rmFlat(D.exposure.staked) + " each.",
+        zeroSum: "League keep nothing. Every ringgit that leave one column land in somebody else column, " +
+          "which is why every table here add up to RM0. If it ever don't, the site refuse to publish " +
+          "instead of showing you a wrong number.",
+        pots: [
+          potRow("Weekly", "RM" + R.weekly_stake + " × " + N, D.stakes.weekly.pot,
+                 D.stakes.weekly.split, D.stakes.weekly.net,
+                 D.checks.gameweeks_expected + " times a season"),
+          // The monthly pot is not one number — it follows how many gameweeks the
+          // month has. Showing the current bucket here would read as "the"
+          // monthly figure, so the rules tab shows the range and the table below
+          // breaks it down month by month.
+          {
+            name: "Monthly", stake: "RM" + R.monthly_stake_per_gw + " per gameweek",
+            pot: this.rmFlat(monthlyLow.pot) + "–" + this.rmFlat(monthlyHigh.pot),
+            split: D.stakes.monthly.split.map(x => Math.round(x * 100) + "%").join(" / "),
+            pays: rm(monthlyLow.net[0]) + " … " + rm(monthlyHigh.net[0]),
+            note: R.months.length + " buckets, Aug to May — depend how many gameweeks"
+          },
+          potRow("Season", "RM" + R.season_stake + " × " + N, D.stakes.season.pot,
+                 D.stakes.season.split, D.stakes.season.net, "Only settle after GW38")
+        ],
+        months: R.months.map(m => ({
+          name: this.monthName(m.month), gws: m.gameweeks,
+          stake: this.rmFlat(m.stake), pot: this.rmFlat(m.pot),
+          first: rm(m.net[0]), second: rm(m.net[1]), rest: rm(-m.stake)
+        })),
+        monthsNote: (() => {
+          // The longest and shortest buckets, found rather than remembered: the
+          // month names were typed in under a comment saying nothing here is.
+          const longest = R.months.reduce((a, m) => m.gameweeks > a.gameweeks ? m : a, R.months[0]);
+          const shortest = R.months.reduce((a, m) => m.gameweeks < a.gameweeks ? m : a, R.months[0]);
+          return "Stake is per gameweek, not per month. " + this.monthName(longest.month) + " got " +
+            longest.gameweeks + " gameweeks and " + this.monthName(shortest.month) + " got " +
+            shortest.gameweeks + " — flat monthly fee would make one " + this.monthName(shortest.month) +
+            " gameweek worth a few " + this.monthName(longest.month) + " ones for the same effort.";
+        })(),
+        tiebreak: R.tiebreak.map(t => ({
+          level: t.level, label: t.label.charAt(0).toUpperCase() + t.label.slice(1), who: t.direction
+        })).concat([{ level: R.tiebreak.length + 1, label: "Split the pot", who: "ours" }]),
+        floors: R.floors.map(f => ({
+          n: f.n,
+          seasonThird: rm(f.season_third), seasonInk: f.season_third < 0 ? "var(--crit)" : "var(--good)",
+          weeklySecond: rm(f.weekly_second), weeklyInk: f.weekly_second < 0 ? "var(--crit)" : "var(--good)",
+          mark: f.is_us ? "us" : "", isUs: f.is_us,
+          rowBg: f.is_us ? "var(--tint)" : "transparent"
+        })),
+        floorNote: "Any paid place only worth having while its share beat one stake. It get safer as we grow " +
+          "and break if we shrink. Build check every pot every run and stop rather than publish a podium that cost money.",
+        settleNote: N + " people settling one by one could be " + R.naive_payments +
+          " separate payments. Site work out the shortest set instead: at most " + R.max_payments +
+          ". Same answer every time it run, so nothing to negotiate.",
+        steps: [
+          "Each weekly pot, as soon as that gameweek final.",
+          "Each monthly pot, but only once every gameweek in that month final.",
+          "The season pot, only after GW" + D.checks.gameweeks_expected + ".",
+          "Each manager's balance — those three added up, and checked to sum to RM0 across the league."
+        ],
+        best: this.rm(D.exposure.best), worst: this.rm(D.exposure.worst),
+        staked: this.rmFlat(D.exposure.staked),
+        bestNote: "Best case break down as " + this.rmFlat(R.best_breakdown.weekly) + " from the weekly pots, " +
+          this.rmFlat(R.best_breakdown.monthly) + " from the monthly, " + this.rmFlat(R.best_breakdown.season) +
+          " from the season. Nobody going to do that — it just show the shape: downside is capped and known " +
+          "from day one, upside is a few times bigger.",
+        terms: [
+          { term: "Provisional", meaning: "Live, mid-match, still can change. Bonus not confirmed until the match end, auto-subs and vice captain only apply when the whole gameweek close." },
+          { term: "Accrued", meaning: "Settled maths, already in the book. You owe or you are owed. Won't change unless a correction get posted, and corrections come in as their own visible row." },
+          { term: "Projected", meaning: "What something would pay if it end today. Deliberately kept OUT of your balance. Season pot sit here until GW38." },
+          { term: "Settled", meaning: "A pot is settled once its last gameweek final — the money is decided and in the book. The LEAGUE settles up once, in May, and that is when anybody actually pay." }
+        ]
+      };
+    }
 
     /* ---- season tab ---- */
     /* month pot — live/provisional feed takes over when the month has live gameweeks */
@@ -1416,6 +1435,34 @@ class Dashboard {
     };
 
 
+    /* ---- corrections (§3.9.4) ----
+     *
+     * Append-only adjusting entries. They move the accrued balances the whole
+     * money tab is built from, so a posted one has to be visible: the page
+     * showing a changed figure and nothing explaining it is exactly the
+     * argument the audit trail exists to end. This was the statement card's
+     * job until that card went, and the glossary still promises it.
+     *
+     * Absent when none are posted, which is the normal state.
+     */
+    const correctionRows = (D.corrections || []).map(c => ({
+      date: c.date ? this.dateShort(c.date + "T00:00:00Z") : "",
+      reason: c.reason,
+      affects: c.affects_gw ? "GW" + c.affects_gw : "the season",
+      moves: Object.keys(c.adjustments || {})
+        .sort((a, b) => c.adjustments[b] - c.adjustments[a])
+        .map(id => (byId[id] ? byId[id].short : id) + " " + this.sen(c.adjustments[id]))
+        .join(" · ")
+    }));
+    const corrections = {
+      show: correctionRows.length > 0,
+      count: correctionRows.length,
+      sub: correctionRows.length === 1
+        ? "One adjusting entry posted. The original rows are never rewritten — a correction is its own row, with a reason."
+        : correctionRows.length + " adjusting entries posted. The original rows are never rewritten — each correction is its own row, with a reason.",
+      rows: correctionRows
+    };
+
     /* §7.2H settlement sheet */
     const sPay = (D.settlement && D.settlement.payments) || [];
     const settle = {
@@ -1435,13 +1482,21 @@ class Dashboard {
         fromWeight: wOf(p.from), toWeight: wOf(p.to)
       })),
       total: this.sen2Flat(sPay.reduce((a,p) => a + p.amount, 0)),
-      foot: "Minimum-transfer set: at most " + (N - 1) + " payments instead of up to " + (N * (N - 1)) +
-        ". Sorted by amount then id, so the sheet come out the same every time you run it.",
+      /* Both figures come from `rules`, which is where the How it works tab
+       * reads them. Deriving them here as well printed 156 next to that tab's
+       * 78 for the same thing. */
+      foot: "Minimum-transfer set: at most " + (R ? R.max_payments : N - 1) + " payments instead of up to " +
+        (R ? R.naive_payments : N * (N - 1) / 2) + ". Sorted by amount then id, so the sheet come out the same every time it run.",
       emptyNote: "Once a gameweek go final, the preview shows who would pay whom.",
       onCSV: () => this.downloadCSV("superf-settlement.csv",
         [["from","to","amount_rm"]].concat(sPay.map(p => [p.from, p.to, (p.amount / 100).toFixed(2)])))
     };
 
+    /* The first month's real terms, off `rules.months` — the pre-season note
+     * used to state RM80 and "two gameweeks", which were the figures at eight
+     * managers and disagreed with the How it works tab on the same site. */
+    const firstBucket = (D.rules && D.rules.months && D.rules.months[0]) ||
+      { month: D.month_buckets[0].month, pot: 0, gameweeks: D.month_buckets[0].gameweeks.length };
     const season = {
       empty: isPre, hasData: !isPre,
       /* The pot and the weekly list also stand up on a round that is played
@@ -1452,7 +1507,8 @@ class Dashboard {
       emptyNote: PB
         ? "GW" + PB.gw + " is played but not settled — FPL has not confirmed bonus, so the pot below is provisional."
         : "First weekly pot settle after GW1 on " + this.dayKey(D.events[0].deadline) +
-          ", then August's RM80 monthly pot two gameweeks after that.",
+          ", then " + this.monthName(firstBucket.month) + "'s " + this.rmFlat(firstBucket.pot) +
+          " monthly pot " + firstBucket.gameweeks + " gameweeks after that.",
       foot: settledGWs.length >= 6
         ? "" : "Season race chart only comes out after six gameweeks settled — nothing to plot yet, waste space only."
     };
@@ -1470,8 +1526,12 @@ class Dashboard {
       activeTabId: "tab-" + S.tab,
       brk, dl, share, ref,
       showLive, live, provPot, fx, cal, standings, pl, pred,
-      pot, weekly, mt, settle, season, rules,
-      footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
+      pot, weekly, mt, corrections, settle, season, rules,
+      /* §3.9.1's model, said once for the whole site. It used to be repeated on
+       * nine cards; the answer to that is one statement somewhere every tab
+       * carries, not none. */
+      footer: "Nothing is paid during the season — every figure is accrued and the league settles up once, after GW" +
+        D.checks.gameweeks_expected + ". Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +
         " of " + D.checks.gameweeks_expected + " gameweeks in the calendar · " +
         "scores from the official FPL API, money computed in this repo."

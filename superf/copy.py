@@ -65,32 +65,6 @@ def settled_month_callout(
     )
 
 
-def live_month_callout(
-    month: str, leader: str, leader_points: int, first_net, you: str,
-    you_points: int, remaining: int,
-) -> str:
-    """Copy while a month is still running — the 'live bet' framing of §7.2C."""
-    gap = leader_points - you_points
-    tail = (
-        f"{remaining} gameweek{'s' if remaining != 1 else ''} left in {month_name(month)}."
-        if remaining
-        else f"Last gameweek of {month_name(month)}."
-    )
-    if you == leader:
-        return (
-            f"You lead the {month_name(month)} pot on {you_points} points and the "
-            f"{rm(first_net)} is yours if it holds. {tail}"
-        )
-    if gap <= 0:
-        return (
-            f"You are level with {leader} on {you_points} for the {rm(first_net)}. {tail}"
-        )
-    return (
-        f"You need {gap} more than {leader} to take the {rm(first_net)} — "
-        f"{you_points} against {leader_points}. {tail}"
-    )
-
-
 def month_opens_note(month: str, gameweeks: int, opens_gw: int, stake, pot) -> str:
     """Copy for a bucket that has not started yet."""
     return (
