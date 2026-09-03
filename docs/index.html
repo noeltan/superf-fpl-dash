@@ -56,17 +56,24 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
 *{box-sizing:border-box}
 /* Stop the scroll at the end of the page.
  *
- * CSS computes `overflow-y` to `auto` whenever `overflow-x` is not `visible`,
- * so every card that scrolls its table sideways had quietly become a vertical
- * scroll container as well, each one able to swallow a flick and hand back the
- * rest. They only ever needed the horizontal axis. `overscroll-behavior` then
- * stops a scroll that begins inside a card from chaining out to the document
- * once that card runs out.
+ * `overscroll-behavior-y:none` on the document is what stops the scroll at the
+ * end of the page. Safari has supported it since 16, and without it iOS
+ * rubber-bands past the last row — which drags the fixed tab bar up with the
+ * content and opens a screenful of background under it, the exact symptom this
+ * was reported as. It was briefly removed on the reasoning that iOS ignores it
+ * here; iOS does not, and the bounce came straight back.
  *
- * Deliberately NOT on html/body: iOS ignores it for the document rubber-band,
- * and on Android it would turn off pull-to-refresh, which is the one gesture
- * that refreshes a page that otherwise polls on its own clock. The real cause
- * of the endless scroll was `100vh`, fixed on the wrapper below. */
+ * The cost is real and accepted: `none` also turns off pull-to-refresh on
+ * Android. This page polls on its own clock and the numbers carry a generated
+ * date, so a gesture that reloads it is worth less than a scroll that ends.
+ *
+ * The `overflow-y` rule is a separate fix. CSS computes `overflow-y` to `auto`
+ * whenever `overflow-x` is not `visible`, so every card that scrolls its table
+ * sideways had quietly become a vertical scroll container as well, each one
+ * able to swallow a flick and hand back the rest. They only ever needed the
+ * horizontal axis, and `contain` keeps a scroll that starts inside one from
+ * chaining out to the page. */
+html,body{overscroll-behavior-y:none}
 [style*="overflow-x:auto"]{overflow-y:hidden;overscroll-behavior:contain}
 body{margin:0;background:var(--plane);color:var(--ink-1);
   font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;
