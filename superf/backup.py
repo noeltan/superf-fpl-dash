@@ -55,12 +55,37 @@ def _rm(sen: int) -> str:
     return f"{sen / 100:.2f}"
 
 
+def _gw_points(gameweek: dict, manager_id: str):
+    """One manager's score in one gameweek, as the sheet should carry it.
+
+    Blank for a manager who was not in the league yet (§3.8.6) — the cell has
+    no value rather than a zero, so a column average is not dragged down by
+    gameweeks somebody could not have played. A manager who was in the league
+    and never set a team really did score 0, and that 0 is the number.
+    """
+    score = gameweek["scores"].get(manager_id) or {}
+    if not score.get("active"):
+        return ""
+    points = score.get("points")
+    return 0 if points is None else points
+
+
 def ledger_rows(payload: dict) -> list[list]:
-    """The accrued book — what each manager owes or is owed, unpaid (§3.9.1)."""
+    """The league table: the accrued book (§3.9.1), a column per gameweek.
+
+    The gameweek columns are the shape the league read for seven seasons on the
+    old sheet — one row per manager, one column per week, the season total at
+    the end of them. The `gameweeks` tab holds the same scores long-form, with
+    the money each one moved; this is the at-a-glance grid, and having both is
+    the point. Neither computes anything: the scores are read out of the
+    settled book exactly as `data.json` published them.
+    """
     settled = payload["settlement"]["settled"]
+    gameweeks = payload["gameweeks"]
+    gw_headers = [f"GW{gameweek['gw']}" for gameweek in gameweeks]
     rows = [[
-        "manager", "team", "entry_id", "points", "weekly_rm", "monthly_rm",
-        "season_rm", "season_is_settled", "accrued_rm", "position",
+        "manager", "team", "entry_id", *gw_headers, "points", "weekly_rm",
+        "monthly_rm", "season_rm", "season_is_settled", "accrued_rm", "position",
     ]]
     for manager_id in payload["rank"]:
         entry = next(m for m in payload["managers"] if m["id"] == manager_id)
@@ -68,6 +93,7 @@ def ledger_rows(payload: dict) -> list[list]:
         accrued = led["accrued"]
         rows.append([
             entry["display_name"], entry["team_name"], entry["entry_id"],
+            *[_gw_points(gameweek, manager_id) for gameweek in gameweeks],
             payload["totals"].get(manager_id, 0),
             _rm(led["weekly"]), _rm(led["monthly"]), _rm(led["projected_season"]),
             "yes" if settled else "no (projected)",
@@ -75,7 +101,7 @@ def ledger_rows(payload: dict) -> list[list]:
             "square" if accrued == 0 else ("is owed" if accrued > 0 else "owes"),
         ])
     rows.append([
-        "TOTAL", "", "", "", "", "", "", "",
+        "TOTAL", "", "", *[""] * len(gameweeks), "", "", "", "", "",
         _rm(sum(payload["ledger"][m]["accrued"] for m in payload["ledger"])), "",
     ])
     return rows
