@@ -1151,7 +1151,7 @@ class Dashboard {
         terms: [
           { term: "Provisional", meaning: "Live, mid-match, still can change. Bonus not confirmed until the match end, auto-subs and vice captain only apply when the whole gameweek close." },
           { term: "Accrued", meaning: "Settled maths, already in the book. You owe or you are owed. Won't change unless a correction get posted, and corrections come in as their own visible row." },
-          { term: "Projected", meaning: "What something would pay if it end today. Deliberately kept OUT of your balance. Season pot sit here until GW38." },
+          { term: "Projected", meaning: "What something would pay if it end today. Deliberately kept OUT of the accrued balances. Season pot sit here until GW38." },
           { term: "Settled", meaning: "A pot is settled once its last gameweek final — the money is decided and in the book. The LEAGUE settles up once, in May, and that is when anybody actually pay." }
         ]
       };
@@ -1527,11 +1527,9 @@ class Dashboard {
       brk, dl, share, ref,
       showLive, live, provPot, fx, cal, standings, pl, pred,
       pot, weekly, mt, corrections, settle, season, rules,
-      /* §3.9.1's model, said once for the whole site. It used to be repeated on
-       * nine cards; the answer to that is one statement somewhere every tab
-       * carries, not none. */
-      footer: "Nothing is paid during the season — every figure is accrued and the league settles up once, after GW" +
-        D.checks.gameweeks_expected + ". Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
+      /* No "nothing is paid yet" here either. It is on the How it works tab,
+       * which exists to explain the money; everywhere else it was a refrain. */
+      footer: "Generated " + this.dateShort(D.generated_at) + " · league 310479 · " + N +
         " managers · everything in Asia/Kuala_Lumpur (UTC+8) · " + D.checks.gameweeks_present +
         " of " + D.checks.gameweeks_expected + " gameweeks in the calendar · " +
         "scores from the official FPL API, money computed in this repo."

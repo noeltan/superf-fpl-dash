@@ -188,20 +188,45 @@ def test_a_complete_month_names_the_monthly_winner_and_the_runner_up(summary):
 
 
 def test_the_season_pot_is_never_stated_as_owed(summary):
-    """§3.9.1 — projected is not in the book, so it cannot read like a credit."""
+    """§3.9.1 — projected is not in the book, so it cannot read like a credit.
+
+    Enforced now by the season block naming no money at all: it is a points
+    standing. The old wording carried a "not in anybody's book until GW38"
+    caveat, which went with the rest of the not-paid-yet refrain.
+    """
     season = next(b for b in summary["blocks"] if b["heading"] == "Season so far")
     body = "\n".join(season["lines"])
-    assert "projected only" in body
-    assert "GW38" in body
+    assert "RM" not in body
+    for word in ("owed", "owe", "projected"):
+        assert word not in body.lower(), word
     assert "is owed" not in body
 
 
 def test_the_message_never_says_won_or_collected(summary):
-    """The words the league is not allowed to use about money it has not moved."""
+    """The words the league is not allowed to use about money it has not moved.
+
+    The vocabulary is the whole guard now: with the standing disclaimer gone,
+    "is owed" and "owe" are the only things telling a reader these are
+    accruals, so a stray "won" or "paid" would be the message's one claim that
+    cash moved.
+    """
     text = summary["text"].lower()
-    for forbidden in (" won ", "collected", "payout", "winnings", "cash out"):
+    for forbidden in (" won ", "collected", "payout", "winnings", "cash out", " paid "):
         assert forbidden not in text, forbidden
-    assert "accrued, not cash" in text
+    assert "is owed" in text
+
+
+def test_the_message_carries_no_nothing_is_paid_yet_disclaimer(summary):
+    """Asked for across the whole site, the message included.
+
+    Being told the same caveat every week is how a caveat stops being read.
+    """
+    text = summary["text"]
+    for refrain in ("Nothing is paid", "accrued, not cash", "not in anybody's book",
+                    "until GW38", "settles up once"):
+        assert refrain not in text, refrain
+    # What the footer is actually for survives.
+    assert summary["footer"] == "GW3 deadline: Fri 4 Sep, 01:30 MYT."
 
 
 def test_every_active_manager_appears_in_the_scoreboard(summary):

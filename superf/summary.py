@@ -15,9 +15,12 @@ never over money.
 
 Money vocabulary is §3.9.1's, exactly. The weekly and monthly pots are
 *accrued* — "is owed", "owe" — the season pot is *projected* and stays out of
-the message entirely, and nothing is *won* or *collected* until after GW38.
-The footer says so every week, because a message forwarded on its own has to
-carry that with it.
+the message entirely, and nothing is ever *won*, *paid* or *collected*.
+
+There is no standing "nothing is paid yet" line. It was on every message and
+every card on the site, and being told the same thing weekly is how a caveat
+stops being read. The vocabulary carries it instead: "is owed" and "owe" are
+what an accrual sounds like.
 
 Runnable: ``python -m superf.summary [docs/data.json]`` prints the text, so a
 gameweek can be sent out from a terminal without opening the site.
@@ -32,9 +35,12 @@ from . import copy as copytext
 from .config import TZ_OFFSET_HOURS
 from .money import sen_to_rm
 
-FOOTER = (
-    "Nothing is paid until after GW38 — every figure above is accrued, not cash."
-)
+# No standing reminder that nothing is paid yet. The vocabulary already carries
+# it — "is owed" and "owe" are accruals, and the message never says won, paid or
+# collected — and repeating the disclaimer every week is what got it cut from the
+# site. What is left in the footer is the one thing the message is for: when the
+# next deadline is.
+FOOTER = ""
 
 DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 MONTHS_SHORT = [
@@ -298,8 +304,7 @@ def _season_block(
     if len(rank) > 1:
         lines.append(
             f"{names.get(rank[0], rank[0])} leads by "
-            f"{behind.get(rank[1], 0)} after {_plural(through_gw, 'gameweek')}. "
-            "The season pot is projected only — it is not in anybody's book until GW38."
+            f"{behind.get(rank[1], 0)} after {_plural(through_gw, 'gameweek')}."
         )
     return {"heading": "Season so far", "lines": lines}
 
@@ -403,11 +408,12 @@ def build(payload: Mapping) -> dict | None:
 
     next_gw = payload["current"].get("next_gw")
     next_event = next((e for e in payload["events"] if e["gw"] == next_gw), None)
-    tail = FOOTER
+    tail_parts = [FOOTER] if FOOTER else []
     if next_event and next_gw != gw:
-        tail += (
-            f"\nGW{next_gw} deadline: {_deadline_myt(next_event['deadline'])} MYT."
+        tail_parts.append(
+            f"GW{next_gw} deadline: {_deadline_myt(next_event['deadline'])} MYT."
         )
+    tail = "\n".join(tail_parts)
 
     title = f"{league} · GW{gw} settled"
     if settled_on:
@@ -418,7 +424,7 @@ def build(payload: Mapping) -> dict | None:
         for block in blocks
         if block["lines"]
     )
-    text = f"{title}\n\n{body}\n\n{tail}\n"
+    text = f"{title}\n\n{body}\n" + (f"\n{tail}\n" if tail else "")
 
     winners = [names.get(m, m) for m in last["winners"]]
     return {
