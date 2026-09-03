@@ -1,15 +1,15 @@
-manager,team,entry_id,points,weekly_rm,monthly_rm,season_rm,season_is_settled,accrued_rm,position
-Sam Lim,GeGe,2686159,182,110.00,81.00,680.00,no (projected),191.00,is owed
-Soon Lee Loo,SLucky XI,2488327,171,19.00,29.00,225.00,no (projected),48.00,is owed
-Way Shoon Lim,AyamFC,5250642,162,71.00,-10.00,95.00,no (projected),61.00,is owed
-Jack Siah,Apple TV,1427521,161,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Noel Tan,JEONSOMI,1652821,161,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Tian Pin Lee,Vege went tight,1567532,152,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Robin Ho Ho,LetMeWin,6529703,144,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Shaik Zahir,BestPlaya,4882676,142,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Christopher Chin,ChriSpirit,1641730,135,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Wei Hun Wong,Back To Back To Back,4590653,132,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Wei Chen Lim,chili pan mee,5140825,123,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Calvin Foo,After 22 yrs,4677226,120,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-Boon Siang Ng,Boon,1840731,106,-20.00,-10.00,-100.00,no (projected),-30.00,owes
-TOTAL,,,,,,,,0.00,
+manager,team,entry_id,GW1,GW2,points,weekly_rm,monthly_rm,season_rm,season_is_settled,accrued_rm,position
+Sam Lim,GeGe,2686159,74,108,182,110.00,81.00,680.00,no (projected),191.00,is owed
+Soon Lee Loo,SLucky XI,2488327,70,101,171,19.00,29.00,225.00,no (projected),48.00,is owed
+Way Shoon Lim,AyamFC,5250642,52,110,162,71.00,-10.00,95.00,no (projected),61.00,is owed
+Jack Siah,Apple TV,1427521,58,103,161,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Noel Tan,JEONSOMI,1652821,63,98,161,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Tian Pin Lee,Vege went tight,1567532,49,103,152,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Robin Ho Ho,LetMeWin,6529703,60,84,144,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Shaik Zahir,BestPlaya,4882676,48,94,142,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Christopher Chin,ChriSpirit,1641730,52,83,135,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Wei Hun Wong,Back To Back To Back,4590653,60,72,132,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Wei Chen Lim,chili pan mee,5140825,61,62,123,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Calvin Foo,After 22 yrs,4677226,66,54,120,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+Boon Siang Ng,Boon,1840731,36,70,106,-20.00,-10.00,-100.00,no (projected),-30.00,owes
+TOTAL,,,,,,,,,,0.00,
