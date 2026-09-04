@@ -129,7 +129,12 @@ select,button{font:inherit}
 <a class="skip" href="#panel">Skip to the numbers</a>
 
 <header style="background:var(--plane)">
-  <div style="max-width:1280px;margin:0 auto;padding:12px clamp(12px,3vw,24px);display:flex;align-items:center;gap:12px;flex-wrap:{{L.headWrap}};overflow-x:{{L.headScroll}}">
+  <!-- Wraps at every width. It used to be a no-wrap row that scrolled sideways
+       on a phone, and the iOS-bounce rule below turns every overflow-x:auto
+       box into a clipped one — so on a 390px screen the reminder and theme
+       buttons sat past the right edge, reachable only by swiping a header
+       nothing suggested could swipe. -->
+  <div style="max-width:1280px;margin:0 auto;padding:12px clamp(12px,3vw,24px);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
     <div style="display:flex;align-items:baseline;gap:10px">
       <h1 style="margin:0;font-size:21px;font-weight:670;letter-spacing:-.025em">SuperF</h1>
       <div style="display:{{L.metaShow}};font-size:12px;color:var(--ink-muted);font-variant-numeric:tabular-nums;white-space:nowrap">2026/27 · league 310479 · {{league.players}} managers</div>
@@ -139,11 +144,14 @@ select,button{font:inherit}
       <span style="font-size:11.5px;font-weight:640;letter-spacing:.07em;color:{{chrome.dotInk}}">{{chrome.stateText}}</span>
       <span style="font-size:11.5px;color:var(--ink-muted);font-variant-numeric:tabular-nums">{{chrome.stateSub}}</span>
     </div>
-    <div style="flex:1;min-width:12px"></div>
-    <sc-if value="{{notify.show}}" hint-placeholder-val="{{ false }}">
-      <button sc-camel-on-click="{{notify.onToggle}}" aria-label="{{notify.aria}}" aria-pressed="{{notify.pressed}}" title="{{notify.title}}" data-focus-key="notify" style="color:{{notify.ink}};background:{{notify.bg}};border:1px solid {{notify.rule}};border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">{{notify.label}}</button>
-    </sc-if>
-    <button sc-camel-on-click="{{toggleTheme}}" aria-label="{{chrome.themeAria}}" data-focus-key="theme" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer">{{chrome.themeLabel}}</button>
+    <!-- The controls are one group pushed to the right, so when the row wraps
+         on a phone they land on their own line, still right-aligned. -->
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;flex:none">
+      <sc-if value="{{notify.show}}" hint-placeholder-val="{{ false }}">
+        <button sc-camel-on-click="{{notify.onToggle}}" aria-label="{{notify.aria}}" aria-pressed="{{notify.pressed}}" title="{{notify.title}}" data-focus-key="notify" style="color:{{notify.ink}};background:{{notify.bg}};border:1px solid {{notify.rule}};border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap">{{notify.label}}</button>
+      </sc-if>
+      <button sc-camel-on-click="{{toggleTheme}}" aria-label="{{chrome.themeAria}}" data-focus-key="theme" style="color:var(--ink-2);background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12.5px;cursor:pointer">{{chrome.themeLabel}}</button>
+    </div>
   </div>
   <sc-if value="{{notify.hasHint}}" hint-placeholder-val="{{ false }}">
     <div style="max-width:1280px;margin:0 auto;padding:0 clamp(12px,3vw,24px) 12px">

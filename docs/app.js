@@ -490,8 +490,8 @@ class Dashboard {
     const LAY = {
       isMob: mob, isDesk: !mob,
       metaShow: mob ? "none" : "block",
-      headWrap: mob ? "nowrap" : "wrap",
-      headScroll: mob ? "auto" : "visible",
+      /* The header wraps at every width now. It was a sideways-scrolling row on
+       * a phone, which hid the reminder and theme buttons past the right edge. */
       showTopTabs: !mob || MOBILE_NAV === "top",
       showBottomNav: mob && MOBILE_NAV === "bottom",
       /* The bottom bar is fixed, so the page has to end above it or the last
