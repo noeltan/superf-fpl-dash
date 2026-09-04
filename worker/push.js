@@ -121,3 +121,20 @@ export function reminderDue(events, { now, hoursBefore }) {
   }
   return due;
 }
+
+/* Which gameweek, if any, has settled and is worth waking people for.
+ *
+ * The build commits within hours of a gameweek going Final, and then nothing
+ * happens until somebody opens the site and presses the summary button. This
+ * is the tap on the shoulder: the message is ready. `summary` is null until a
+ * gameweek has settled, and its `gw` is the one the message is about, so
+ * "something new" is simply a `gw` the KV flag upstream has not seen. The
+ * season is part of the identity so a rebuilt calendar next August cannot
+ * inherit this season's "already sent".
+ */
+export function settledDue(data) {
+  const summary = data && data.summary;
+  if (!summary || !Number.isInteger(summary.gw) || summary.gw < 1) return null;
+  const season = (data.current && data.current.season) || "season";
+  return { season, gw: summary.gw, headline: summary.headline || `GW${summary.gw} settled` };
+}

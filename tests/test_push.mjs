@@ -16,7 +16,7 @@ import assert from "node:assert/strict";
 // had them since 20, so this only fills the gap on anything older.
 if (!globalThis.crypto) globalThis.crypto = webcrypto;
 
-const { vapidToken, reminderDue, isDeadSubscription, b64url } = await import(
+const { vapidToken, reminderDue, isDeadSubscription, b64url, settledDue } = await import(
   "../worker/push.js"
 );
 
@@ -187,6 +187,20 @@ globalThis.fetch = async () =>
     ? { ok: false, status: 503 }
     : { ok: true, status: 200, json: async () => pushFixture.data };
 
+// The one thing sw.js remembers — the last settlement it announced — lives in
+// the Cache API. A Map per cache name is all of it that the worker touches.
+const cacheStores = {};
+globalThis.caches = {
+  open: async (name) => {
+    const store = (cacheStores[name] = cacheStores[name] || new Map());
+    return {
+      match: async (key) => (store.has(key) ? new Response(store.get(key)) : undefined),
+      put: async (key, response) => { store.set(key, await response.text()); },
+    };
+  },
+};
+const forgetSettled = () => { for (const name of Object.keys(cacheStores)) delete cacheStores[name]; };
+
 await import("../docs/sw.js");
 assert.equal(typeof handlers.push, "function", "sw.js registered no push handler");
 
@@ -240,6 +254,76 @@ await test("still shows something when data.json cannot be read", async () => {
 await test("one deadline never stacks up as several notifications", async () => {
   const [note] = await runPushHandler({ data: CALENDAR, now: at("2026-08-28T15:30:00Z") });
   assert.equal(note.tag, "superf-deadline", "a retry must replace, not pile up");
+});
+
+console.log("\nWhen a gameweek has settled");
+
+await test("settledDue names the gameweek the summary is about, and nothing before one", () => {
+  assert.equal(settledDue({ summary: null }), null);
+  assert.equal(settledDue({}), null);
+  assert.equal(settledDue({ summary: { gw: 0 } }), null);
+  const due = settledDue({ current: { season: "2026/27" }, summary: { gw: 2, headline: "Way Shoon takes GW2" } });
+  assert.deepEqual(due, { season: "2026/27", gw: 2, headline: "Way Shoon takes GW2" });
+});
+
+const SETTLED = {
+  ...CALENDAR,
+  current: { season: "2026/27" },
+  summary: { gw: 2, headline: "Way Shoon takes GW2", monthly_settled: true },
+};
+
+await test("a new settlement is announced in the summary's own words", async () => {
+  forgetSettled();
+  // Tuesday morning after GW2: the next deadline is days away.
+  const notes = await runPushHandler({ data: SETTLED, now: at("2026-09-01T00:00:00Z") });
+  assert.equal(notes.length, 1, "no deadline is close, so only the settlement");
+  const [note] = notes;
+  assert.equal(note.tag, "superf-settled");
+  assert.equal(note.title, "Way Shoon takes GW2");
+  assert.match(note.body, /GW2 has settled, and the month with it/);
+  assert.match(note.body, /send the summary/);
+  assert.doesNotMatch(note.title + note.body, /\bwon\b|\bpaid\b/i, "§3.9.1");
+});
+
+await test("the same settlement is not announced twice — the next push is the deadline", async () => {
+  const [note] = await runPushHandler({ data: SETTLED, now: at("2026-09-01T00:00:00Z") });
+  assert.equal(note.tag, "superf-deadline");
+  assert.match(note.title, /GW3 deadline/);
+});
+
+await test("a deadline inside the window rides alongside a new settlement", async () => {
+  forgetSettled();
+  // GW3 settles late, two hours before GW4 locks — both are worth saying.
+  const tight = {
+    ...SETTLED,
+    events: [...EVENTS, { gw: 4, deadline: "2026-09-05T17:30:00Z" }],
+    summary: { gw: 3, headline: "Sam takes GW3", monthly_settled: false },
+  };
+  const notes = await runPushHandler({ data: tight, now: at("2026-09-05T15:30:00Z") });
+  assert.deepEqual(notes.map((n) => n.tag), ["superf-settled", "superf-deadline"]);
+  assert.match(notes[0].body, /GW3 has settled\./);
+  assert.match(notes[1].title, /GW4 deadline in 2h/);
+});
+
+await test("without a memory the settlement is left unsaid rather than repeated forever", async () => {
+  const realCaches = globalThis.caches;
+  globalThis.caches = undefined;
+  try {
+    const notes = await runPushHandler({ data: SETTLED, now: at("2026-09-01T00:00:00Z") });
+    assert.deepEqual(notes.map((n) => n.tag), ["superf-deadline"]);
+  } finally {
+    globalThis.caches = realCaches;
+  }
+});
+
+await test("installing notes what has already settled, so the first push is not last week's news", async () => {
+  forgetSettled();
+  pushFixture = { data: SETTLED, failFetch: false };
+  const waits = [];
+  await handlers.install({ waitUntil: (p) => waits.push(p) });
+  await Promise.all(waits);
+  const [note] = await runPushHandler({ data: SETTLED, now: at("2026-09-01T00:00:00Z") });
+  assert.equal(note.tag, "superf-deadline");
 });
 
 console.log(`\n${passed} passed`);

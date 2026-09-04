@@ -238,7 +238,7 @@ for the card.
     "headline": "Way Shoon takes GW2",
     "monthly_settled": true,          // did this gameweek close a month bucket?
     "blocks": [ { "heading": "GW2", "lines": ["Way Shoon takes GW2 on 110 pts …"] } ],
-    "footer": "Nothing is paid until after GW38 — …\nGW3 deadline: Sat 5 Sep, 01:30 MYT.",
+    "footer": "GW3 deadline: Sat 5 Sep, 01:30 MYT.",
     "text": "SuperF · GW2 settled · Mon 31 Aug\n\nGW2\n…"   // the pasteable message
   }
 }
@@ -296,18 +296,27 @@ Gameweek tab and the message in the group chat cannot drift. The view copies
 the string; it never builds one.
 
 - **`blocks[]`** are `{ heading, lines[] }`, in order: the gameweek, `Every
-  score`, the month, then `Season so far`. A block with no lines is dropped.
-  The page does not render them — it sends `text`. They are here because `text`
-  is assembled from them, so the two cannot disagree.
+  score`, the month, `Season so far`, then `Corrections`. A block with no
+  lines is dropped, so `Corrections` is present only when an adjusting entry
+  (§3.9.4) has been posted since the previous gameweek settled. The page does
+  not render them — it sends `text`. They are here because `text` is
+  assembled from them, so the two cannot disagree.
 - **The month block is `— settled` only when the bucket's last gameweek is
   Final.** Otherwise it is `— running`: a standing, what first *would* take,
   and no accrual anywhere in it. This is the same `months[]` /
   `month_current` boundary, said in words.
 - **The season pot never appears as a credit.** §3.9.1 — projected is not in
-  the book, and the footer repeats that nothing is paid until after GW38,
-  because a forwarded message arrives without the page around it.
+  the book, so `Season so far` is a points standing and nothing else. There is
+  no standing "nothing is paid yet" footer any more; the vocabulary carries
+  it, and `footer` holds the next deadline in MYT.
 - **Money is quoted off the settled ledger**, so a gameweek played at a smaller
   field reports what it actually paid, never `stakes.weekly.net` (§3.8.6).
+  Debits too: who owes what is read off the ledger rows, for the week and the
+  month alike, never stake × headcount.
+- **`Every score` carries the season standing** on each line and shares a
+  place (`=3.`) between unpaid managers level on points; chips are named as
+  the page names them, from one map in `copy.py` that a test holds equal to
+  the one in `app.js`.
 - `null` while nothing has settled. The card is absent rather than empty.
 
 `python -m superf.summary [path]` prints `text` from a published `data.json`,
