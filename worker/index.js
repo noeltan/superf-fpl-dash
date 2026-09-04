@@ -14,16 +14,19 @@
  * concurrent viewers into roughly two origin hits a minute.
  */
 
-import { isDeadSubscription, reminderDue, sendPush } from "./push.js";
+import { isDeadSubscription, reminderDue, sendPush, settledDue } from "./push.js";
 
 const ORIGIN = "https://fantasy.premierleague.com";
 const CACHE_SECONDS = 30;
 
-/* --- deadline reminders (opt-in, per device) --------------------------------
+/* --- reminders (opt-in, per device) -----------------------------------------
  *
- * The one thing this league actually needs telling: the deadline is close, set
- * your team. Everything else on the site is a number you go and look at; this
- * is the number that costs you RM10 if nobody taps you on the shoulder.
+ * Two things this league actually needs telling. The deadline is close, set
+ * your team: everything else on the site is a number you go and look at, and
+ * this is the number that costs you RM10 if nobody taps you on the shoulder.
+ * And the gameweek has settled: the build commits the result within hours,
+ * but the summary only reaches the group when somebody opens the site and
+ * presses the button, so without a nudge it goes out when somebody remembers.
  *
  * Subscriptions live in KV because they have to outlive the request that made
  * them and there is nowhere else — Pages is static. They are per browser, not
@@ -192,26 +195,47 @@ export default {
     return out;
   },
 
-  /* Hourly. Reads the same published calendar the page reads, decides whether
-   * a deadline is close enough to be worth waking anybody for, and sends one
-   * bodyless push per subscribed device.
+  /* Hourly. Reads the same published book the page reads, decides whether
+   * a deadline is close enough to be worth waking anybody for, or whether a
+   * gameweek has settled since the last run, and sends one bodyless push per
+   * subscribed device for each. The push says nothing; the service worker
+   * reads data.json and works out which of the two it was.
    *
    * Fires on a WINDOW, guarded by a KV flag, rather than at an exact hour —
    * cron is a suggestion and a missed slot must not mean a missed deadline.
    * The flag carries the gameweek, so it also survives a redeploy.
    */
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(notifyDeadline(env, Date.now()));
+    ctx.waitUntil(notify(env, Date.now()));
   },
 };
 
-export async function notifyDeadline(env, now) {
-  if (!env.SUBSCRIPTIONS || !env.VAPID_PUBLIC_KEY || !env.VAPID_PRIVATE_JWK) return;
-  if (!env.DATA_URL) return;
+function configured(env) {
+  return Boolean(
+    env.SUBSCRIPTIONS && env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_JWK && env.DATA_URL
+  );
+}
 
+async function publishedBook(env, now) {
   const response = await fetch(`${env.DATA_URL}?t=${Math.floor(now / 60000)}`);
-  if (!response.ok) return;
-  const data = await response.json();
+  if (!response.ok) return null;
+  return response.json();
+}
+
+export async function notify(env, now) {
+  if (!configured(env)) return;
+  const data = await publishedBook(env, now);
+  if (!data) return;
+  // The settlement first: it is the older news, and a device that gets both
+  // in one hour should read them in the order they happened.
+  await notifySettled(env, now, data);
+  await notifyDeadline(env, now, data);
+}
+
+export async function notifyDeadline(env, now, data = null) {
+  if (!configured(env)) return;
+  data = data || (await publishedBook(env, now));
+  if (!data) return;
 
   const due = reminderDue(data.events, { now, hoursBefore: REMIND_HOURS_BEFORE });
   if (!due) return;
@@ -222,8 +246,48 @@ export async function notifyDeadline(env, now) {
   const flag = `sent:${season}:gw${due.gw}`;
   if (await env.SUBSCRIPTIONS.get(flag)) return;
 
+  const sent = await broadcast(env, now);
+
+  // Written only after a real send. A run that reached nobody leaves the flag
+  // clear so the next hour tries again — there is still time before the
+  // deadline, which is the whole point of the window.
+  if (sent > 0) {
+    const ttl = Math.max(
+      60,
+      Math.floor((new Date(due.deadline).getTime() - now) / 1000) + 86400
+    );
+    await env.SUBSCRIPTIONS.put(flag, String(now), { expirationTtl: ttl });
+  }
+}
+
+/* Kept for as long as the season could plausibly still be running, then let
+ * go: a flag that outlives the season is a key nobody will ever read. */
+const SETTLED_FLAG_TTL = 120 * 86400;
+
+export async function notifySettled(env, now, data = null) {
+  if (!configured(env)) return;
+  data = data || (await publishedBook(env, now));
+  if (!data) return;
+
+  const due = settledDue(data);
+  if (!due) return;
+
+  // Once per settled gameweek, ever — the same guard as the deadline, for
+  // the same reason. The flag is written only after somebody was reached, so
+  // an hour when every push service was having a bad minute is retried.
+  const flag = `settled:${due.season}:gw${due.gw}`;
+  if (await env.SUBSCRIPTIONS.get(flag)) return;
+
+  const sent = await broadcast(env, now);
+  if (sent > 0) {
+    await env.SUBSCRIPTIONS.put(flag, String(now), { expirationTtl: SETTLED_FLAG_TTL });
+  }
+}
+
+/* One bodyless push to every subscribed device. Returns how many were reached. */
+async function broadcast(env, now) {
   const { keys } = await env.SUBSCRIPTIONS.list({ prefix: SUB_PREFIX });
-  if (!keys.length) return;
+  if (!keys.length) return 0;
 
   const subject = env.VAPID_SUBJECT || "mailto:superf-bot@users.noreply.github.com";
   let sent = 0;
@@ -254,15 +318,5 @@ export async function notifyDeadline(env, now) {
       // A single push service having a bad minute must not stop the rest.
     }
   }
-
-  // Written only after a real send. A run that reached nobody leaves the flag
-  // clear so the next hour tries again — there is still time before the
-  // deadline, which is the whole point of the window.
-  if (sent > 0) {
-    const ttl = Math.max(
-      60,
-      Math.floor((new Date(due.deadline).getTime() - now) / 1000) + 86400
-    );
-    await env.SUBSCRIPTIONS.put(flag, String(now), { expirationTtl: ttl });
-  }
+  return sent;
 }

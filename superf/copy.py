@@ -29,6 +29,27 @@ def month_name(month: str) -> str:
     return MONTH_NAMES.get(month, month)
 
 
+# FPL's chip codes are not words anybody says out loud. `docs/app.js` carries
+# the same map for the page (`chipLabel`), and `tests/test_summary.py` reads
+# that file and checks the two agree, because a message that says "bboost"
+# next to a score the page calls BENCH BOOST is the kind of drift a reader
+# notices and stops trusting. Unknown codes pass through in capitals rather
+# than being swallowed: a chip nobody has heard of still inflated the score.
+CHIP_LABELS = {
+    "bboost": "Bench Boost",
+    "3xc": "Triple Captain",
+    "freehit": "Free Hit",
+    "wildcard": "Wildcard",
+    "manager": "Assistant Mgr",
+}
+
+
+def chip_label(code: str | None) -> str:
+    if not code:
+        return ""
+    return CHIP_LABELS.get(code, code.upper())
+
+
 def ordinal(place: int) -> str:
     if 10 <= place % 100 <= 20:
         return f"{place}th"

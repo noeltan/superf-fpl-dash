@@ -490,8 +490,8 @@ class Dashboard {
     const LAY = {
       isMob: mob, isDesk: !mob,
       metaShow: mob ? "none" : "block",
-      headWrap: mob ? "nowrap" : "wrap",
-      headScroll: mob ? "auto" : "visible",
+      /* The header wraps at every width now. It was a sideways-scrolling row on
+       * a phone, which hid the reminder and theme buttons past the right edge. */
       showTopTabs: !mob || MOBILE_NAV === "top",
       showBottomNav: mob && MOBILE_NAV === "bottom",
       /* The bottom bar is fixed, so the page has to end above it or the last
@@ -549,10 +549,10 @@ class Dashboard {
     const notifyCopy = {
       unavailable: { label:"", show:false },
       unsupported: { label:"", show:false },
-      off:      { label:"🔔 Remind me", aria:"Turn on deadline reminders", pressed:"false",
-                  title:"Get a notification a few hours before each deadline" },
-      on:       { label:"🔔 Reminders on", aria:"Turn off deadline reminders", pressed:"true",
-                  title:"You will be reminded before each deadline. Tap to stop." },
+      off:      { label:"🔔 Remind me", aria:"Turn on reminders", pressed:"false",
+                  title:"Get a notification a few hours before each deadline, and when a gameweek settles" },
+      on:       { label:"🔔 Reminders on", aria:"Turn off reminders", pressed:"true",
+                  title:"You will be reminded before each deadline, and when a gameweek settles. Tap to stop." },
       working:  { label:"…", aria:"Working", pressed:"false", title:"Working" },
       blocked:  { label:"🔕 Blocked", aria:"Notifications are blocked in this browser", pressed:"false",
                   title:"Notifications are blocked for this site in your browser settings" },

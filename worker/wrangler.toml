@@ -3,7 +3,8 @@ main = "index.js"
 compatibility_date = "2026-08-15"
 
 # The proxy half needs nothing: it adds one header and caches for 30 seconds.
-# Everything below is for deadline reminders, and every part of it is optional
+# Everything below is for reminders — the deadline, and a gameweek settling —
+# and every part of it is optional
 # — with no KV bound and no keys set, /push/* answers 503 and the page simply
 # never offers the toggle. The dashboard is unchanged either way.
 

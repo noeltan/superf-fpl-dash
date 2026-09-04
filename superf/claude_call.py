@@ -114,7 +114,7 @@ else can swing anything now. Do not describe a finished match as if it were
 still to come.
 """
 
-SYSTEM = """You are calling the weekly winner for an eight-person Malaysian FPL money league.
+SYSTEM = """You are calling the weekly winner for a Malaysian FPL money league among friends.
 
 The projections you are given are produced by code. They are the only numbers
 you may quote. Do not estimate, average, or invent any figure — not points, not

@@ -1,7 +1,7 @@
 # SuperF — FPL league dashboard
 
-The data pipeline behind the SuperF dashboard: an eight-person Malaysian FPL
-money league, classic league `310479`, season 2026/27.
+The data pipeline behind the SuperF dashboard: a Malaysian FPL money league
+among friends, classic league `310479`, season 2026/27.
 
 The league previously ran on a seven-season Google Sheet typed in by hand, which
 stalled mid-February. **Nothing here is manually entered.** The FPL API is the
@@ -71,9 +71,21 @@ nobody would find out until May.
 
 The vocabulary is §3.9.1's throughout. The weekly and monthly pots are
 *accrued* ("is owed", "owe"); the season pot is *projected* and never appears
-as a credit; the footer repeats that nothing is paid until after GW38, because
-a forwarded message arrives without the rest of the site attached. A month that
-is still running says what first *would* take, and says "would".
+as a credit. There is no standing "nothing is paid yet" line — it was on every
+message and every card, and a caveat repeated weekly stops being read — so the
+vocabulary carries it, and the footer is left with the one thing the message is
+for: the next deadline, in Malaysia time. A month that is still running says
+what first *would* take, and says "would".
+
+Every debit is read off a ledger row, never worked out from a headcount, so a
+gameweek settled at a smaller field or a month somebody joined halfway through
+prints what it actually charged. Every score carries the season standing, so
+the one block that names everybody answers both questions a reader has about
+themselves; managers level on points share a place. An adjusting entry
+(§3.9.4) posted since the previous gameweek settled gets its own block — the
+message is the record that circulates, and a correction that only ever
+appeared in a statement nobody opens is the November error that surfaces in
+May.
 
 ## Running it
 
@@ -104,8 +116,9 @@ Serve the page locally with `python -m http.server -d docs 8000`.
 4. **Live scores** — `cd worker && npx wrangler deploy`, then paste the URL into
    `docs/config.js`. Until you do, everything works except the in-match live
    layer, which stays hidden.
-5. **Deadline reminders** (optional) — a browser notification a few hours before
-   each deadline. Three one-time steps, all on the Worker:
+5. **Reminders** (optional) — a browser notification a few hours before each
+   deadline, and one when a gameweek settles so somebody knows the summary is
+   ready to send. Three one-time steps, all on the Worker:
 
    ```bash
    cd worker

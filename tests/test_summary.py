@@ -414,3 +414,179 @@ def test_the_running_month_survives_its_last_gameweek_being_live():
     )
     assert "August is 2 of 3 gameweeks in" in running
     assert "Nothing settles until GW3 is final." in running
+
+
+# --- from the review of the GW2 message -------------------------------------
+
+
+def _payload_with(mutate, **overrides):
+    """The spec fixture with one thing changed on the calendar, emitted whole."""
+    calendar = full_season(
+        {1: GW1_POINTS, 2: GW2_POINTS}, managers=MANAGERS, months={1: "AUG", 2: "AUG"}
+    )
+    mutate(calendar)
+    settlement = settle(MANAGERS, calendar, BUCKETS, expected_gameweeks=38)
+    kwargs = dict(
+        generated_at="2026-09-01T06:00:00Z", league_name="SuperF", league_id=310479,
+        managers=MANAGERS, teams=TEAMS, events=EVENTS, breaks=[], month_buckets=BUCKETS,
+        fixtures_by_gw={}, pl_table=[], gameweeks=calendar, settlement=settlement,
+        current={"season": "2026/27", "gameweek": 2, "next_gw": 3, "state": "final"},
+        settled_dates=SETTLED_DATES,
+    )
+    kwargs.update(overrides)
+    return build_payload(**kwargs)
+
+
+def test_chips_are_named_as_the_page_names_them():
+    """`[bboost]` is an API code, not a word. GW1 printed it next to two scores."""
+    import re
+    from pathlib import Path
+
+    from superf import copy as copytext
+
+    def bench_boost(calendar):
+        calendar[2].scores["jack"].chip = "bboost"
+
+    payload = _payload_with(bench_boost)
+    scores = next(b for b in payload["summary"]["blocks"] if b["heading"] == "Every score")
+    jack = next(line for line in scores["lines"] if "Jack" in line)
+    assert "bboost" not in jack
+    assert "[Bench Boost]" in jack
+    # One map, two languages: the page's `chipLabel` must agree with copy.py's.
+    app = Path(__file__).resolve().parent.parent / "docs" / "app.js"
+    source = app.read_text(encoding="utf-8")
+    body = re.search(r"chipLabel\(code\)\{.*?\}\[code\]", source, re.S).group(0)
+    page = dict(re.findall(r'"?([\w]+)"?:\s*"([^"]+)"', body))
+    assert {k: v.upper() for k, v in copytext.CHIP_LABELS.items()} == page
+
+
+def test_managers_level_on_points_share_a_place():
+    """3 and 4 on the same score claims an order nothing decided."""
+    # Soon Lee 69 and Noel 68 take the paid places; Jack and Tian Pin both on 66.
+    payload = payload_for({1: GW1_POINTS, 2: dict(GW2_POINTS, tianpin=66)})
+    scores = next(b for b in payload["summary"]["blocks"] if b["heading"] == "Every score")
+    level = [line for line in scores["lines"] if " 66 pts" in line]
+    assert len(level) == 2
+    assert all(line.startswith("=3. ") for line in level), level
+    assert scores["lines"][4].startswith("5. ")
+    # The paid places are settled by the tiebreak, so they are never shared.
+    assert scores["lines"][0].startswith("1. ")
+    assert scores["lines"][1].startswith("2. ")
+
+
+def test_every_score_carries_the_season_standing(summary):
+    """With thirteen managers a top three leaves ten people who cannot find
+    themselves. The block that names everybody says where they stand."""
+    scores = next(b for b in summary["blocks"] if b["heading"] == "Every score")
+    soon_lee = next(line for line in scores["lines"] if line.startswith("1. Soon Lee"))
+    assert "· 1st overall on 141" in soon_lee
+
+
+def test_a_hit_is_stated_in_points():
+    def eight_point_hit(calendar):
+        calendar[2].scores["jack"].hits = 8
+
+    payload = _payload_with(eight_point_hit)
+    scores = next(b for b in payload["summary"]["blocks"] if b["heading"] == "Every score")
+    jack = next(line for line in scores["lines"] if "Jack" in line)
+    assert "[8-pt hit]" in jack
+
+
+def test_the_month_says_how_its_stake_was_built(summary):
+    """A two-gameweek month charges RM10, which is also the weekly stake. Two
+    lines saying "owe RM10 each" read as one charge said twice."""
+    month = next(b for b in summary["blocks"] if b["heading"] == "August — settled")
+    assert "owe RM10 each — RM5 a gameweek, 2 gameweeks in the month. Pot RM80." in "\n".join(month["lines"])
+    week = "\n".join(summary["blocks"][0]["lines"])
+    assert "a gameweek" not in week
+
+
+def test_the_week_is_given_its_context_in_points_only(summary):
+    week = "\n".join(summary["blocks"][0]["lines"])
+    average = sum(GW2_POINTS.values()) / len(GW2_POINTS)
+    assert f"League average {average:.1f}." in week or f"League average {average:.0f}." in week
+    # GW2's 69 is below GW1's 74, so it is not the season high and must not claim to be.
+    assert "highest score" not in week
+
+
+def test_the_season_high_is_named_only_once_there_is_a_season():
+    tall = dict(GW2_POINTS, soonlee=120)
+    payload = payload_for({1: GW1_POINTS, 2: tall})
+    assert "120 is the highest score of the season so far." in "\n".join(
+        payload["summary"]["blocks"][0]["lines"]
+    )
+    # After GW1 every score is the highest so far, and saying so is noise.
+    one = payload_for(
+        {1: GW1_POINTS},
+        current={"season": "2026/27", "gameweek": 1, "next_gw": 2, "state": "final"},
+        settled_dates={1: "2026-08-24"},
+    )
+    assert "highest score" not in "\n".join(one["summary"]["blocks"][0]["lines"])
+
+
+def test_the_season_block_names_the_movers_and_nothing_twice(summary):
+    season = next(b for b in summary["blocks"] if b["heading"] == "Season so far")
+    body = "\n".join(season["lines"])
+    assert "leads by" not in body          # said already by "(N behind)" above it
+    assert body.count("Movers:") == 1
+    assert "up " in body and " to " in body
+    # After GW1 there is no before, so there are no movers.
+    one = payload_for(
+        {1: GW1_POINTS},
+        current={"season": "2026/27", "gameweek": 1, "next_gw": 2, "state": "final"},
+        settled_dates={1: "2026-08-24"},
+    )
+    first = next(b for b in one["summary"]["blocks"] if b["heading"] == "Season so far")
+    assert "Movers" not in "\n".join(first["lines"])
+
+
+def test_the_running_month_carries_the_gaps_and_says_not_settled_once():
+    mid = payload_for(
+        {1: GW1_POINTS},
+        current={"season": "2026/27", "gameweek": 1, "next_gw": 2, "state": "final"},
+        settled_dates={1: "2026-08-24"},
+    )["summary"]
+    running = next(b for b in mid["blocks"] if b["heading"] == "August — running")
+    body = "\n".join(running["lines"])
+    assert "2. " in body and "behind)" in body
+    assert "would, not is" not in body
+    assert body.count("settle") == 1
+
+
+def test_a_correction_posted_since_the_last_gameweek_gets_its_own_block():
+    """§3.9.4 — the message is the record that circulates. An adjusting entry
+    that only ever appeared in a statement nobody opens is the November error
+    that surfaces in May."""
+    calendar = full_season(
+        {1: GW1_POINTS, 2: GW2_POINTS}, managers=MANAGERS, months={1: "AUG", 2: "AUG"}
+    )
+    settlement = settle(MANAGERS, calendar, BUCKETS, expected_gameweeks=38)
+    corrections = [
+        {"type": "correction", "date": "2026-08-20", "affects_gw": 1,
+         "reason": "posted before either gameweek — already announced",
+         "adjustments": {"jack": 100, "sam": -100}},
+        {"type": "correction", "date": "2026-08-26", "affects_gw": 1,
+         "reason": "GW1 tiebreak applied cards before goals conceded",
+         "adjustments": {"jack": 3500, "sam": -3500}},
+    ]
+    kwargs = dict(
+        generated_at="2026-09-01T06:00:00Z", league_name="SuperF", league_id=310479,
+        managers=MANAGERS, teams=TEAMS, events=EVENTS, breaks=[], month_buckets=BUCKETS,
+        fixtures_by_gw={}, pl_table=[], gameweeks=calendar, settlement=settlement,
+        current={"season": "2026/27", "gameweek": 2, "next_gw": 3, "state": "final"},
+        settled_dates=SETTLED_DATES,
+    )
+    payload = build_payload(corrections=corrections, **kwargs)
+    block = next(b for b in payload["summary"]["blocks"] if b["heading"] == "Corrections")
+    assert len(block["lines"]) == 1, block
+    line = block["lines"][0]
+    assert line.startswith("Adjusting entry to GW1, posted Wed 26 Aug: ")
+    assert "GW1 tiebreak applied cards before goals conceded. Jack +RM35, Sam −RM35." in line
+    assert "already announced" not in line
+    assert block["heading"].upper() in payload["summary"]["text"]
+    # The vocabulary guard holds over the new block too.
+    for forbidden in (" won ", " paid ", "collected"):
+        assert forbidden not in payload["summary"]["text"].lower()
+    # No corrections, no block — the card is not padded with an empty heading.
+    clean = build_payload(**kwargs)
+    assert "Corrections" not in [b["heading"] for b in clean["summary"]["blocks"]]
