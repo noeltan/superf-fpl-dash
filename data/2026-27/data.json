@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-04T11:02:14Z",
+ "generated_at": "2026-09-05T10:24:13Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 2,
-  "next_gw": 3,
-  "state": "final"
+  "gameweek": 3,
+  "next_gw": 4,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -1037,11 +1037,11 @@
     "ko": "2026-09-04T19:00:00Z",
     "dh": 4,
     "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 21
    },
    {
@@ -5850,6 +5850,23 @@
   },
   {
    "pos": 5,
+   "team": 14,
+   "p": 3,
+   "w": 1,
+   "d": 2,
+   "l": 0,
+   "gf": 6,
+   "ga": 4,
+   "gd": 2,
+   "pts": 5,
+   "form": [
+    "D",
+    "D",
+    "W"
+   ]
+  },
+  {
+   "pos": 6,
    "team": 4,
    "p": 2,
    "w": 1,
@@ -5865,7 +5882,7 @@
    ]
   },
   {
-   "pos": 6,
+   "pos": 7,
    "team": 17,
    "p": 2,
    "w": 1,
@@ -5881,7 +5898,7 @@
    ]
   },
   {
-   "pos": 7,
+   "pos": 8,
    "team": 9,
    "p": 2,
    "w": 1,
@@ -5897,7 +5914,7 @@
    ]
   },
   {
-   "pos": 8,
+   "pos": 9,
    "team": 13,
    "p": 2,
    "w": 1,
@@ -5913,7 +5930,7 @@
    ]
   },
   {
-   "pos": 9,
+   "pos": 10,
    "team": 5,
    "p": 2,
    "w": 1,
@@ -5929,7 +5946,7 @@
    ]
   },
   {
-   "pos": 10,
+   "pos": 11,
    "team": 16,
    "p": 2,
    "w": 1,
@@ -5945,7 +5962,7 @@
    ]
   },
   {
-   "pos": 11,
+   "pos": 12,
    "team": 20,
    "p": 2,
    "w": 1,
@@ -5961,35 +5978,20 @@
    ]
   },
   {
-   "pos": 12,
+   "pos": 13,
    "team": 12,
-   "p": 2,
+   "p": 3,
    "w": 1,
    "d": 0,
-   "l": 1,
+   "l": 2,
    "gf": 4,
-   "ga": 6,
-   "gd": -2,
+   "ga": 8,
+   "gd": -4,
    "pts": 3,
    "form": [
     "W",
+    "L",
     "L"
-   ]
-  },
-  {
-   "pos": 13,
-   "team": 14,
-   "p": 2,
-   "w": 0,
-   "d": 2,
-   "l": 0,
-   "gf": 4,
-   "ga": 4,
-   "gd": 0,
-   "pts": 2,
-   "form": [
-    "D",
-    "D"
    ]
   },
   {
@@ -7150,7 +7152,7 @@
     ]
    }
   ],
-  "footer": "GW3 deadline: Sat 5 Sep, 01:30 MYT.",
-  "text": "SuperF \u00b7 GW2 settled \u00b7 Mon 31 Aug\n\nGW2\nWay Shoon takes GW2 on 110 pts and is owed RM81.\nSam is second on 108 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nEVERY SCORE\n1. Way Shoon \u2014 110 pts (+RM81)\n2. Sam \u2014 108 pts (+RM29)\n3. Jack \u2014 103 pts (\u2212RM10)\n4. Tian Pin \u2014 103 pts (\u2212RM10)\n5. Soon Lee \u2014 101 pts (\u2212RM10)\n6. Noel \u2014 98 pts (\u2212RM10)\n7. Zahir \u2014 94 pts (\u2212RM10)\n8. Robin \u2014 84 pts (\u2212RM10)\n9. Chris \u2014 83 pts (\u2212RM10)\n10. Wei Hun \u2014 72 pts (\u2212RM10)\n11. Boon \u2014 70 pts (\u2212RM10)\n12. Wei Chen \u2014 62 pts (\u2212RM10)\n13. Calvin \u2014 54 pts (\u2212RM10)\n\nAUGUST \u2014 SETTLED\nAugust is settled over GW1\u2013GW2.\nSam takes the month on 182 pts and is owed RM81.\nSoon Lee is second on 171 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nSEASON SO FAR\n1. Sam \u2014 182 pts\n2. Soon Lee \u2014 171 pts (11 behind)\n3. Way Shoon \u2014 162 pts (20 behind)\nSam leads by 11 after 2 gameweeks.\n\nGW3 deadline: Sat 5 Sep, 01:30 MYT.\n"
+  "footer": "GW4 deadline: Sat 12 Sep, 20:30 MYT.",
+  "text": "SuperF \u00b7 GW2 settled \u00b7 Mon 31 Aug\n\nGW2\nWay Shoon takes GW2 on 110 pts and is owed RM81.\nSam is second on 108 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nEVERY SCORE\n1. Way Shoon \u2014 110 pts (+RM81)\n2. Sam \u2014 108 pts (+RM29)\n3. Jack \u2014 103 pts (\u2212RM10)\n4. Tian Pin \u2014 103 pts (\u2212RM10)\n5. Soon Lee \u2014 101 pts (\u2212RM10)\n6. Noel \u2014 98 pts (\u2212RM10)\n7. Zahir \u2014 94 pts (\u2212RM10)\n8. Robin \u2014 84 pts (\u2212RM10)\n9. Chris \u2014 83 pts (\u2212RM10)\n10. Wei Hun \u2014 72 pts (\u2212RM10)\n11. Boon \u2014 70 pts (\u2212RM10)\n12. Wei Chen \u2014 62 pts (\u2212RM10)\n13. Calvin \u2014 54 pts (\u2212RM10)\n\nAUGUST \u2014 SETTLED\nAugust is settled over GW1\u2013GW2.\nSam takes the month on 182 pts and is owed RM81.\nSoon Lee is second on 171 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nSEASON SO FAR\n1. Sam \u2014 182 pts\n2. Soon Lee \u2014 171 pts (11 behind)\n3. Way Shoon \u2014 162 pts (20 behind)\nSam leads by 11 after 2 gameweeks.\n\nGW4 deadline: Sat 12 Sep, 20:30 MYT.\n"
  }
 }
