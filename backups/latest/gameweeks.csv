@@ -1,40 +1,40 @@
 manager,gw,month,points,hits,chip,did_not_set,won_pot,weekly_rm,running_weekly_rm
 Soon Lee Loo,1,AUG,70,0,bboost,,,29.00,29.00
 Soon Lee Loo,2,AUG,101,0,,,,-10.00,19.00
-Soon Lee Loo,3,SEP,68,0,,,yes,81.00,100.00
+Soon Lee Loo,3,SEP,77,0,,,,29.00,48.00
 Sam Lim,1,AUG,74,0,bboost,,yes,81.00,81.00
 Sam Lim,2,AUG,108,0,,,,29.00,110.00
-Sam Lim,3,SEP,43,0,3xc,,,-10.00,100.00
+Sam Lim,3,SEP,53,0,3xc,,,-10.00,100.00
 Way Shoon Lim,1,AUG,52,0,,,,-10.00,-10.00
 Way Shoon Lim,2,AUG,110,0,,,yes,81.00,71.00
-Way Shoon Lim,3,SEP,54,0,3xc,,,-10.00,61.00
+Way Shoon Lim,3,SEP,61,0,3xc,,,-10.00,61.00
 Jack Siah,1,AUG,58,0,,,,-10.00,-10.00
 Jack Siah,2,AUG,103,0,,,,-10.00,-20.00
-Jack Siah,3,SEP,46,0,3xc,,,-10.00,-30.00
+Jack Siah,3,SEP,61,0,3xc,,,-10.00,-30.00
 Tian Pin Lee,1,AUG,49,0,,,,-10.00,-10.00
 Tian Pin Lee,2,AUG,103,0,,,,-10.00,-20.00
-Tian Pin Lee,3,SEP,48,0,,,,-10.00,-30.00
-Noel Tan,1,AUG,63,0,,,,-10.00,-10.00
-Noel Tan,2,AUG,98,0,,,,-10.00,-20.00
-Noel Tan,3,SEP,36,0,,,,-10.00,-30.00
-Wei Chen Lim,1,AUG,61,0,,,,-10.00,-10.00
-Wei Chen Lim,2,AUG,62,0,,,,-10.00,-20.00
-Wei Chen Lim,3,SEP,59,0,,,,29.00,9.00
+Tian Pin Lee,3,SEP,60,0,,,,-10.00,-30.00
 Christopher Chin,1,AUG,52,0,,,,-10.00,-10.00
 Christopher Chin,2,AUG,83,0,,,,-10.00,-20.00
-Christopher Chin,3,SEP,46,0,,,,-10.00,-30.00
-Robin Ho Ho,1,AUG,60,0,,,,-10.00,-10.00
-Robin Ho Ho,2,AUG,84,0,,,,-10.00,-20.00
-Robin Ho Ho,3,SEP,33,0,,,,-10.00,-30.00
-Wei Hun Wong,1,AUG,60,0,bboost,,,-10.00,-10.00
-Wei Hun Wong,2,AUG,72,0,,,,-10.00,-20.00
-Wei Hun Wong,3,SEP,45,0,3xc,,,-10.00,-30.00
+Christopher Chin,3,SEP,74,0,,,,-10.00,-30.00
+Noel Tan,1,AUG,63,0,,,,-10.00,-10.00
+Noel Tan,2,AUG,98,0,,,,-10.00,-20.00
+Noel Tan,3,SEP,45,0,,,,-10.00,-30.00
+Wei Chen Lim,1,AUG,61,0,,,,-10.00,-10.00
+Wei Chen Lim,2,AUG,62,0,,,,-10.00,-20.00
+Wei Chen Lim,3,SEP,80,0,,,yes,81.00,61.00
 Shaik Zahir,1,AUG,48,0,,,,-10.00,-10.00
 Shaik Zahir,2,AUG,94,0,,,,-10.00,-20.00
-Shaik Zahir,3,SEP,30,0,,,,-10.00,-30.00
+Shaik Zahir,3,SEP,51,0,,,,-10.00,-30.00
+Robin Ho Ho,1,AUG,60,0,,,,-10.00,-10.00
+Robin Ho Ho,2,AUG,84,0,,,,-10.00,-20.00
+Robin Ho Ho,3,SEP,44,0,,,,-10.00,-30.00
+Wei Hun Wong,1,AUG,60,0,bboost,,,-10.00,-10.00
+Wei Hun Wong,2,AUG,72,0,,,,-10.00,-20.00
+Wei Hun Wong,3,SEP,54,0,3xc,,,-10.00,-30.00
 Boon Siang Ng,1,AUG,36,0,,,,-10.00,-10.00
 Boon Siang Ng,2,AUG,70,0,,,,-10.00,-20.00
-Boon Siang Ng,3,SEP,47,0,,,,-10.00,-30.00
+Boon Siang Ng,3,SEP,56,0,,,,-10.00,-30.00
 Calvin Foo,1,AUG,66,0,,,,-10.00,-10.00
 Calvin Foo,2,AUG,54,0,,,,-10.00,-20.00
-Calvin Foo,3,SEP,33,0,wildcard,,,-10.00,-30.00
+Calvin Foo,3,SEP,41,0,wildcard,,,-10.00,-30.00
