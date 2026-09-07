@@ -395,13 +395,45 @@ def build_payload(
             note = copytext.month_opens_note(
                 month, len(bucket_gws), opens_gw, _rm(stake_sen), _rm(stake_sen * n)
             )
+        # Month to date, from the settled gameweeks in the bucket. Without it
+        # the pot card fell back to the last SETTLED month the moment a round
+        # closed: September vanished from the money tab while GW3 sat on the
+        # page above it. Advertised money only — nothing here is accrued.
+        month_totals = {m: 0 for m in ids} if played else {}
+        for gw in played:
+            for manager, score in gameweeks[gw].scores.items():
+                if manager in month_totals and score.active:
+                    month_totals[manager] += score.net_points
+        order = sorted(month_totals, key=lambda m: (-month_totals[m], m))
+        closes_gw = bucket_gws[-1]
         month_current = {
             "month": month,
             "gameweeks": len(bucket_gws),
             "opens_gw": opens_gw,
+            "closes_gw": closes_gw,
+            "played": played,
+            "remaining": len(bucket_gws) - len(played),
             "stake": _rm(stake_sen),
             "pot": _rm(stake_sen * n),
             "net": [_rm(v) for v in nets],
+            "totals": month_totals,
+            "order": order,
+            "gap_to_first": (
+                month_totals[order[0]] - month_totals[order[1]] if len(order) > 1 else 0
+            ),
+            "callout": (
+                copytext.running_month_callout(
+                    month,
+                    _display(managers, order[0]),
+                    month_totals[order[0]],
+                    _rm(nets[0]) if nets else 0,
+                    _display(managers, order[1]) if len(order) > 1 else "-",
+                    month_totals[order[1]] if len(order) > 1 else 0,
+                    len(bucket_gws) - len(played),
+                    closes_gw,
+                )
+                if order else None
+            ),
             "note": note,
         }
 

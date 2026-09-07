@@ -191,6 +191,61 @@ def test_only_complete_months_are_listed(payload):
     assert payload["month_current"]["opens_gw"] == 3
 
 
+def test_a_bucket_nothing_has_settled_in_has_no_standing(payload):
+    """Nothing played in September yet: no order, no callout, an "opens" note."""
+    running = payload["month_current"]
+    assert running["played"] == [] and running["remaining"] == 36
+    assert running["order"] == [] and running["totals"] == {}
+    assert running["callout"] is None
+    assert "opens with GW3" in running["note"]
+
+
+@pytest.fixture
+def september_running():
+    """August settled, GW3 settled, GW4 and GW5 still to play."""
+    buckets = AUGUST + [{"month": "SEP", "gameweeks": [3, 4, 5]},
+                        {"month": "OCT", "gameweeks": list(range(6, 39))}]
+    calendar = full_season(
+        {1: GW1_POINTS, 2: GW2_POINTS, 3: GW1_POINTS},
+        managers=MANAGERS,
+        months={1: "AUG", 2: "AUG", 3: "SEP"},
+    )
+    settlement = settle(MANAGERS, calendar, buckets, expected_gameweeks=38)
+    return build_payload(
+        generated_at="2026-09-07T10:00:00Z",
+        league_name="SuperF",
+        league_id=310479,
+        managers=MANAGERS,
+        teams=TEAMS,
+        events=EVENTS,
+        breaks=[],
+        month_buckets=buckets,
+        fixtures_by_gw={1: [], 2: [], 3: [], 4: []},
+        pl_table=[],
+        gameweeks=calendar,
+        settlement=settlement,
+        current={"season": "2026/27", "gameweek": 3, "next_gw": 4, "state": "final"},
+    )
+
+
+def test_a_running_month_carries_its_standing(september_running):
+    """The pot card must show September once GW3 settles, not fall back to
+    August. Month to date from the settled gameweeks, money said as would."""
+    running = september_running["month_current"]
+    assert running["month"] == "SEP"
+    assert running["played"] == [3] and running["remaining"] == 2
+    assert running["opens_gw"] == 3 and running["closes_gw"] == 5
+    assert running["totals"]["soonlee"] == 72 and running["totals"]["jack"] == 68
+    assert running["order"][:2] == ["soonlee", "jack"]
+    assert running["gap_to_first"] == 4
+    assert running["callout"].startswith("Soon Lee leads the September pot on 72, 4 clear of Jack")
+    assert "would take RM69" in running["callout"]
+    assert "GW5 is final" in running["callout"]
+    assert "1 of 3 gameweeks in" in running["note"]
+    # Still not a settled month: it must not appear where the view says SETTLED.
+    assert [m["month"] for m in september_running["months"]] == ["AUG"]
+
+
 def test_missed_deadline_is_flagged_and_still_charged(payload):
     gw2 = payload["gameweeks"][1]
     assert gw2["scores"]["chris"]["did_not_set"] is True
