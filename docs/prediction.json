@@ -217,7 +217,14 @@
   },
   "reasoning": "Jack Siah tops the projection at 80.4 but every point of it is still to come \u2014 banked 0.0 \u2014 so this is a lead made entirely of promise, resting on a tripled Haaland against Coventry. I'll still back him: MCI at home is the softest fixture left, and he pairs the triple with Cherki and Gvardiol. For second I'm departing from the ranking and taking Shaik Zahir over Calvin Foo. Shaik already has 15.0 banked and captains B.Fernandes (xP 9.7) at Everton, the highest captain projection of the leaders; Calvin's wildcard squad is 78.4 of pure remaining with nothing secured. Structural warning: Soon Lee Loo and Boon Siang Ng sit on 25.0 banked each and pounce if Haaland blanks."
  },
- "result": null,
+ "result": {
+  "actual_first": "soonlee",
+  "actual_second": "weichenlim",
+  "exact_hit": false,
+  "podium_hit": false,
+  "pair_hit": false,
+  "mean_rank_error": 8.5
+ },
  "record": {
   "played": 0,
   "exact": 0,
