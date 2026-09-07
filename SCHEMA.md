@@ -170,9 +170,16 @@ Two things worth stating plainly:
       "callout": "August settled. …" },                                // ← not in §5
   ],
 
-  // ← not in §5. The bucket in play, for the card when no month has settled yet.
-  "month_current": { "month": "SEP", "gameweeks": 3, "opens_gw": 3,
-                     "stake": 15, "pot": 120, "net": [69, 21], "note": "…" },
+  // ← not in §5. The bucket in play. `played` / `totals` / `order` are the
+  // month to date from its settled gameweeks, so the pot card can show the
+  // running standing rather than falling back to the last settled month.
+  // Advertised money only: nothing on a running month is accrued.
+  "month_current": { "month": "SEP", "gameweeks": 3, "opens_gw": 3, "closes_gw": 5,
+                     "played": [3], "remaining": 2,
+                     "stake": 15, "pot": 120, "net": [69, 21],
+                     "totals": { "noel": 45, "soonlee": 77 }, "order": ["soonlee", "noel"],
+                     "gap_to_first": 32, "callout": "Soon Lee leads the September pot …",
+                     "note": "…" },
 ```
 
 `months[]` carries **only complete months** because the view labels the last

@@ -65,6 +65,26 @@ def settled_month_callout(
     )
 
 
+def running_month_callout(
+    month: str, first: str, first_points: int, first_net, second: str,
+    second_points: int, remaining: int, closes_gw: int,
+) -> str:
+    """Copy for a bucket with at least one gameweek settled and more to come.
+
+    The money is projected, never accrued, so it is said as *would* (§3.9.1) —
+    the same sentence the gameweek summary uses, so the card and the message
+    cannot disagree about what the standing means.
+    """
+    margin = first_points - second_points
+    gap = f", {margin} clear of {second}" if margin else f", level with {second}"
+    left = f"{remaining} gameweek{'s' if remaining != 1 else ''} left"
+    return (
+        f"{first} leads the {month_name(month)} pot on {first_points}{gap}, and would "
+        f"take {rm(first_net)} if it held — would, not is. {left}; nothing settles "
+        f"until GW{closes_gw} is final."
+    )
+
+
 def month_opens_note(month: str, gameweeks: int, opens_gw: int, stake, pot) -> str:
     """Copy for a bucket that has not started yet."""
     return (

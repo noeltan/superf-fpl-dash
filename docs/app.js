@@ -1217,6 +1217,37 @@ class Dashboard {
         calloutBg:"var(--tint-warn)",
         foot: "Money shown is what each position would pay if the month ended on these numbers. The round is not closed, so nothing here is accrued — and these are not the final scores: bonus, auto-subs and the vice-captain still have to land."
       };
+    } else if (monthCurrent.order && monthCurrent.order.length) {
+      /* The running month, from the book: at least one of its gameweeks has
+       * settled and the rest have not. Without this branch the card fell back
+       * to the last SETTLED month the moment a round closed — September went
+       * missing from the money tab while GW3 sat on the page above it.
+       * Advertised money, not accrued: nothing on a running month is in the
+       * ledger, and the callout says "would" for that reason (§3.9.1). */
+      const mc = monthCurrent;
+      const max = Math.max.apply(null, mc.order.map(id => mc.totals[id])) || 1;
+      const through = mc.played[mc.played.length - 1];
+      pot = {
+        title: this.monthName(mc.month) + " pot", tag:"RUNNING · " + mc.played.length + " OF " + mc.gameweeks,
+        tagRule:"var(--warn)", tagInk:"var(--warn-ink)",
+        sub: "Month to date through GW" + through + " · " + mc.gameweeks + " gameweeks in the bucket · RM" + mc.stake + " each · 70/30",
+        potLabel: this.rmFlat(mc.pot), prizeLabel: rm(mc.net[0]) + " · " + rm(mc.net[1]),
+        hasBars: true,
+        rows: mc.order.map((id, i) => ({
+          pos: i + 1, name: byId[id].display_name, ink: inkOf(id), weight: wOf(id),
+          width: Math.round(mc.totals[id] / max * 100) + "%", fill: fillOf(id),
+          pts: mc.totals[id], title: byId[id].display_name + " · " + mc.totals[id] + " points this month",
+          money: i === 0 ? rm(mc.net[0]) : i === 1 ? rm(mc.net[1]) : rm(-mc.stake),
+          moneyInk: i < 2 ? "var(--pos)" : "var(--ink-muted)", moneyWeight: i < 2 ? 620 : 450
+        })),
+        isTable: S.potView === "table",
+        isChart: S.potView === "chart" && (!mob || BARS_ON_MOBILE),
+        isList: S.potView === "chart" && mob && !BARS_ON_MOBILE,
+        onView: () => this.setState({ potView: S.potView === "chart" ? "table" : "chart" }),
+        viewLabel: S.potView === "chart" ? "Table view" : (mob && !BARS_ON_MOBILE ? "List view" : "Chart view"),
+        callout: mc.callout, calloutBg:"var(--tint-warn)",
+        foot: "What each position would take if the month ended on these numbers. Nothing is accrued until GW" + mc.closes_gw + " is final."
+      };
     } else if (settledMonth) {
       const max = Math.max.apply(null, Object.keys(settledMonth.totals).map(k => settledMonth.totals[k])) || 1;
       pot = {
