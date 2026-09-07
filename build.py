@@ -4,6 +4,8 @@
     GET /api/bootstrap-static/                     -> 38 events, deadlines, teams
     GET /api/leagues-classic/310479/standings/     -> members + entry_ids
     GET /api/entry/{entry_id}/history/  x N        -> per-GW points, hits, transfers
+    GET /api/entry/{entry_id}/event/{gw}/picks/ x N  -> the squad, once a round stops moving
+    GET /api/event/{gw}/live/                      -> per-player points, to check the history
     GET /api/fixtures/                             -> results -> derive the PL table
     compute weekly / monthly / season ledgers (§3)
     ASSERT sum of balances == 0                    -> fail the build loudly if not
@@ -156,7 +158,7 @@ def settled_date(fixtures: list[dict]) -> str:
     return max(kickoffs).strftime("%Y-%m-%d") if kickoffs else ""
 
 
-def gameweek_snapshot(
+def read_round(
     gw: int,
     managers: list[dict],
     fixtures: list[dict],
@@ -164,35 +166,95 @@ def gameweek_snapshot(
     fetcher: Fetcher,
     now: datetime,
 ) -> dict:
-    """The immutable pruned record for a Final gameweek (§4.2). Written once."""
-    existing = snapshot_mod.load(gw)
-    if existing is not None:
-        fetcher.snapshot_hits += 1
-        return existing
+    """One reading of a round that has stopped moving, in the snapshot's shape.
 
+    Not written. Between full time and FPL closing the round this is what the
+    page shows as provisional; once it agrees with itself it is what gets
+    frozen. Read unfrozen (``final=False``) so nothing lands in the HTTP cache:
+    a copy taken before FPL applied auto-subs must never revalidate with a 304
+    and be frozen as the settled XI.
+    """
     picks = {}
     for manager in managers:
         entry_id = int(manager["entry_id"])
-        payload = fetcher.entry_picks(entry_id, gw, final=True)
+        payload = fetcher.entry_picks(entry_id, gw, final=False)
         if payload and payload.get("picks"):
             picks[entry_id] = payload
-    live = fetcher.event_live(gw, final=True) or {}
-
-    record = snapshot_mod.build(
+    live = fetcher.event_live(gw, final=False) or {}
+    return snapshot_mod.build(
         gw=gw, captured_at=iso_z(now), managers=managers, fixtures=fixtures,
         histories=histories, picks=picks, live=live,
     )
-    snapshot_mod.write(record)
-    return record
+
+
+def gameweek_snapshot(
+    gw: int,
+    managers: list[dict],
+    fixtures: list[dict],
+    histories: dict[int, dict],
+    fetcher: Fetcher,
+    now: datetime,
+) -> tuple[dict | None, bool]:
+    """The immutable pruned record for a Final gameweek (§4.2). Written once.
+
+    Returns ``(record, frozen)``. ``frozen`` is False — and nothing is written
+    — while FPL's account of the round disagrees with itself: every fixture
+    says finished, but the history endpoint has not caught up with the squads
+    and the per-player points (see ``snapshot.inconsistencies``). The caller
+    holds the round provisional and tries again next run. Offline there is
+    nothing to read, so a round with no snapshot is held the same way, which is
+    what keeps the offline rebuild identical to the online one.
+    """
+    existing = snapshot_mod.load(gw, root=fetcher.raw_dir)
+    if existing is not None:
+        fetcher.snapshot_hits += 1
+        return existing, True
+    if fetcher.offline:
+        return None, False
+
+    record = read_round(gw, managers, fixtures, histories, fetcher, now)
+    stale = snapshot_mod.inconsistencies(record, managers)
+    if stale:
+        for row in stale:
+            log.warning(
+                "GW%d: history says %s scored %d, their squad scored %d",
+                gw, row["manager"], row["history"], row["squad"],
+            )
+        log.warning(
+            "GW%d: every fixture is finished but FPL has not closed the round — "
+            "held provisional, nothing frozen", gw,
+        )
+        return record, False
+
+    snapshot_mod.write(record, root=fetcher.raw_dir)
+    return record, True
 
 
 def scores_from_snapshot(
-    record: dict, managers: list[dict]
+    record: dict, managers: list[dict], *, provisional: bool = False
 ) -> dict[str, ManagerScore]:
-    """Rebuild one gameweek's scores and tiebreak stats from the frozen record."""
+    """Rebuild one gameweek's scores and tiebreak stats from the frozen record.
+
+    ``provisional`` reads the same shape before it is frozen: the points come
+    from the squad and the per-player stats, because the history row is the
+    one input that lags the football, and no invariant is enforced — the round
+    is not closed and nothing here is booked.
+    """
     gw = int(record["gw"])
     element_stats = {int(k): v for k, v in record.get("elements", {}).items()}
     scores: dict[str, ManagerScore] = {}
+
+    if not provisional:
+        stale = snapshot_mod.inconsistencies(record, managers)
+        if stale:
+            row = stale[0]
+            raise LedgerError(
+                f"GW{gw}: the frozen snapshot disagrees with itself — {row['manager']!r} is "
+                f"booked {row['history']} points but their squad scored {row['squad']}"
+                + (f" (and {len(stale) - 1} more)" if len(stale) > 1 else "")
+                + ". The history endpoint had not caught up when this was captured. "
+                f"Delete {snapshot_mod.path_for(gw)} and rebuild once FPL has closed the round."
+            )
 
     for manager in managers:
         entry_id = str(manager["entry_id"])
@@ -215,20 +277,31 @@ def scores_from_snapshot(
         # on first sight, so that verdict would never be revisited and would
         # surface as a disputed total in May.
         if did_not_set and (picks or {}).get("picks"):
-            raise LedgerError(
-                f"GW{gw}: {manager['id']!r} (entry {entry_id}) has a squad but no history "
-                "row. Refusing to book them at 0 points — delete "
-                f"{snapshot_mod.path_for(gw)} and rebuild once the API is consistent."
-            )
+            if provisional:
+                did_not_set = False
+            else:
+                raise LedgerError(
+                    f"GW{gw}: {manager['id']!r} (entry {entry_id}) has a squad but no history "
+                    "row. Refusing to book them at 0 points — delete "
+                    f"{snapshot_mod.path_for(gw)} and rebuild once the API is consistent."
+                )
 
         stats = TiebreakStats()
         if picks and element_stats:
             stats = stats_for_xi(starting_xi(picks), element_stats)
 
+        if provisional:
+            points = snapshot_mod.points_from_picks(picks, element_stats)
+            if points is None and row and row.get("points") is not None:
+                points = int(row["points"])
+        else:
+            points = int(row["points"]) if row and row.get("points") is not None else 0
+        meta = row or ((picks or {}).get("entry_history") or {})
+
         scores[manager["id"]] = ManagerScore(
-            points=int(row["points"]) if row and row.get("points") is not None else 0,
-            hits=int((row or {}).get("event_transfers_cost") or 0),
-            transfers=int((row or {}).get("event_transfers") or 0),
+            points=points,
+            hits=int(meta.get("event_transfers_cost") or 0),
+            transfers=int(meta.get("event_transfers") or 0),
             chip=(row or {}).get("chip") or (picks or {}).get("active_chip"),
             did_not_set=did_not_set,
             active=True,
@@ -258,9 +331,25 @@ def build_gameweeks(
         dates[gw] = settled_date(raw_fixtures)
         note = fixture_note(raw_fixtures)
 
+        record = None
         if state == "final":
-            record = gameweek_snapshot(gw, managers, raw_fixtures, histories, fetcher, now)
-            scores = scores_from_snapshot(record, managers)
+            record, frozen = gameweek_snapshot(
+                gw, managers, raw_fixtures, histories, fetcher, now
+            )
+            if not frozen:
+                # Every fixture is finished but FPL has not closed the round:
+                # the history endpoint still disagrees with the squads. Not
+                # Final, whatever the fixtures say — nothing is booked until
+                # the two agree (see snapshot.inconsistencies).
+                state = states[gw] = "provisional"
+        elif state == "provisional" and not fetcher.offline:
+            # The same reading the snapshot will freeze, taken early so the
+            # standing on the page is the squads' points and not the history
+            # endpoint's, which can be a day behind at full time.
+            record = read_round(gw, managers, raw_fixtures, histories, fetcher, now)
+
+        if record is not None:
+            scores = scores_from_snapshot(record, managers, provisional=state != "final")
         else:
             scores = {}
             for manager in managers:
@@ -279,26 +368,26 @@ def build_gameweeks(
                     active=True,
                 )
 
-            # §11.4 — remember who led while the gameweek was provisional, so a
-            # bonus flip can be named permanently once it settles. The history
-            # endpoint already carries live points, so this costs no requests.
-            # The full score map rides along: every match is at full time in
-            # this state, so the pre-bonus points cannot move, and the emitter
-            # publishes the pot standing from this record while FPL confirms.
-            if state == "provisional":
-                live_points = {
-                    m: s.points for m, s in scores.items() if s.points is not None
-                }
-                if live_points:
-                    leader = max(sorted(live_points), key=lambda m: live_points[m])
-                    snapshot_mod.record_provisional_leader(
-                        gw, leader, iso_z(now),
-                        scores={
-                            m: {"points": int(s.points), "hits": int(s.hits)}
-                            for m, s in scores.items()
-                            if s.active and s.points is not None
-                        },
-                    )
+        # §11.4 — remember who led while the gameweek was provisional, so a
+        # bonus flip can be named permanently once it settles. The full score
+        # map rides along: every match is at full time in this state, and the
+        # emitter publishes the pot standing from this record while FPL
+        # confirms. Offline there are no scores to observe and the record on
+        # disk is left as it is.
+        if state == "provisional":
+            live_points = {
+                m: s.points for m, s in scores.items() if s.points is not None
+            }
+            if live_points:
+                leader = max(sorted(live_points), key=lambda m: live_points[m])
+                snapshot_mod.record_provisional_leader(
+                    gw, leader, iso_z(now), root=fetcher.raw_dir,
+                    scores={
+                        m: {"points": int(s.points), "hits": int(s.hits)}
+                        for m, s in scores.items()
+                        if s.active and s.points is not None
+                    },
+                )
 
         gameweeks[gw] = Gameweek(
             gw=gw, month=event["month"], state=state, scores=scores, note=note

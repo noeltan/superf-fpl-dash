@@ -183,6 +183,22 @@ disk forever after. Snapshots are **pruned** to the ~120 players the league
 actually owns (§4.2) — tens of KB per gameweek rather than half a megabyte. A
 steady-state run is about 20 requests.
 
+**A round is frozen only when FPL's account of it agrees with itself.** The
+history endpoint is the one place FPL states a manager's gameweek total, and
+it lags: FPL processes a round in batches, after each day's matches and again
+when it closes the round, and `entry/{id}/history/` only moves with the batch
+while the fixtures, the picks and the per-player points move with the
+football. In GW3 every fixture said `finished` on the Monday morning, the
+snapshot froze, and every history row was still Saturday's — up to 28 points
+short per manager, and the weekly pot booked to the wrong person. So before a
+snapshot is written, every manager's history points are checked against what
+their squad scored (Σ multiplier × points over the post-auto-sub XI, from the
+same record); if any disagree the round is held *provisional*, nothing is
+booked, and the page shows the squads' points until the next run finds the
+two in agreement. A snapshot already on disk that fails the same check stops
+the build with the file to delete, because the book must never settle on a
+row the squad contradicts.
+
 **A fetch failure publishes nothing.** The previous `data.json` stays live and
 ages, which fires the §9.5 stale banner. A stale number that says it is stale
 beats a fresh number built from half an API.

@@ -73,6 +73,69 @@ def prune_elements(live: Mapping, owned: set[int]) -> dict[str, dict]:
     return kept
 
 
+# --- consistency --------------------------------------------------------------
+# The history endpoint is the one place FPL states a manager's gameweek total,
+# and it lags. FPL processes a round in batches — after each day's matches and
+# again when it closes the round — and ``entry/{id}/history/`` only moves with
+# the batch, while ``/event/{gw}/live/``, the picks and the fixtures move with
+# the football. GW3 2026/27: on the Monday morning every fixture said
+# ``finished``, the snapshot froze, and every history row was still Saturday's.
+# A round FPL had not closed settled up to 28 points short per manager and
+# paid the weekly pot to the wrong person.
+#
+# The record carries enough to catch that on its own: each squad with its
+# multipliers, and the points of every player in it. A round is frozen only
+# once what FPL says a manager scored equals what their squad scored.
+
+def points_from_picks(picks_payload: Mapping | None, elements: Mapping) -> int | None:
+    """Gross gameweek points the way FPL totals them: Σ multiplier × points over
+    the XI that stood after auto-subs. Robust whether or not the endpoint has
+    rewritten the multipliers yet, the same way :func:`tiebreak.starting_xi` is.
+    ``None`` when there is no squad to total."""
+    if not picks_payload or not picks_payload.get("picks"):
+        return None
+    by_id = {int(k): v for k, v in (elements or {}).items()}
+    multiplier = {
+        int(p["element"]): int(p.get("multiplier") or 0) for p in picks_payload["picks"]
+    }
+    for sub in picks_payload.get("automatic_subs") or []:
+        out_element, in_element = sub.get("element_out"), sub.get("element_in")
+        if out_element is None or in_element is None:
+            continue
+        if multiplier.get(out_element, 0) > 0 and multiplier.get(in_element, 0) == 0:
+            multiplier[in_element] = multiplier[out_element]
+            multiplier[out_element] = 0
+    total = 0
+    for element, factor in multiplier.items():
+        if factor <= 0:
+            continue
+        total += factor * int((by_id.get(element) or {}).get("total_points", 0) or 0)
+    return total
+
+
+def inconsistencies(record: Mapping, managers: Sequence[Mapping]) -> list[dict]:
+    """Managers whose history row disagrees with their own squad.
+
+    Empty means FPL's account of the round agrees with itself and the record
+    can be frozen. Anything else means the history endpoint has not caught up
+    with the football yet, and the round is not Final whatever the fixtures say.
+    """
+    gw = int(record.get("gw", 0))
+    elements = record.get("elements", {})
+    found: list[dict] = []
+    for manager in managers:
+        if gw < int(manager.get("started_event", 1)):
+            continue
+        entry_id = str(manager["entry_id"])
+        row = record.get("history", {}).get(entry_id)
+        squad = points_from_picks(record.get("picks", {}).get(entry_id), elements)
+        if row is None or row.get("points") is None or squad is None:
+            continue
+        if int(row["points"]) != squad:
+            found.append({"manager": manager["id"], "history": int(row["points"]), "squad": squad})
+    return found
+
+
 def build(
     *,
     gw: int,
