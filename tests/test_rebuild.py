@@ -14,7 +14,7 @@ import json
 
 import pytest
 
-from build import scores_from_snapshot, settled_date
+from build import build_gameweeks, scores_from_snapshot, settled_date
 from conftest import LEAGUE
 from superf import snapshot as snapshot_mod
 from superf.ledger import Gameweek, settle
@@ -45,9 +45,11 @@ LIVE = {
         {"id": 1, "stats": {"minutes": 0, "goals_scored": 0, "assists": 0,
                             "goals_conceded": 0, "yellow_cards": 0, "red_cards": 0,
                             "bps": 0, "total_points": 0}},
+        # Captain: 2 x 19, plus element 3's 5 off the bench, is the 43 noel's
+        # history row books — a snapshot must agree with itself to be frozen.
         {"id": 2, "stats": {"minutes": 90, "goals_scored": 2, "assists": 1,
                             "goals_conceded": 1, "yellow_cards": 1, "red_cards": 0,
-                            "bps": 40, "total_points": 13}},
+                            "bps": 40, "total_points": 19}},
         {"id": 3, "stats": {"minutes": 90, "goals_scored": 0, "assists": 1,
                             "goals_conceded": 1, "yellow_cards": 0, "red_cards": 0,
                             "bps": 20, "total_points": 5}},
@@ -178,6 +180,139 @@ def test_a_squad_with_no_history_row_refuses_to_publish(record):
         scores_from_snapshot(stripped, MANAGERS)
     assert "noel" in str(caught.value)
     assert "no history row" in str(caught.value)
+
+
+# --- the round FPL has not closed --------------------------------------------
+# GW3 2026/27: every fixture said finished on the Monday morning, the snapshot
+# froze, and the history rows were still Saturday's — up to 28 points short per
+# manager, and the weekly pot booked to the wrong person. The record carries
+# the squads and the per-player points, so it can tell on its own.
+
+def test_squad_points_follow_fpl_arithmetic(record):
+    """Captain doubled, bench ignored, auto-subs applied: 2 x 19 + 5."""
+    picks = record["picks"]["1652821"]
+    assert snapshot_mod.points_from_picks(picks, record["elements"]) == 43
+
+
+def test_squad_points_survive_fpl_rewriting_the_multipliers(record):
+    """After processing, FPL rewrites the subbed-in player's multiplier to 1
+    and the subbed-out one's to 0. Either reading totals the same."""
+    rewritten = json.loads(json.dumps(record["picks"]["1652821"]))
+    for pick in rewritten["picks"]:
+        if pick["element"] == 1:
+            pick["multiplier"] = 0
+        if pick["element"] == 3:
+            pick["multiplier"] = 1
+    assert snapshot_mod.points_from_picks(rewritten, record["elements"]) == 43
+
+
+def test_no_squad_means_nothing_to_total():
+    assert snapshot_mod.points_from_picks(None, {}) is None
+    assert snapshot_mod.points_from_picks({"picks": []}, {}) is None
+
+
+def test_a_consistent_record_has_no_inconsistencies(record):
+    assert snapshot_mod.inconsistencies(record, MANAGERS) == []
+
+
+def test_a_lagging_history_row_is_named(record):
+    stale = json.loads(json.dumps(record))
+    stale["history"]["1652821"]["points"] = 36
+    assert snapshot_mod.inconsistencies(stale, MANAGERS) == [
+        {"manager": "noel", "history": 36, "squad": 43}
+    ]
+
+
+def test_a_frozen_snapshot_that_disagrees_with_itself_refuses_to_publish(record):
+    """The book must never settle on a history row the squad contradicts."""
+    stale = json.loads(json.dumps(record))
+    stale["history"]["1652821"]["points"] = 36
+    with pytest.raises(LedgerError) as caught:
+        scores_from_snapshot(stale, MANAGERS)
+    assert "noel" in str(caught.value)
+    assert "36" in str(caught.value) and "43" in str(caught.value)
+
+
+def test_a_provisional_reading_scores_the_squad_not_the_history_row(record):
+    stale = json.loads(json.dumps(record))
+    stale["history"]["1652821"]["points"] = 36
+    scores = scores_from_snapshot(stale, MANAGERS, provisional=True)
+    assert scores["noel"].points == 43
+    assert scores["noel"].stats == TiebreakStats(goals=2, assists=2, conceded=2, cards=1)
+
+
+class _Fetcher:
+    """The two endpoints a round reading needs, answered from the fixtures above."""
+
+    def __init__(self, raw_dir, *, offline=False, history_points=None):
+        self.raw_dir = raw_dir
+        self.offline = offline
+        self.snapshot_hits = 0
+        self.requests = []
+        self.history_points = history_points
+
+    def entry_picks(self, entry_id, gw, *, final=True):
+        self.requests.append(("picks", entry_id, final))
+        return PICKS.get(entry_id)
+
+    def event_live(self, gw, *, final=True):
+        self.requests.append(("live", gw, final))
+        return LIVE
+
+
+EVENTS = [{"gw": 1, "deadline": "2026-08-21T17:30:00Z", "month": "AUG"}]
+
+
+def _histories(noel_points: int) -> dict:
+    histories = {int(k): v for k, v in json.loads(json.dumps(HISTORIES)).items()}
+    histories[1652821]["current"][0]["points"] = noel_points
+    return histories
+
+
+def test_a_round_fpl_has_not_closed_is_held_provisional(tmp_path):
+    """Every fixture finished, history a day behind: nothing frozen, nothing
+    booked, and the page shows the squads' points while it waits."""
+    from superf.fplcal import parse_utc
+
+    fetcher = _Fetcher(tmp_path)
+    gameweeks, states, _ = build_gameweeks(
+        MANAGERS, EVENTS, {1: FIXTURES}, _histories(36), fetcher,
+        parse_utc("2026-08-24T06:00:00Z"),
+    )
+    assert states[1] == "provisional"
+    assert gameweeks[1].is_final is False
+    assert not snapshot_mod.exists(1, root=tmp_path), "a lagging round must not be frozen"
+    assert gameweeks[1].scores["noel"].points == 43
+    assert all(final is False for kind, _, final in fetcher.requests), \
+        "an unfrozen reading must never land in the HTTP cache"
+    observed = snapshot_mod.load_provisional(1, root=tmp_path)
+    assert observed["scores"]["noel"] == {"points": 43, "hits": 0}
+
+
+def test_a_round_that_agrees_with_itself_is_frozen(tmp_path):
+    from superf.fplcal import parse_utc
+
+    fetcher = _Fetcher(tmp_path)
+    gameweeks, states, _ = build_gameweeks(
+        MANAGERS, EVENTS, {1: FIXTURES}, _histories(43), fetcher,
+        parse_utc("2026-08-24T06:00:00Z"),
+    )
+    assert states[1] == "final"
+    assert snapshot_mod.exists(1, root=tmp_path)
+    assert gameweeks[1].scores["noel"].points == 43
+
+
+def test_offline_a_round_with_no_snapshot_is_held_provisional_too(tmp_path):
+    """The online build held it, so the offline rebuild must land on the same
+    state — and it cannot read the API to check."""
+    from superf.fplcal import parse_utc
+
+    fetcher = _Fetcher(tmp_path, offline=True)
+    _, states, _ = build_gameweeks(
+        MANAGERS, EVENTS, {1: FIXTURES}, {}, fetcher, parse_utc("2026-08-24T06:00:00Z"),
+    )
+    assert states[1] == "provisional"
+    assert fetcher.requests == []
 
 
 def test_the_full_ledger_rebuilds_from_snapshots_alone(record):
