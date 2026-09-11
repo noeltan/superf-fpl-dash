@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-10T11:03:27Z",
+ "generated_at": "2026-09-11T11:01:30Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -276,7 +276,7 @@
    "id": "weihun",
    "display_name": "Wei Hun Wong",
    "short": "Wei Hun",
-   "team_name": "Back To Back To Back",
+   "team_name": "Change Name",
    "entry_id": 4590653
   },
   {
@@ -528,22 +528,22 @@
   },
   {
    "gw": 17,
-   "deadline": "2026-12-26T13:30:00Z",
+   "deadline": "2026-12-26T11:00:00Z",
    "month": "DEC"
   },
   {
    "gw": 18,
-   "deadline": "2026-12-30T18:30:00Z",
+   "deadline": "2026-12-29T18:00:00Z",
    "month": "DEC"
   },
   {
    "gw": 19,
-   "deadline": "2027-01-02T13:30:00Z",
+   "deadline": "2027-01-01T18:30:00Z",
    "month": "JAN"
   },
   {
    "gw": 20,
-   "deadline": "2027-01-06T18:30:00Z",
+   "deadline": "2027-01-05T18:00:00Z",
    "month": "JAN"
   },
   {
@@ -653,7 +653,7 @@
   {
    "after_gw": 20,
    "next_gw": 21,
-   "days": 9,
+   "days": 10,
    "resumes": "2027-01-16T13:30:00Z"
   },
   {
@@ -2882,7 +2882,7 @@
    {
     "h": 2,
     "a": 13,
-    "ko": "2026-12-26T15:00:00Z",
+    "ko": "2026-12-26T12:30:00Z",
     "dh": 2,
     "da": 4,
     "hs": null,
@@ -2891,32 +2891,6 @@
     "finished": false,
     "finished_provisional": false,
     "id": 161
-   },
-   {
-    "h": 7,
-    "a": 6,
-    "ko": "2026-12-26T15:00:00Z",
-    "dh": 4,
-    "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 162
-   },
-   {
-    "h": 8,
-    "a": 1,
-    "ko": "2026-12-26T15:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 163
    },
    {
     "h": 9,
@@ -2945,19 +2919,6 @@
     "id": 165
    },
    {
-    "h": 11,
-    "a": 14,
-    "ko": "2026-12-26T15:00:00Z",
-    "dh": 4,
-    "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 166
-   },
-   {
     "h": 12,
     "a": 4,
     "ko": "2026-12-26T15:00:00Z",
@@ -2971,32 +2932,6 @@
     "id": 167
    },
    {
-    "h": 16,
-    "a": 18,
-    "ko": "2026-12-26T15:00:00Z",
-    "dh": 3,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 168
-   },
-   {
-    "h": 17,
-    "a": 15,
-    "ko": "2026-12-26T15:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 169
-   },
-   {
     "h": 19,
     "a": 3,
     "ko": "2026-12-26T15:00:00Z",
@@ -3008,26 +2943,117 @@
     "finished": false,
     "finished_provisional": false,
     "id": 170
-   }
-  ],
-  "18": [
+   },
    {
-    "h": 2,
+    "h": 11,
     "a": 14,
-    "ko": "2026-12-30T20:00:00Z",
+    "ko": "2026-12-26T17:30:00Z",
     "dh": 4,
+    "da": 2,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 166
+   },
+   {
+    "h": 17,
+    "a": 15,
+    "ko": "2026-12-26T20:00:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 169
+   },
+   {
+    "h": 7,
+    "a": 6,
+    "ko": "2026-12-27T14:00:00Z",
+    "dh": 4,
+    "da": 2,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 162
+   },
+   {
+    "h": 16,
+    "a": 18,
+    "ko": "2026-12-27T16:30:00Z",
+    "dh": 3,
     "da": 4,
     "hs": null,
     "as": null,
     "started": false,
     "finished": false,
     "finished_provisional": false,
-    "id": 171
+    "id": 168
+   },
+   {
+    "h": 8,
+    "a": 1,
+    "ko": "2026-12-27T19:00:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 163
+   }
+  ],
+  "18": [
+   {
+    "h": 11,
+    "a": 13,
+    "ko": "2026-12-29T19:30:00Z",
+    "dh": 2,
+    "da": 2,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 176
+   },
+   {
+    "h": 19,
+    "a": 5,
+    "ko": "2026-12-29T19:30:00Z",
+    "dh": 2,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 180
+   },
+   {
+    "h": 9,
+    "a": 15,
+    "ko": "2026-12-29T20:15:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 174
    },
    {
     "h": 7,
     "a": 4,
-    "ko": "2026-12-30T20:00:00Z",
+    "ko": "2026-12-30T19:30:00Z",
     "dh": 3,
     "da": 2,
     "hs": null,
@@ -3040,7 +3066,7 @@
    {
     "h": 8,
     "a": 3,
-    "ko": "2026-12-30T20:00:00Z",
+    "ko": "2026-12-30T19:30:00Z",
     "dh": 3,
     "da": 3,
     "hs": null,
@@ -3051,22 +3077,9 @@
     "id": 173
    },
    {
-    "h": 9,
-    "a": 15,
-    "ko": "2026-12-30T20:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 174
-   },
-   {
     "h": 10,
     "a": 1,
-    "ko": "2026-12-30T20:00:00Z",
+    "ko": "2026-12-30T19:30:00Z",
     "dh": 4,
     "da": 3,
     "hs": null,
@@ -3077,35 +3090,9 @@
     "id": 175
    },
    {
-    "h": 11,
-    "a": 13,
-    "ko": "2026-12-30T20:00:00Z",
-    "dh": 2,
-    "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 176
-   },
-   {
-    "h": 12,
-    "a": 6,
-    "ko": "2026-12-30T20:00:00Z",
-    "dh": 4,
-    "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 177
-   },
-   {
     "h": 16,
     "a": 20,
-    "ko": "2026-12-30T20:00:00Z",
+    "ko": "2026-12-30T19:30:00Z",
     "dh": 2,
     "da": 4,
     "hs": null,
@@ -3118,7 +3105,7 @@
    {
     "h": 17,
     "a": 18,
-    "ko": "2026-12-30T20:00:00Z",
+    "ko": "2026-12-30T19:30:00Z",
     "dh": 3,
     "da": 3,
     "hs": null,
@@ -3129,20 +3116,59 @@
     "id": 179
    },
    {
-    "h": 19,
-    "a": 5,
-    "ko": "2026-12-30T20:00:00Z",
-    "dh": 2,
+    "h": 2,
+    "a": 14,
+    "ko": "2026-12-30T20:15:00Z",
+    "dh": 4,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 171
+   },
+   {
+    "h": 12,
+    "a": 6,
+    "ko": "2026-12-30T20:15:00Z",
+    "dh": 4,
+    "da": 2,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 177
+   }
+  ],
+  "19": [
+   {
+    "h": 13,
+    "a": 9,
+    "ko": "2027-01-01T20:00:00Z",
+    "dh": 3,
     "da": 3,
     "hs": null,
     "as": null,
     "started": false,
     "finished": false,
     "finished_provisional": false,
-    "id": 180
-   }
-  ],
-  "19": [
+    "id": 186
+   },
+   {
+    "h": 5,
+    "a": 16,
+    "ko": "2027-01-02T12:30:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 184
+   },
    {
     "h": 1,
     "a": 12,
@@ -3155,19 +3181,6 @@
     "finished": false,
     "finished_provisional": false,
     "id": 181
-   },
-   {
-    "h": 3,
-    "a": 2,
-    "ko": "2027-01-02T15:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 182
    },
    {
     "h": 4,
@@ -3183,45 +3196,6 @@
     "id": 183
    },
    {
-    "h": 5,
-    "a": 16,
-    "ko": "2027-01-02T15:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 184
-   },
-   {
-    "h": 6,
-    "a": 17,
-    "ko": "2027-01-02T15:00:00Z",
-    "dh": 2,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 185
-   },
-   {
-    "h": 13,
-    "a": 9,
-    "ko": "2027-01-02T15:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 186
-   },
-   {
     "h": 14,
     "a": 7,
     "ko": "2027-01-02T15:00:00Z",
@@ -3233,19 +3207,6 @@
     "finished": false,
     "finished_provisional": false,
     "id": 187
-   },
-   {
-    "h": 15,
-    "a": 19,
-    "ko": "2027-01-02T15:00:00Z",
-    "dh": 3,
-    "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 188
    },
    {
     "h": 18,
@@ -3272,13 +3233,52 @@
     "finished": false,
     "finished_provisional": false,
     "id": 190
+   },
+   {
+    "h": 3,
+    "a": 2,
+    "ko": "2027-01-02T17:30:00Z",
+    "dh": 3,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 182
+   },
+   {
+    "h": 6,
+    "a": 17,
+    "ko": "2027-01-03T14:00:00Z",
+    "dh": 2,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 185
+   },
+   {
+    "h": 15,
+    "a": 19,
+    "ko": "2027-01-03T16:30:00Z",
+    "dh": 3,
+    "da": 5,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 188
    }
   ],
   "20": [
    {
     "h": 1,
     "a": 4,
-    "ko": "2027-01-06T20:00:00Z",
+    "ko": "2027-01-05T19:30:00Z",
     "dh": 3,
     "da": 5,
     "hs": null,
@@ -3291,7 +3291,7 @@
    {
     "h": 5,
     "a": 3,
-    "ko": "2027-01-06T20:00:00Z",
+    "ko": "2027-01-05T19:30:00Z",
     "dh": 3,
     "da": 3,
     "hs": null,
@@ -3302,22 +3302,9 @@
     "id": 192
    },
    {
-    "h": 8,
-    "a": 6,
-    "ko": "2027-01-06T20:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 193
-   },
-   {
     "h": 9,
     "a": 2,
-    "ko": "2027-01-06T20:00:00Z",
+    "ko": "2027-01-05T19:30:00Z",
     "dh": 3,
     "da": 3,
     "hs": null,
@@ -3328,61 +3315,9 @@
     "id": 194
    },
    {
-    "h": 10,
-    "a": 19,
-    "ko": "2027-01-06T20:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 195
-   },
-   {
-    "h": 12,
-    "a": 7,
-    "ko": "2027-01-06T20:00:00Z",
-    "dh": 2,
-    "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 196
-   },
-   {
-    "h": 13,
-    "a": 15,
-    "ko": "2027-01-06T20:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 197
-   },
-   {
-    "h": 16,
-    "a": 17,
-    "ko": "2027-01-06T20:00:00Z",
-    "dh": 2,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 198
-   },
-   {
     "h": 18,
     "a": 11,
-    "ko": "2027-01-06T20:00:00Z",
+    "ko": "2027-01-05T19:30:00Z",
     "dh": 2,
     "da": 3,
     "hs": null,
@@ -3395,7 +3330,7 @@
    {
     "h": 20,
     "a": 14,
-    "ko": "2027-01-06T20:00:00Z",
+    "ko": "2027-01-05T20:15:00Z",
     "dh": 4,
     "da": 3,
     "hs": null,
@@ -3404,6 +3339,71 @@
     "finished": false,
     "finished_provisional": false,
     "id": 200
+   },
+   {
+    "h": 8,
+    "a": 6,
+    "ko": "2027-01-06T19:30:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 193
+   },
+   {
+    "h": 10,
+    "a": 19,
+    "ko": "2027-01-06T19:30:00Z",
+    "dh": 3,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 195
+   },
+   {
+    "h": 12,
+    "a": 7,
+    "ko": "2027-01-06T19:30:00Z",
+    "dh": 2,
+    "da": 2,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 196
+   },
+   {
+    "h": 13,
+    "a": 15,
+    "ko": "2027-01-06T20:15:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 197
+   },
+   {
+    "h": 16,
+    "a": 17,
+    "ko": "2027-01-07T20:00:00Z",
+    "dh": 2,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 198
    }
   ],
   "21": [
