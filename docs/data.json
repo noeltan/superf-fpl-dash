@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-12T10:30:15Z",
+ "generated_at": "2026-09-13T11:33:49Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 3,
-  "next_gw": 4,
-  "state": "final"
+  "gameweek": 4,
+  "next_gw": 5,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -276,7 +276,7 @@
    "id": "weihun",
    "display_name": "Wei Hun Wong",
    "short": "Wei Hun",
-   "team_name": "Change Name",
+   "team_name": "\u54d1\u5df4\u5403\u9ec4\u8fde , \u6709\u82e6\u8bf4\u4e0d\u51fa",
    "entry_id": 4590653
   },
   {
@@ -1169,11 +1169,11 @@
     "ko": "2026-09-12T14:00:00Z",
     "dh": 3,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 31
    },
    {
@@ -1182,11 +1182,11 @@
     "ko": "2026-09-12T14:00:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 32
    },
    {
@@ -1195,11 +1195,11 @@
     "ko": "2026-09-12T14:00:00Z",
     "dh": 2,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 33
    },
    {
@@ -1208,11 +1208,11 @@
     "ko": "2026-09-12T14:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 3,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 34
    },
    {
@@ -1221,11 +1221,11 @@
     "ko": "2026-09-12T14:00:00Z",
     "dh": 2,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 35
    },
    {
@@ -1234,11 +1234,11 @@
     "ko": "2026-09-12T16:30:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 37
    },
    {
@@ -1247,11 +1247,11 @@
     "ko": "2026-09-12T19:00:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 36
    },
    {
@@ -5786,6 +5786,24 @@
  "pl_table": [
   {
    "pos": 1,
+   "team": 1,
+   "p": 4,
+   "w": 4,
+   "d": 0,
+   "l": 0,
+   "gf": 8,
+   "ga": 1,
+   "gd": 7,
+   "pts": 12,
+   "form": [
+    "W",
+    "W",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 2,
    "team": 15,
    "p": 3,
    "w": 3,
@@ -5802,69 +5820,55 @@
    ]
   },
   {
-   "pos": 2,
-   "team": 1,
-   "p": 3,
-   "w": 3,
-   "d": 0,
-   "l": 0,
-   "gf": 6,
-   "ga": 1,
-   "gd": 5,
-   "pts": 9,
-   "form": [
-    "W",
-    "W",
-    "W"
-   ]
-  },
-  {
    "pos": 3,
    "team": 11,
-   "p": 3,
+   "p": 4,
    "w": 2,
-   "d": 1,
+   "d": 2,
    "l": 0,
-   "gf": 3,
-   "ga": 0,
+   "gf": 5,
+   "ga": 2,
    "gd": 3,
-   "pts": 7,
+   "pts": 8,
    "form": [
     "W",
     "W",
+    "D",
     "D"
    ]
   },
   {
    "pos": 4,
    "team": 6,
-   "p": 3,
+   "p": 4,
    "w": 2,
-   "d": 0,
+   "d": 1,
    "l": 1,
-   "gf": 8,
-   "ga": 7,
+   "gf": 10,
+   "ga": 9,
    "gd": 1,
-   "pts": 6,
+   "pts": 7,
    "form": [
     "W",
     "W",
-    "L"
+    "L",
+    "D"
    ]
   },
   {
    "pos": 5,
    "team": 4,
-   "p": 3,
+   "p": 4,
    "w": 1,
-   "d": 2,
+   "d": 3,
    "l": 0,
-   "gf": 5,
-   "ga": 2,
+   "gf": 7,
+   "ga": 4,
    "gd": 3,
-   "pts": 5,
+   "pts": 6,
    "form": [
     "W",
+    "D",
     "D",
     "D"
    ]
@@ -5872,22 +5876,59 @@
   {
    "pos": 6,
    "team": 14,
-   "p": 3,
+   "p": 4,
    "w": 1,
-   "d": 2,
+   "d": 3,
    "l": 0,
    "gf": 6,
    "ga": 4,
    "gd": 2,
-   "pts": 5,
+   "pts": 6,
    "form": [
     "D",
     "D",
-    "W"
+    "W",
+    "D"
    ]
   },
   {
    "pos": 7,
+   "team": 9,
+   "p": 4,
+   "w": 1,
+   "d": 3,
+   "l": 0,
+   "gf": 5,
+   "ga": 3,
+   "gd": 2,
+   "pts": 6,
+   "form": [
+    "W",
+    "D",
+    "D",
+    "D"
+   ]
+  },
+  {
+   "pos": 8,
+   "team": 12,
+   "p": 4,
+   "w": 2,
+   "d": 0,
+   "l": 2,
+   "gf": 7,
+   "ga": 10,
+   "gd": -3,
+   "pts": 6,
+   "form": [
+    "W",
+    "L",
+    "L",
+    "W"
+   ]
+  },
+  {
+   "pos": 9,
    "team": 17,
    "p": 3,
    "w": 1,
@@ -5904,24 +5945,7 @@
    ]
   },
   {
-   "pos": 8,
-   "team": 9,
-   "p": 3,
-   "w": 1,
-   "d": 2,
-   "l": 0,
-   "gf": 5,
-   "ga": 3,
-   "gd": 2,
-   "pts": 5,
-   "form": [
-    "W",
-    "D",
-    "D"
-   ]
-  },
-  {
-   "pos": 9,
+   "pos": 10,
    "team": 13,
    "p": 3,
    "w": 1,
@@ -5938,7 +5962,25 @@
    ]
   },
   {
-   "pos": 10,
+   "pos": 11,
+   "team": 18,
+   "p": 4,
+   "w": 1,
+   "d": 2,
+   "l": 1,
+   "gf": 4,
+   "ga": 4,
+   "gd": 0,
+   "pts": 5,
+   "form": [
+    "L",
+    "D",
+    "D",
+    "W"
+   ]
+  },
+  {
+   "pos": 12,
    "team": 5,
    "p": 3,
    "w": 1,
@@ -5955,7 +5997,7 @@
    ]
   },
   {
-   "pos": 11,
+   "pos": 13,
    "team": 16,
    "p": 3,
    "w": 1,
@@ -5972,119 +6014,90 @@
    ]
   },
   {
-   "pos": 12,
+   "pos": 14,
    "team": 20,
-   "p": 3,
+   "p": 4,
    "w": 1,
    "d": 1,
-   "l": 1,
+   "l": 2,
    "gf": 3,
-   "ga": 3,
-   "gd": 0,
+   "ga": 5,
+   "gd": -2,
    "pts": 4,
    "form": [
     "L",
     "W",
-    "D"
-   ]
-  },
-  {
-   "pos": 13,
-   "team": 8,
-   "p": 3,
-   "w": 1,
-   "d": 0,
-   "l": 2,
-   "gf": 4,
-   "ga": 8,
-   "gd": -4,
-   "pts": 3,
-   "form": [
-    "L",
-    "L",
-    "W"
-   ]
-  },
-  {
-   "pos": 14,
-   "team": 12,
-   "p": 3,
-   "w": 1,
-   "d": 0,
-   "l": 2,
-   "gf": 4,
-   "ga": 8,
-   "gd": -4,
-   "pts": 3,
-   "form": [
-    "W",
-    "L",
+    "D",
     "L"
    ]
   },
   {
    "pos": 15,
    "team": 3,
-   "p": 3,
+   "p": 4,
    "w": 0,
-   "d": 2,
+   "d": 3,
    "l": 1,
-   "gf": 4,
-   "ga": 5,
+   "gf": 6,
+   "ga": 7,
    "gd": -1,
-   "pts": 2,
+   "pts": 3,
    "form": [
     "L",
+    "D",
     "D",
     "D"
    ]
   },
   {
    "pos": 16,
-   "team": 18,
-   "p": 3,
+   "team": 8,
+   "p": 4,
+   "w": 1,
+   "d": 0,
+   "l": 3,
+   "gf": 6,
+   "ga": 11,
+   "gd": -5,
+   "pts": 3,
+   "form": [
+    "L",
+    "L",
+    "W",
+    "L"
+   ]
+  },
+  {
+   "pos": 17,
+   "team": 19,
+   "p": 4,
    "w": 0,
    "d": 2,
-   "l": 1,
-   "gf": 2,
-   "ga": 3,
-   "gd": -1,
+   "l": 2,
+   "gf": 0,
+   "ga": 5,
+   "gd": -5,
    "pts": 2,
    "form": [
+    "L",
     "L",
     "D",
     "D"
    ]
   },
   {
-   "pos": 17,
-   "team": 2,
-   "p": 3,
-   "w": 0,
-   "d": 1,
-   "l": 2,
-   "gf": 0,
-   "ga": 5,
-   "gd": -5,
-   "pts": 1,
-   "form": [
-    "L",
-    "L",
-    "D"
-   ]
-  },
-  {
    "pos": 18,
-   "team": 19,
-   "p": 3,
+   "team": 10,
+   "p": 4,
    "w": 0,
    "d": 1,
-   "l": 2,
-   "gf": 0,
-   "ga": 5,
-   "gd": -5,
+   "l": 3,
+   "gf": 4,
+   "ga": 7,
+   "gd": -3,
    "pts": 1,
    "form": [
+    "L",
     "L",
     "L",
     "D"
@@ -6092,18 +6105,19 @@
   },
   {
    "pos": 19,
-   "team": 10,
-   "p": 3,
+   "team": 2,
+   "p": 4,
    "w": 0,
-   "d": 0,
+   "d": 1,
    "l": 3,
-   "gf": 4,
+   "gf": 1,
    "ga": 7,
-   "gd": -3,
-   "pts": 0,
+   "gd": -6,
+   "pts": 1,
    "form": [
     "L",
     "L",
+    "D",
     "L"
    ]
   },
@@ -7447,7 +7461,7 @@
     ]
    }
   ],
-  "footer": "GW4 deadline: Sat 12 Sep, 20:30 MYT.",
-  "text": "SuperF \u00b7 GW3 settled \u00b7 Sun 6 Sep\n\nGW3\nWei Chen takes GW3 on 80 pts and is owed RM81.\nSoon Lee is second on 77 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nEVERY SCORE\n1. Wei Chen \u2014 80 pts (+RM81)\n2. Soon Lee \u2014 77 pts (+RM29)\n3. Chris \u2014 74 pts (\u2212RM10)\n4. Jack \u2014 61 pts (\u2212RM10) [3xc]\n5. Way Shoon \u2014 61 pts (\u2212RM10) [3xc]\n6. Tian Pin \u2014 60 pts (\u2212RM10)\n7. Boon \u2014 56 pts (\u2212RM10)\n8. Wei Hun \u2014 54 pts (\u2212RM10) [3xc]\n9. Sam \u2014 53 pts (\u2212RM10) [3xc]\n10. Zahir \u2014 51 pts (\u2212RM10)\n11. Noel \u2014 45 pts (\u2212RM10)\n12. Robin \u2014 44 pts (\u2212RM10)\n13. Calvin \u2014 41 pts (\u2212RM10) [wildcard]\n\nSEPTEMBER \u2014 RUNNING\nSeptember is 1 of 3 gameweeks in \u2014 RM195 in the pot, 2 gameweeks left.\n1. Wei Chen \u2014 80 pts\n2. Soon Lee \u2014 77 pts\n3. Chris \u2014 74 pts\nWei Chen would take RM121.50 if it held \u2014 would, not is. Nothing settles until GW5 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 248 pts\n2. Sam \u2014 235 pts (13 behind)\n3. Way Shoon \u2014 223 pts (25 behind)\nSoon Lee leads by 13 after 3 gameweeks.\n\nGW4 deadline: Sat 12 Sep, 20:30 MYT.\n"
+  "footer": "GW5 deadline: Sat 19 Sep, 01:30 MYT.",
+  "text": "SuperF \u00b7 GW3 settled \u00b7 Sun 6 Sep\n\nGW3\nWei Chen takes GW3 on 80 pts and is owed RM81.\nSoon Lee is second on 77 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nEVERY SCORE\n1. Wei Chen \u2014 80 pts (+RM81)\n2. Soon Lee \u2014 77 pts (+RM29)\n3. Chris \u2014 74 pts (\u2212RM10)\n4. Jack \u2014 61 pts (\u2212RM10) [3xc]\n5. Way Shoon \u2014 61 pts (\u2212RM10) [3xc]\n6. Tian Pin \u2014 60 pts (\u2212RM10)\n7. Boon \u2014 56 pts (\u2212RM10)\n8. Wei Hun \u2014 54 pts (\u2212RM10) [3xc]\n9. Sam \u2014 53 pts (\u2212RM10) [3xc]\n10. Zahir \u2014 51 pts (\u2212RM10)\n11. Noel \u2014 45 pts (\u2212RM10)\n12. Robin \u2014 44 pts (\u2212RM10)\n13. Calvin \u2014 41 pts (\u2212RM10) [wildcard]\n\nSEPTEMBER \u2014 RUNNING\nSeptember is 1 of 3 gameweeks in \u2014 RM195 in the pot, 2 gameweeks left.\n1. Wei Chen \u2014 80 pts\n2. Soon Lee \u2014 77 pts\n3. Chris \u2014 74 pts\nWei Chen would take RM121.50 if it held \u2014 would, not is. Nothing settles until GW5 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 248 pts\n2. Sam \u2014 235 pts (13 behind)\n3. Way Shoon \u2014 223 pts (25 behind)\nSoon Lee leads by 13 after 3 gameweeks.\n\nGW5 deadline: Sat 19 Sep, 01:30 MYT.\n"
  }
 }
