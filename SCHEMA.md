@@ -137,7 +137,7 @@ Two things worth stating plainly:
     "leader": "sam", "runner_up": "jack", "margin": 4,
     "pot": 130,                        // RM, advertised weekly pot
     "net": [81, 29],                   // RM, what 1st/2nd would take — advertised, not accrued
-    "scores": { "sam": { "points": 71, "hits": 0 } },
+    "scores": { "sam": { "points": 71, "hits": 0, "chip": null } },
     "order": ["sam", "jack"],          // points desc, then manager id
 
     // The month bucket holding this round, carried to date: settled gameweeks
@@ -151,6 +151,23 @@ Two things worth stating plainly:
       "stake": 10, "pot": 130, "net": [81, 29],
       "totals": { "sam": 71 },
       "order": ["sam", "jack"]
+    },
+
+    // The season standing with this round on top of the book. The league
+    // table shows this while the round is provisional, because a table that
+    // still says "after GW3" on the Tuesday after GW4 was played reads as
+    // broken, not as careful. Settled totals plus this round's full-time net
+    // points (points minus hits), ordered by points alone — the §3.5 ladder
+    // only runs on a settled round. `rank_prev` is the settled rank, the
+    // position each manager holds in the book right now, so the movement
+    // arrows say what this round would do to it. Accrued money and weeks won
+    // stay settled: nothing here is booked.
+    "season": {
+      "round": { "sam": 71 },          // this round's net points per manager
+      "totals": { "sam": 271 },        // settled total + round
+      "order": ["sam", "jack"],        // totals desc, then manager id
+      "behind": { "sam": 0 },          // gap to the provisional leader
+      "rank_prev": { "sam": 2 }        // settled position, before this round
     }
   },
 ```

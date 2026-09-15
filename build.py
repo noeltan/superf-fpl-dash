@@ -383,7 +383,7 @@ def build_gameweeks(
                 snapshot_mod.record_provisional_leader(
                     gw, leader, iso_z(now), root=fetcher.raw_dir,
                     scores={
-                        m: {"points": int(s.points), "hits": int(s.hits)}
+                        m: {"points": int(s.points), "hits": int(s.hits), "chip": s.chip}
                         for m, s in scores.items()
                         if s.active and s.points is not None
                     },

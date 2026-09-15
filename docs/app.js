@@ -735,10 +735,28 @@ class Dashboard {
      * a page whose other seven columns are money; weeks won is the one that
      * explains the accrued figure sitting next to it.
      */
+    /* A round at full time but not closed sits on top of the book here, not
+     * beside it. Every match of GW4 was played on the Monday and the table
+     * went on saying "after GW3" until FPL closed the round on the Tuesday
+     * — which reads as broken, not as careful. So while the round is
+     * provisional the rows come from `provisional.season`: the settled totals
+     * with the full-time round on top, ordered by points, with the movement
+     * arrows measured from the settled rank. The money columns stay settled,
+     * because nothing is booked until the round closes, and the subtitle says
+     * so. The view still adds nothing up: every figure arrives from data.json.
+     */
+    const PBS = isProv && D.provisional && D.provisional.gw === cur.gameweek &&
+      D.provisional.season && D.provisional.season.order && D.provisional.season.order.length
+      ? D.provisional.season : null;
+    const tableGW = PBS ? cur.gameweek : (lastGW ? lastGW.gw : 0);
+    const tableOrder = PBS ? PBS.order : D.rank;
     const standings = {
-      sub: isPre ? N + " managers signed up" : "Overall points after GW" + D.settled.through_gw +
-        (isLive || isProv ? " — settled figures, GW" + cur.gameweek + " is live below" : ""),
-      empty: isPre, hasRows: !isPre,
+      sub: isPre ? N + " managers signed up"
+        : PBS ? "Overall points after GW" + cur.gameweek + " — provisional: every match played, " +
+          "FPL has not confirmed bonus. Accrued and ★ are settled through GW" + D.settled.through_gw + "."
+        : "Overall points after GW" + D.settled.through_gw +
+          (isLive || isProv ? " — settled figures, GW" + cur.gameweek + " is live below" : ""),
+      empty: isPre && !PBS, hasRows: !isPre || !!PBS,
       /* "Nobody has scored yet" is written for pre-season, and stops being
        * true the moment a ball is kicked — mid-GW1 the live table below this
        * card is showing real points. This card is the book of record and only
@@ -754,22 +772,28 @@ class Dashboard {
         : "Standings only fill up after GW1 final. First RM" + D.stakes.weekly.pot +
           " weekly pot settle same night, so don't forget to set team ah.",
       signups: D.managers.map(m => ({ name:m.display_name, team:m.team_name, ink:inkOf(m.id), weight:wOf(m.id) })),
-      head: [ {label:"#",align:"left"}, {label:"Manager",align:"left"}, {label:"GW" + (lastGW ? lastGW.gw : ""),align:"right"},
+      head: [ {label:"#",align:"left"}, {label:"Manager",align:"left"}, {label:"GW" + (tableGW || ""),align:"right"},
               {label:"Total",align:"right"}, {label:"Gap",align:"right"}, {label:"Accrued",align:"right"},
               {label:"★ Won",align:"right"}, {label:"Chip",align:"left"} ],
-      rows: D.rank.map((id, i) => {
-        const sc = lastGW ? lastGW.scores[id] : null;
+      rows: tableOrder.map((id, i) => {
+        const sc = PBS ? null : (lastGW ? lastGW.scores[id] : null);
+        const ps = PBS && D.provisional.scores ? D.provisional.scores[id] : null;
         const dns = sc ? sc.did_not_set : false;
         const pnl = D.ledger[id].accrued;
         /* Movement is places gained since the gameweek before last, which is
          * what `rank_prev` holds. It is empty pre-season and on GW1, where
-         * there is no "before" to have moved from. */
-        const prev = D.rank_prev ? D.rank_prev[id] : null;
-        const mv = (prev && !isPre) ? prev - (i + 1) : 0;
+         * there is no "before" to have moved from. On a provisional round the
+         * "before" is the settled rank, so the arrow is what this round would
+         * do to the book. */
+        const prev = PBS ? PBS.rank_prev[id] : (D.rank_prev ? D.rank_prev[id] : null);
+        const mv = (prev && (PBS || !isPre)) ? prev - (i + 1) : 0;
         const wonN = D.weeks_won ? D.weeks_won[id] : 0;
-        const chip = sc && sc.chip ? this.chipLabel(sc.chip) : "";
-        const gap = D.behind[id] === 0 ? "—" : "\u2212" + D.behind[id];
-        const gwTxt = dns ? "0 ✕" : (sc && sc.points !== null && sc.points !== undefined ? sc.points : "—");
+        const chipRaw = PBS ? (ps ? ps.chip : null) : (sc ? sc.chip : null);
+        const chip = chipRaw ? this.chipLabel(chipRaw) : "";
+        const behindN = PBS ? PBS.behind[id] : D.behind[id];
+        const gap = behindN === 0 ? "—" : "\u2212" + behindN;
+        const gwTxt = PBS ? (PBS.round[id] !== null && PBS.round[id] !== undefined ? PBS.round[id] : "—")
+          : dns ? "0 ✕" : (sc && sc.points !== null && sc.points !== undefined ? sc.points : "—");
         const pnlTxt = this.sen(pnl);
         const pnlInk = pnl > 0 ? "var(--good)" : pnl < 0 ? "var(--crit)" : "var(--ink-2)";
         const open = S.openRow === id;
@@ -782,7 +806,7 @@ class Dashboard {
             : mv < 0 ? "down " + (-mv) + " place" + (mv < -1 ? "s" : "") : "no change",
           gw: gwTxt,
           gwInk: dns ? "var(--crit)" : "var(--ink-1)",
-          total: D.totals[id], gap,
+          total: PBS ? PBS.totals[id] : D.totals[id], gap,
           wonTxt: wonN ? "★ " + wonN : "—",
           chip: chip ? "◆ " + chip : "—",
           chipInk: chip ? "var(--accent)" : "var(--ink-muted)",
@@ -802,7 +826,8 @@ class Dashboard {
           ]
         };
       }),
-      foot: "★ counts weekly pots won. Miss the deadline also never mind — FPL roll your last team over and it score as usual. 0 ✕ only show up if somebody never enter a team at all, and that one still pay RM" +
+      foot: (PBS ? "GW" + cur.gameweek + " is provisional: confirmed bonus, auto-subs and the vice-captain all land when FPL closes the round, and the order can still move. Nothing from it is in the book yet. " : "") +
+        "★ counts weekly pots won. Miss the deadline also never mind — FPL roll your last team over and it score as usual. 0 ✕ only show up if somebody never enter a team at all, and that one still pay RM" +
         D.stakes.weekly.stake + "."
     };
 

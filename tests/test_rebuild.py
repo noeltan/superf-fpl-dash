@@ -286,7 +286,7 @@ def test_a_round_fpl_has_not_closed_is_held_provisional(tmp_path):
     assert all(final is False for kind, _, final in fetcher.requests), \
         "an unfrozen reading must never land in the HTTP cache"
     observed = snapshot_mod.load_provisional(1, root=tmp_path)
-    assert observed["scores"]["noel"] == {"points": 43, "hits": 0}
+    assert observed["scores"]["noel"] == {"points": 43, "hits": 0, "chip": None}
 
 
 def test_a_round_that_agrees_with_itself_is_frozen(tmp_path):

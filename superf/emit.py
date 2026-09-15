@@ -520,7 +520,11 @@ def build_payload(
     ):
         raw_scores = provisional.get("scores") or {}
         prov_scores = {
-            m: {"points": int(v.get("points", 0)), "hits": int(v.get("hits", 0))}
+            m: {
+                "points": int(v.get("points", 0)),
+                "hits": int(v.get("hits", 0)),
+                "chip": v.get("chip"),
+            }
             for m, v in raw_scores.items()
             if m in ids
         }
@@ -562,6 +566,34 @@ def build_payload(
                 "order": sorted(month_totals, key=lambda m: (-month_totals[m], m)),
             }
 
+        # The season standing with this round on top of the book. The league
+        # table reads this while the round is provisional, because a table
+        # that still says "after GW3" on the Tuesday after GW4 was played
+        # reads as broken, not as careful. Same caveats as everything else in
+        # this block: the settled totals plus this round's full-time net
+        # points, ordered by points alone (the §3.5 ladder only runs on a
+        # settled round), and `rank_prev` is the settled rank — the position
+        # each manager holds in the book right now — so the movement arrows
+        # say what this round would do to it.
+        prov_season = None
+        if prov_scores:
+            season_totals = {
+                m: totals_points[m] + prov_scores[m]["points"] - prov_scores[m]["hits"]
+                for m in prov_scores
+            }
+            season_order = sorted(season_totals, key=lambda m: (-season_totals[m], m))
+            top = season_totals[season_order[0]]
+            prov_season = {
+                "round": {
+                    m: prov_scores[m]["points"] - prov_scores[m]["hits"]
+                    for m in prov_scores
+                },
+                "totals": season_totals,
+                "order": season_order,
+                "behind": {m: top - season_totals[m] for m in prov_scores},
+                "rank_prev": {m: i + 1 for i, m in enumerate(rank) if m in prov_scores},
+            }
+
         provisional_block = {
             "gw": prov_gw,
             "observed_at": provisional.get("observed_at"),
@@ -579,6 +611,7 @@ def build_payload(
             "scores": prov_scores,
             "order": order,
             "month": prov_month,
+            "season": prov_season,
         }
 
     podiums, weeks_won = _place_counts(settlement, ids)
