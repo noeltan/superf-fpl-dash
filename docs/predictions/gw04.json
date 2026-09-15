@@ -211,7 +211,14 @@
   },
   "reasoning": "No model call this week, so this is the projection ranking as it stands: Jack Siah ahead of Shaik Zahir. Confidence is low by default when nothing has looked at the fixtures."
  },
- "result": null,
+ "result": {
+  "actual_first": "weihun",
+  "actual_second": "jack",
+  "exact_hit": false,
+  "podium_hit": true,
+  "pair_hit": false,
+  "mean_rank_error": 2.0
+ },
  "record": {
   "played": 0,
   "exact": 0,
