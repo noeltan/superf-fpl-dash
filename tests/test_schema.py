@@ -307,9 +307,31 @@ def test_the_provisional_round_is_published_for_display():
     assert block["runner_up"] == "jack"
     assert block["margin"] == 4
     assert block["order"] == ["sam", "jack", "noel"]
-    assert block["scores"]["jack"] == {"points": 67, "hits": 4}
+    assert block["scores"]["jack"] == {"points": 67, "hits": 4, "chip": None}
     # RM10 a head over the managers with a recorded score.
     assert block["pot"] == 30
+
+
+def test_the_provisional_round_carries_the_season_standing():
+    """The league table reads this while the round is provisional, so the
+    page does not go on saying "after GW2" for a day after GW3 was played.
+    Settled totals plus the round's net points, ordered by points; the
+    movement arrows measure from the settled rank."""
+    payload = _payload_with_provisional(PROVISIONAL_RECORD)
+    season = payload["provisional"]["season"]
+    settled = payload["totals"]
+    assert season["round"] == {"sam": 71, "jack": 63, "noel": 40}   # jack took a 4-point hit
+    assert season["totals"] == {m: settled[m] + season["round"][m] for m in season["round"]}
+    leader = season["order"][0]
+    assert season["totals"][leader] == max(season["totals"].values())
+    assert season["behind"][leader] == 0
+    assert all(
+        season["behind"][m] == season["totals"][leader] - season["totals"][m]
+        for m in season["round"]
+    )
+    assert season["rank_prev"] == {m: payload["rank"].index(m) + 1 for m in season["round"]}
+    # Money is untouched: nothing from the round is in the book.
+    assert payload["settled"]["through_gw"] == 2
 
 
 def test_the_provisional_round_carries_its_month_to_date():
