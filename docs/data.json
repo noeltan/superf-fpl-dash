@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-18T10:59:42Z",
+ "generated_at": "2026-09-19T10:43:21Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 4,
-  "next_gw": 5,
-  "state": "final"
+  "gameweek": 5,
+  "next_gw": 6,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -31,16 +31,16 @@
   },
   "monthly": {
    "stake_per_gw": 5,
-   "gameweeks": 3,
-   "stake": 15,
-   "pot": 195,
+   "gameweeks": 4,
+   "stake": 20,
+   "pot": 260,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    121.5,
-    43.5
+    162,
+    58
    ]
   },
   "season": {
@@ -1301,11 +1301,11 @@
     "ko": "2026-09-18T19:00:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 3,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 41
    },
    {
@@ -5822,6 +5822,25 @@
   },
   {
    "pos": 3,
+   "team": 4,
+   "p": 5,
+   "w": 2,
+   "d": 3,
+   "l": 0,
+   "gf": 10,
+   "ga": 4,
+   "gd": 6,
+   "pts": 9,
+   "form": [
+    "W",
+    "D",
+    "D",
+    "D",
+    "W"
+   ]
+  },
+  {
+   "pos": 4,
    "team": 13,
    "p": 4,
    "w": 2,
@@ -5839,7 +5858,7 @@
    ]
   },
   {
-   "pos": 4,
+   "pos": 5,
    "team": 11,
    "p": 4,
    "w": 2,
@@ -5857,7 +5876,7 @@
    ]
   },
   {
-   "pos": 5,
+   "pos": 6,
    "team": 5,
    "p": 4,
    "w": 2,
@@ -5875,39 +5894,22 @@
    ]
   },
   {
-   "pos": 6,
+   "pos": 7,
    "team": 6,
-   "p": 4,
+   "p": 5,
    "w": 2,
    "d": 1,
-   "l": 1,
+   "l": 2,
    "gf": 10,
-   "ga": 9,
-   "gd": 1,
+   "ga": 12,
+   "gd": -2,
    "pts": 7,
    "form": [
     "W",
     "W",
     "L",
-    "D"
-   ]
-  },
-  {
-   "pos": 7,
-   "team": 4,
-   "p": 4,
-   "w": 1,
-   "d": 3,
-   "l": 0,
-   "gf": 7,
-   "ga": 4,
-   "gd": 3,
-   "pts": 6,
-   "form": [
-    "W",
     "D",
-    "D",
-    "D"
+    "L"
    ]
   },
   {
@@ -6714,54 +6716,23 @@
   }
  ],
  "month_current": {
-  "month": "SEP",
-  "gameweeks": 3,
-  "opens_gw": 3,
-  "closes_gw": 5,
-  "played": [
-   3,
-   4
-  ],
-  "remaining": 1,
-  "stake": 15,
-  "pot": 195,
+  "month": "OCT",
+  "gameweeks": 4,
+  "opens_gw": 6,
+  "closes_gw": 9,
+  "played": [],
+  "remaining": 4,
+  "stake": 20,
+  "pot": 260,
   "net": [
-   121.5,
-   43.5
+   162,
+   58
   ],
-  "totals": {
-   "noel": 118,
-   "jack": 160,
-   "sam": 127,
-   "weihun": 154,
-   "soonlee": 151,
-   "boonsiang": 116,
-   "tianpin": 122,
-   "chris": 147,
-   "calvinfoo": 128,
-   "shaikzahir": 127,
-   "weichenlim": 152,
-   "wayshoonlim": 140,
-   "robinhoho": 84
-  },
-  "order": [
-   "jack",
-   "weihun",
-   "weichenlim",
-   "soonlee",
-   "chris",
-   "wayshoonlim",
-   "calvinfoo",
-   "sam",
-   "shaikzahir",
-   "tianpin",
-   "noel",
-   "boonsiang",
-   "robinhoho"
-  ],
-  "gap_to_first": 6,
-  "callout": "Jack leads the September pot on 160, 6 clear of Wei Hun, and would take RM121.50 if it held \u2014 would, not is. 1 gameweek left; nothing settles until GW5 is final.",
-  "note": "September is 2 of 3 gameweeks in, RM195 in the pot. Nothing settles until the last one is final."
+  "totals": {},
+  "order": [],
+  "gap_to_first": 0,
+  "callout": null,
+  "note": "October opens with GW6 \u2014 RM20 each, RM260 in the pot, 4 gameweeks to decide it."
  },
  "totals": {
   "noel": 279,
@@ -7707,7 +7678,7 @@
     ]
    }
   ],
-  "footer": "GW5 deadline: Sat 19 Sep, 01:30 MYT.",
-  "text": "SuperF \u00b7 GW4 settled \u00b7 Mon 14 Sep\n\nGW4\nWei Hun takes GW4 on 100 pts and is owed RM81.\nJack is second on 99 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nEVERY SCORE\n1. Wei Hun \u2014 100 pts (+RM81) [wildcard]\n2. Jack \u2014 99 pts (+RM29)\n3. Calvin \u2014 87 pts (\u2212RM10)\n4. Way Shoon \u2014 79 pts (\u2212RM10)\n5. Zahir \u2014 76 pts (\u2212RM10)\n6. Sam \u2014 74 pts (\u2212RM10)\n7. Soon Lee \u2014 74 pts (\u2212RM10)\n8. Chris \u2014 73 pts (\u2212RM10)\n9. Noel \u2014 73 pts (\u2212RM10)\n10. Wei Chen \u2014 72 pts (\u2212RM10)\n11. Tian Pin \u2014 62 pts (\u2212RM10)\n12. Boon \u2014 60 pts (\u2212RM10) [wildcard]\n13. Robin \u2014 40 pts (\u2212RM10)\n\nSEPTEMBER \u2014 RUNNING\nSeptember is 2 of 3 gameweeks in \u2014 RM195 in the pot, 1 gameweek left.\n1. Jack \u2014 160 pts\n2. Wei Hun \u2014 154 pts\n3. Wei Chen \u2014 152 pts\nJack would take RM121.50 if it held \u2014 would, not is. Nothing settles until GW5 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 322 pts\n2. Jack \u2014 321 pts (1 behind)\n3. Sam \u2014 309 pts (13 behind)\nSoon Lee leads by 1 after 4 gameweeks.\n\nGW5 deadline: Sat 19 Sep, 01:30 MYT.\n"
+  "footer": "GW6 deadline: Sat 10 Oct, 18:00 MYT.",
+  "text": "SuperF \u00b7 GW4 settled \u00b7 Mon 14 Sep\n\nGW4\nWei Hun takes GW4 on 100 pts and is owed RM81.\nJack is second on 99 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\n\nEVERY SCORE\n1. Wei Hun \u2014 100 pts (+RM81) [wildcard]\n2. Jack \u2014 99 pts (+RM29)\n3. Calvin \u2014 87 pts (\u2212RM10)\n4. Way Shoon \u2014 79 pts (\u2212RM10)\n5. Zahir \u2014 76 pts (\u2212RM10)\n6. Sam \u2014 74 pts (\u2212RM10)\n7. Soon Lee \u2014 74 pts (\u2212RM10)\n8. Chris \u2014 73 pts (\u2212RM10)\n9. Noel \u2014 73 pts (\u2212RM10)\n10. Wei Chen \u2014 72 pts (\u2212RM10)\n11. Tian Pin \u2014 62 pts (\u2212RM10)\n12. Boon \u2014 60 pts (\u2212RM10) [wildcard]\n13. Robin \u2014 40 pts (\u2212RM10)\n\nSEPTEMBER \u2014 RUNNING\nSeptember is 2 of 3 gameweeks in \u2014 RM195 in the pot, 1 gameweek left.\n1. Jack \u2014 160 pts\n2. Wei Hun \u2014 154 pts\n3. Wei Chen \u2014 152 pts\nJack would take RM121.50 if it held \u2014 would, not is. Nothing settles until GW5 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 322 pts\n2. Jack \u2014 321 pts (1 behind)\n3. Sam \u2014 309 pts (13 behind)\nSoon Lee leads by 1 after 4 gameweeks.\n\nGW6 deadline: Sat 10 Oct, 18:00 MYT.\n"
  }
 }
