@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-19T10:43:21Z",
+ "generated_at": "2026-09-20T11:06:02Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -1314,11 +1314,11 @@
     "ko": "2026-09-19T11:30:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 3,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 48
    },
    {
@@ -1327,11 +1327,11 @@
     "ko": "2026-09-19T14:00:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 3,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 42
    },
    {
@@ -1340,11 +1340,11 @@
     "ko": "2026-09-19T14:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 43
    },
    {
@@ -1353,11 +1353,11 @@
     "ko": "2026-09-19T14:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 46
    },
    {
@@ -1366,11 +1366,11 @@
     "ko": "2026-09-19T16:30:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 47
    },
    {
@@ -5786,24 +5786,6 @@
  "pl_table": [
   {
    "pos": 1,
-   "team": 1,
-   "p": 4,
-   "w": 4,
-   "d": 0,
-   "l": 0,
-   "gf": 8,
-   "ga": 1,
-   "gd": 7,
-   "pts": 12,
-   "form": [
-    "W",
-    "W",
-    "W",
-    "W"
-   ]
-  },
-  {
-   "pos": 2,
    "team": 15,
    "p": 4,
    "w": 4,
@@ -5821,7 +5803,45 @@
    ]
   },
   {
+   "pos": 2,
+   "team": 1,
+   "p": 5,
+   "w": 4,
+   "d": 0,
+   "l": 1,
+   "gf": 8,
+   "ga": 4,
+   "gd": 4,
+   "pts": 12,
+   "form": [
+    "W",
+    "W",
+    "W",
+    "W",
+    "L"
+   ]
+  },
+  {
    "pos": 3,
+   "team": 5,
+   "p": 5,
+   "w": 3,
+   "d": 1,
+   "l": 1,
+   "gf": 16,
+   "ga": 5,
+   "gd": 11,
+   "pts": 10,
+   "form": [
+    "W",
+    "L",
+    "D",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 4,
    "team": 4,
    "p": 5,
    "w": 2,
@@ -5840,7 +5860,26 @@
    ]
   },
   {
-   "pos": 4,
+   "pos": 5,
+   "team": 9,
+   "p": 5,
+   "w": 2,
+   "d": 3,
+   "l": 0,
+   "gf": 6,
+   "ga": 3,
+   "gd": 3,
+   "pts": 9,
+   "form": [
+    "W",
+    "D",
+    "D",
+    "D",
+    "W"
+   ]
+  },
+  {
+   "pos": 6,
    "team": 13,
    "p": 4,
    "w": 2,
@@ -5858,43 +5897,45 @@
    ]
   },
   {
-   "pos": 5,
+   "pos": 7,
    "team": 11,
-   "p": 4,
+   "p": 5,
    "w": 2,
    "d": 2,
-   "l": 0,
-   "gf": 5,
-   "ga": 2,
-   "gd": 3,
+   "l": 1,
+   "gf": 6,
+   "ga": 4,
+   "gd": 2,
    "pts": 8,
    "form": [
     "W",
     "W",
     "D",
-    "D"
+    "D",
+    "L"
    ]
   },
   {
-   "pos": 6,
-   "team": 5,
-   "p": 4,
+   "pos": 8,
+   "team": 17,
+   "p": 5,
    "w": 2,
-   "d": 1,
+   "d": 2,
    "l": 1,
-   "gf": 13,
-   "ga": 5,
-   "gd": 8,
-   "pts": 7,
+   "gf": 9,
+   "ga": 9,
+   "gd": 0,
+   "pts": 8,
    "form": [
-    "W",
-    "L",
     "D",
+    "W",
+    "D",
+    "L",
     "W"
    ]
   },
   {
-   "pos": 7,
+   "pos": 9,
    "team": 6,
    "p": 5,
    "w": 2,
@@ -5913,7 +5954,7 @@
    ]
   },
   {
-   "pos": 8,
+   "pos": 10,
    "team": 14,
    "p": 4,
    "w": 1,
@@ -5931,74 +5972,40 @@
    ]
   },
   {
-   "pos": 9,
-   "team": 9,
-   "p": 4,
-   "w": 1,
-   "d": 3,
-   "l": 0,
-   "gf": 5,
-   "ga": 3,
-   "gd": 2,
-   "pts": 6,
-   "form": [
-    "W",
-    "D",
-    "D",
-    "D"
-   ]
-  },
-  {
-   "pos": 10,
+   "pos": 11,
    "team": 12,
-   "p": 4,
+   "p": 5,
    "w": 2,
    "d": 0,
-   "l": 2,
+   "l": 3,
    "gf": 7,
-   "ga": 10,
-   "gd": -3,
+   "ga": 11,
+   "gd": -4,
    "pts": 6,
    "form": [
     "W",
     "L",
     "L",
-    "W"
-   ]
-  },
-  {
-   "pos": 11,
-   "team": 18,
-   "p": 4,
-   "w": 1,
-   "d": 2,
-   "l": 1,
-   "gf": 4,
-   "ga": 4,
-   "gd": 0,
-   "pts": 5,
-   "form": [
-    "L",
-    "D",
-    "D",
-    "W"
+    "W",
+    "L"
    ]
   },
   {
    "pos": 12,
-   "team": 17,
-   "p": 4,
+   "team": 18,
+   "p": 5,
    "w": 1,
    "d": 2,
-   "l": 1,
-   "gf": 7,
-   "ga": 8,
+   "l": 2,
+   "gf": 4,
+   "ga": 5,
    "gd": -1,
    "pts": 5,
    "form": [
+    "L",
+    "D",
     "D",
     "W",
-    "D",
     "L"
    ]
   },
@@ -6040,6 +6047,25 @@
   },
   {
    "pos": 15,
+   "team": 2,
+   "p": 5,
+   "w": 1,
+   "d": 1,
+   "l": 3,
+   "gf": 4,
+   "ga": 9,
+   "gd": -5,
+   "pts": 4,
+   "form": [
+    "L",
+    "L",
+    "D",
+    "L",
+    "W"
+   ]
+  },
+  {
+   "pos": 16,
    "team": 3,
    "p": 4,
    "w": 0,
@@ -6057,7 +6083,7 @@
    ]
   },
   {
-   "pos": 16,
+   "pos": 17,
    "team": 8,
    "p": 4,
    "w": 1,
@@ -6075,25 +6101,45 @@
    ]
   },
   {
-   "pos": 17,
+   "pos": 18,
+   "team": 7,
+   "p": 5,
+   "w": 1,
+   "d": 0,
+   "l": 4,
+   "gf": 1,
+   "ga": 10,
+   "gd": -9,
+   "pts": 3,
+   "form": [
+    "L",
+    "L",
+    "L",
+    "L",
+    "W"
+   ]
+  },
+  {
+   "pos": 19,
    "team": 19,
-   "p": 4,
+   "p": 5,
    "w": 0,
    "d": 2,
-   "l": 2,
-   "gf": 0,
-   "ga": 5,
-   "gd": -5,
+   "l": 3,
+   "gf": 2,
+   "ga": 8,
+   "gd": -6,
    "pts": 2,
    "form": [
     "L",
     "L",
     "D",
-    "D"
+    "D",
+    "L"
    ]
   },
   {
-   "pos": 18,
+   "pos": 20,
    "team": 10,
    "p": 4,
    "w": 0,
@@ -6108,42 +6154,6 @@
     "L",
     "L",
     "D"
-   ]
-  },
-  {
-   "pos": 19,
-   "team": 2,
-   "p": 4,
-   "w": 0,
-   "d": 1,
-   "l": 3,
-   "gf": 1,
-   "ga": 7,
-   "gd": -6,
-   "pts": 1,
-   "form": [
-    "L",
-    "L",
-    "D",
-    "L"
-   ]
-  },
-  {
-   "pos": 20,
-   "team": 7,
-   "p": 4,
-   "w": 0,
-   "d": 0,
-   "l": 4,
-   "gf": 0,
-   "ga": 10,
-   "gd": -10,
-   "pts": 0,
-   "form": [
-    "L",
-    "L",
-    "L",
-    "L"
    ]
   }
  ],
