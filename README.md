@@ -177,6 +177,16 @@ forty lines of WebCrypto. `tests/test_push.mjs` verifies that signature the way
 a push service verifies it, because a bad one fails silently — the push service
 answers 401 and the league simply never gets reminded.
 
+**A manager who is not playing is excluded, not corrected.** The roster is
+read from the FPL league, and somebody can sit in that league without being in
+the money league. Pinning them in `managers.json` with `"excluded": true` drops
+them from the roster on both the online build and the offline rebuild, so every
+pot from GW1 is computed as if they had never joined: `N` shrinks, the stakes
+and the splits follow, and a week they placed in goes to whoever was next. It
+is a rebuild, not a §3.9.4 adjusting entry, because nothing has been paid and
+the book has to read as the league that actually exists. The exclusion is
+dated in the file, and the rebuilt payouts are one commit in `git log`.
+
 **Snapshot once, never re-fetch.** A Final gameweek's inputs cannot change, so
 they are written to `data/2026-27/raw/gw-NN.json` on first sight and read from
 disk forever after. Snapshots are **pruned** to the ~120 players the league
