@@ -118,6 +118,11 @@ def collect_managers(standings: dict, fetcher: Fetcher) -> list[dict]:
     for entry_id in ordering:
         raw = seen[entry_id]
         override = overrides.get(entry_id, {})
+        if override.get("excluded"):
+            # Still a member of the FPL league, but not of the money league:
+            # nothing is fetched for them and no row is ever booked.
+            log.info("excluding entry %d from the roster (managers.json)", entry_id)
+            continue
         entry = fetcher.entry(entry_id) or {}
         first = raw["first"] or entry.get("player_first_name", "")
         last = raw["last"] or entry.get("player_last_name", "")
@@ -135,6 +140,24 @@ def collect_managers(standings: dict, fetcher: Fetcher) -> list[dict]:
             }
         )
     return managers
+
+
+def drop_excluded(managers: list[dict]) -> list[dict]:
+    """Apply managers.json's ``excluded`` flag to a roster read from elsewhere.
+
+    The online build never lets an excluded entry into the roster, so the
+    season mirror it writes is already clean. The mirror on disk may predate
+    the flag, though, and an offline rebuild reads it as-is — so the flag is
+    applied on that path too, and both paths book the same league.
+    """
+    overrides = load_manager_overrides()
+    kept = []
+    for manager in managers:
+        if overrides.get(int(manager["entry_id"]), {}).get("excluded"):
+            log.info("excluding entry %d from the roster (managers.json)", manager["entry_id"])
+            continue
+        kept.append(manager)
+    return kept
 
 
 def fixture_note(fixtures: list[dict]) -> str | None:
@@ -480,7 +503,7 @@ def main() -> int:
         raw_events = season["events"]
         teams = {int(t["id"]): t for t in season["teams"]}
         all_fixtures = season["fixtures"]
-        managers = [dict(m) for m in season["managers"]]
+        managers = drop_excluded([dict(m) for m in season["managers"]])
         league_name = season.get("league_name", "SuperF")
     else:
         try:

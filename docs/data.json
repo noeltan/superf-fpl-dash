@@ -1,10 +1,10 @@
 {
- "generated_at": "2026-09-21T09:12:40Z",
+ "generated_at": "2026-09-21T09:55:32Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
   "currency": "RM",
-  "players": 13
+  "players": 12
  },
  "current": {
   "season": "2026/27",
@@ -19,48 +19,48 @@
  "stakes": {
   "weekly": {
    "stake": 10,
-   "pot": 130,
+   "pot": 120,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    81,
-    29
+    74,
+    26
    ]
   },
   "monthly": {
    "stake_per_gw": 5,
    "gameweeks": 4,
    "stake": 20,
-   "pot": 260,
+   "pot": 240,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    162,
-    58
+    148,
+    52
    ]
   },
   "season": {
    "stake": 100,
-   "pot": 1300,
+   "pot": 1200,
    "split": [
     0.6,
     0.25,
     0.15
    ],
    "net": [
-    680,
-    225,
-    95
+    620,
+    200,
+    80
    ]
   }
  },
  "exposure": {
   "staked": 670,
-  "best": 5297,
+  "best": 4838,
   "worst": -670
  },
  "rules": {
@@ -73,100 +73,100 @@
     "month": "AUG",
     "gameweeks": 2,
     "stake": 10,
-    "pot": 130,
+    "pot": 120,
     "net": [
-     81,
-     29
+     74,
+     26
     ]
    },
    {
     "month": "SEP",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 195,
+    "pot": 180,
     "net": [
-     121.5,
-     43.5
+     111,
+     39
     ]
    },
    {
     "month": "OCT",
     "gameweeks": 4,
     "stake": 20,
-    "pot": 260,
+    "pot": 240,
     "net": [
-     162,
-     58
+     148,
+     52
     ]
    },
    {
     "month": "NOV",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 195,
+    "pot": 180,
     "net": [
-     121.5,
-     43.5
+     111,
+     39
     ]
    },
    {
     "month": "DEC",
     "gameweeks": 6,
     "stake": 30,
-    "pot": 390,
+    "pot": 360,
     "net": [
-     243,
-     87
+     222,
+     78
     ]
    },
    {
     "month": "JAN",
     "gameweeks": 5,
     "stake": 25,
-    "pot": 325,
+    "pot": 300,
     "net": [
-     202.5,
-     72.5
+     185,
+     65
     ]
    },
    {
     "month": "FEB",
     "gameweeks": 4,
     "stake": 20,
-    "pot": 260,
+    "pot": 240,
     "net": [
-     162,
-     58
+     148,
+     52
     ]
    },
    {
     "month": "MAR",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 195,
+    "pot": 180,
     "net": [
-     121.5,
-     43.5
+     111,
+     39
     ]
    },
    {
     "month": "APR",
     "gameweeks": 3,
     "stake": 15,
-    "pot": 195,
+    "pot": 180,
     "net": [
-     121.5,
-     43.5
+     111,
+     39
     ]
    },
    {
     "month": "MAY",
     "gameweeks": 5,
     "stake": 25,
-    "pot": 325,
+    "pot": 300,
     "net": [
-     202.5,
-     72.5
+     185,
+     65
     ]
    }
   ],
@@ -203,21 +203,15 @@
    },
    {
     "n": 12,
-    "is_us": false,
+    "is_us": true,
     "season_third": 80,
     "weekly_second": 26
    },
    {
     "n": 13,
-    "is_us": true,
+    "is_us": false,
     "season_third": 95,
     "weekly_second": 29
-   },
-   {
-    "n": 14,
-    "is_us": false,
-    "season_third": 110,
-    "weekly_second": 32
    }
   ],
   "tiebreak": [
@@ -243,12 +237,12 @@
    }
   ],
   "best_breakdown": {
-   "weekly": 3078,
-   "monthly": 1539,
-   "season": 680
+   "weekly": 2812,
+   "monthly": 1406,
+   "season": 620
   },
-  "max_payments": 12,
-  "naive_payments": 78
+  "max_payments": 11,
+  "naive_payments": 66
  },
  "managers": [
   {
@@ -334,13 +328,6 @@
    "short": "Way Shoon",
    "team_name": "AyamFC",
    "entry_id": 5250642
-  },
-  {
-   "id": "robinhoho",
-   "display_name": "Robin Ho Ho",
-   "short": "Robin",
-   "team_name": "LetMeWin",
-   "entry_id": 6529703
   }
  ],
  "teams": {
@@ -6266,14 +6253,6 @@
      "chip": null,
      "did_not_set": false,
      "active": true
-    },
-    "robinhoho": {
-     "points": 60,
-     "hits": 0,
-     "transfers": 0,
-     "chip": null,
-     "did_not_set": false,
-     "active": true
     }
    },
    "winners": [
@@ -6282,9 +6261,9 @@
    "runners_up": [
     "soonlee"
    ],
-   "winner_net": 8100,
-   "runner_up_net": 2900,
-   "pot": 130,
+   "winner_net": 7400,
+   "runner_up_net": 2600,
+   "pot": 120,
    "tiebreak": null,
    "bonus_change": null
   },
@@ -6388,14 +6367,6 @@
      "chip": null,
      "did_not_set": false,
      "active": true
-    },
-    "robinhoho": {
-     "points": 84,
-     "hits": 0,
-     "transfers": 0,
-     "chip": null,
-     "did_not_set": false,
-     "active": true
     }
    },
    "winners": [
@@ -6404,9 +6375,9 @@
    "runners_up": [
     "sam"
    ],
-   "winner_net": 8100,
-   "runner_up_net": 2900,
-   "pot": 130,
+   "winner_net": 7400,
+   "runner_up_net": 2600,
+   "pot": 120,
    "tiebreak": null,
    "bonus_change": null
   },
@@ -6510,14 +6481,6 @@
      "chip": "3xc",
      "did_not_set": false,
      "active": true
-    },
-    "robinhoho": {
-     "points": 44,
-     "hits": 0,
-     "transfers": 2,
-     "chip": null,
-     "did_not_set": false,
-     "active": true
     }
    },
    "winners": [
@@ -6526,9 +6489,9 @@
    "runners_up": [
     "soonlee"
    ],
-   "winner_net": 8100,
-   "runner_up_net": 2900,
-   "pot": 130,
+   "winner_net": 7400,
+   "runner_up_net": 2600,
+   "pot": 120,
    "tiebreak": null,
    "bonus_change": null
   },
@@ -6632,14 +6595,6 @@
      "chip": null,
      "did_not_set": false,
      "active": true
-    },
-    "robinhoho": {
-     "points": 40,
-     "hits": 0,
-     "transfers": 0,
-     "chip": null,
-     "did_not_set": false,
-     "active": true
     }
    },
    "winners": [
@@ -6648,9 +6603,9 @@
    "runners_up": [
     "jack"
    ],
-   "winner_net": 8100,
-   "runner_up_net": 2900,
-   "pot": 130,
+   "winner_net": 7400,
+   "runner_up_net": 2600,
+   "pot": 120,
    "tiebreak": null,
    "bonus_change": null
   },
@@ -6754,29 +6709,18 @@
      "chip": null,
      "did_not_set": false,
      "active": true
-    },
-    "robinhoho": {
-     "points": 51,
-     "hits": 0,
-     "transfers": 2,
-     "chip": null,
-     "did_not_set": false,
-     "active": true
     }
    },
    "winners": [
     "chris"
    ],
    "runners_up": [
-    "robinhoho"
+    "calvinfoo"
    ],
-   "winner_net": 8100,
-   "runner_up_net": 2900,
-   "pot": 130,
-   "tiebreak": {
-    "level": 1,
-    "text": "Won on goals (3 v 2)"
-   },
+   "winner_net": 7400,
+   "runner_up_net": 2600,
+   "pot": 120,
+   "tiebreak": null,
    "bonus_change": null
   }
  ],
@@ -6794,14 +6738,14 @@
    ],
    "complete": true,
    "stake": 10,
-   "pot": 130,
+   "pot": 120,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    81,
-    29
+    74,
+    26
    ],
    "totals": {
     "noel": 161,
@@ -6815,8 +6759,7 @@
     "calvinfoo": 120,
     "shaikzahir": 142,
     "weichenlim": 123,
-    "wayshoonlim": 162,
-    "robinhoho": 144
+    "wayshoonlim": 162
    },
    "order": [
     "sam",
@@ -6825,7 +6768,6 @@
     "jack",
     "noel",
     "tianpin",
-    "robinhoho",
     "shaikzahir",
     "chris",
     "weihun",
@@ -6842,20 +6784,19 @@
    "ledger": {
     "noel": -1000,
     "jack": -1000,
-    "sam": 8100,
+    "sam": 7400,
     "weihun": -1000,
-    "soonlee": 2900,
+    "soonlee": 2600,
     "boonsiang": -1000,
     "tianpin": -1000,
     "chris": -1000,
     "calvinfoo": -1000,
     "shaikzahir": -1000,
     "weichenlim": -1000,
-    "wayshoonlim": -1000,
-    "robinhoho": -1000
+    "wayshoonlim": -1000
    },
    "gap_to_first": 11,
-   "callout": "August settled. Sam take the RM81 with 182 points \u2014 11 clear of Soon Lee, and Soon Lee takes RM29 with 171. The other 11 pay RM10 each. 2 gameweeks in the bucket."
+   "callout": "August settled. Sam take the RM74 with 182 points \u2014 11 clear of Soon Lee, and Soon Lee takes RM26 with 171. The other 10 pay RM10 each. 2 gameweeks in the bucket."
   },
   {
    "month": "SEP",
@@ -6871,14 +6812,14 @@
    ],
    "complete": true,
    "stake": 15,
-   "pot": 195,
+   "pot": 180,
    "split": [
     0.7,
     0.3
    ],
    "net": [
-    121.5,
-    43.5
+    111,
+    39
    ],
    "totals": {
     "noel": 156,
@@ -6892,8 +6833,7 @@
     "calvinfoo": 178,
     "shaikzahir": 177,
     "weichenlim": 194,
-    "wayshoonlim": 189,
-    "robinhoho": 135
+    "wayshoonlim": 189
    },
    "order": [
     "chris",
@@ -6907,8 +6847,7 @@
     "tianpin",
     "sam",
     "boonsiang",
-    "noel",
-    "robinhoho"
+    "noel"
    ],
    "winners": [
     "chris"
@@ -6918,21 +6857,20 @@
    ],
    "ledger": {
     "noel": -1500,
-    "jack": 4350,
+    "jack": 3900,
     "sam": -1500,
     "weihun": -1500,
     "soonlee": -1500,
     "boonsiang": -1500,
     "tianpin": -1500,
-    "chris": 12150,
+    "chris": 11100,
     "calvinfoo": -1500,
     "shaikzahir": -1500,
     "weichenlim": -1500,
-    "wayshoonlim": -1500,
-    "robinhoho": -1500
+    "wayshoonlim": -1500
    },
    "gap_to_first": 0,
-   "callout": "September settled. Chris take the RM121.50 on 198 points \u2014 level with Jack on points, split by the tiebreak, and Jack takes RM43.50 with 198. The other 11 pay RM15 each. 3 gameweeks in the bucket."
+   "callout": "September settled. Chris take the RM111 on 198 points \u2014 level with Jack on points, split by the tiebreak, and Jack takes RM39 with 198. The other 10 pay RM15 each. 3 gameweeks in the bucket."
   }
  ],
  "month_current": {
@@ -6943,16 +6881,16 @@
   "played": [],
   "remaining": 4,
   "stake": 20,
-  "pot": 260,
+  "pot": 240,
   "net": [
-   162,
-   58
+   148,
+   52
   ],
   "totals": {},
   "order": [],
   "gap_to_first": 0,
   "callout": null,
-  "note": "October opens with GW6 \u2014 RM20 each, RM260 in the pot, 4 gameweeks to decide it."
+  "note": "October opens with GW6 \u2014 RM20 each, RM240 in the pot, 4 gameweeks to decide it."
  },
  "totals": {
   "noel": 317,
@@ -6966,8 +6904,7 @@
   "calvinfoo": 298,
   "shaikzahir": 319,
   "weichenlim": 317,
-  "wayshoonlim": 351,
-  "robinhoho": 279
+  "wayshoonlim": 351
  },
  "rank": [
   "soonlee",
@@ -6981,7 +6918,6 @@
   "noel",
   "weihun",
   "calvinfoo",
-  "robinhoho",
   "boonsiang"
  ],
  "rank_prev": {
@@ -6996,8 +6932,7 @@
   "tianpin": 9,
   "shaikzahir": 10,
   "calvinfoo": 11,
-  "robinhoho": 12,
-  "boonsiang": 13
+  "boonsiang": 12
  },
  "behind": {
   "noel": 50,
@@ -7011,8 +6946,7 @@
   "calvinfoo": 69,
   "shaikzahir": 48,
   "weichenlim": 50,
-  "wayshoonlim": 16,
-  "robinhoho": 88
+  "wayshoonlim": 16
  },
  "ledger": {
   "noel": {
@@ -7033,7 +6967,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "63 pts, 4th of 13",
+     "detail": "63 pts, 4th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7041,7 +6975,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "98 pts, 6th of 13",
+     "detail": "98 pts, 6th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7057,7 +6991,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "45 pts, 11th of 13",
+     "detail": "45 pts, 11th of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7065,7 +6999,7 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "73 pts, 8th of 13",
+     "detail": "73 pts, 8th of 12",
      "amount": -1000,
      "balance": -5000
     },
@@ -7073,7 +7007,7 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "38 pts, 11th of 13",
+     "detail": "38 pts, 10th of 12",
      "amount": -1000,
      "balance": -6000
     },
@@ -7088,16 +7022,16 @@
    ]
   },
   "jack": {
-   "weekly": -1100,
-   "monthly": 3350,
-   "accrued": 2250,
-   "projected_season": 22500,
-   "delta_last_gw": 3350,
+   "weekly": -1400,
+   "monthly": 2900,
+   "accrued": 1500,
+   "projected_season": 20000,
+   "delta_last_gw": 2900,
    "by_gameweek": [
     -1000,
     -1000,
     -1000,
-    2900,
+    2600,
     -1000
    ],
    "statement": [
@@ -7105,7 +7039,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "58 pts, 8th of 13",
+     "detail": "58 pts, 7th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7113,7 +7047,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "103 pts, 3rd of 13",
+     "detail": "103 pts, 3rd of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7129,7 +7063,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "61 pts, 4th of 13",
+     "detail": "61 pts, 4th of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7137,37 +7071,37 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "99 pts, 2nd of 13 \u2014 30% share",
-     "amount": 2900,
-     "balance": -1100
+     "detail": "99 pts, 2nd of 12 \u2014 30% share",
+     "amount": 2600,
+     "balance": -1400
     },
     {
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "38 pts, 10th of 13",
+     "detail": "38 pts, 9th of 12",
      "amount": -1000,
-     "balance": -2100
+     "balance": -2400
     },
     {
      "date": "2026-09-20",
      "type": "monthly",
      "month": "SEP",
      "detail": "198 pts, 2nd in September \u2014 30% share",
-     "amount": 4350,
-     "balance": 2250
+     "amount": 3900,
+     "balance": 1500
     }
    ]
   },
   "sam": {
-   "weekly": 8000,
-   "monthly": 6600,
-   "accrued": 14600,
+   "weekly": 7000,
+   "monthly": 5900,
+   "accrued": 12900,
    "projected_season": -10000,
    "delta_last_gw": -2500,
    "by_gameweek": [
-    8100,
-    2900,
+    7400,
+    2600,
     -1000,
     -1000,
     -1000
@@ -7177,49 +7111,49 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "74 pts, 1st of 13, top score \u2014 70% share",
-     "amount": 8100,
-     "balance": 8100
+     "detail": "74 pts, 1st of 12, top score \u2014 70% share",
+     "amount": 7400,
+     "balance": 7400
     },
     {
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "108 pts, 2nd of 13 \u2014 30% share",
-     "amount": 2900,
-     "balance": 11000
+     "detail": "108 pts, 2nd of 12 \u2014 30% share",
+     "amount": 2600,
+     "balance": 10000
     },
     {
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
      "detail": "182 pts, 1st in August \u2014 70% share",
-     "amount": 8100,
-     "balance": 19100
+     "amount": 7400,
+     "balance": 17400
     },
     {
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "53 pts, 9th of 13",
+     "detail": "53 pts, 9th of 12",
      "amount": -1000,
-     "balance": 18100
+     "balance": 16400
     },
     {
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "74 pts, 6th of 13",
+     "detail": "74 pts, 6th of 12",
      "amount": -1000,
-     "balance": 17100
+     "balance": 15400
     },
     {
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "37 pts, 12th of 13",
+     "detail": "37 pts, 11th of 12",
      "amount": -1000,
-     "balance": 16100
+     "balance": 14400
     },
     {
      "date": "2026-09-20",
@@ -7227,21 +7161,21 @@
      "month": "SEP",
      "detail": "164 pts, 10th in September",
      "amount": -1500,
-     "balance": 14600
+     "balance": 12900
     }
    ]
   },
   "weihun": {
-   "weekly": 4100,
+   "weekly": 3400,
    "monthly": -2500,
-   "accrued": 1600,
+   "accrued": 900,
    "projected_season": -10000,
    "delta_last_gw": -2500,
    "by_gameweek": [
     -1000,
     -1000,
     -1000,
-    8100,
+    7400,
     -1000
    ],
    "statement": [
@@ -7249,7 +7183,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "60 pts, 7th of 13",
+     "detail": "60 pts, 6th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7257,7 +7191,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "72 pts, 10th of 13",
+     "detail": "72 pts, 9th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7265,7 +7199,7 @@
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
-     "detail": "132 pts, 10th in August",
+     "detail": "132 pts, 9th in August",
      "amount": -1000,
      "balance": -3000
     },
@@ -7273,7 +7207,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "54 pts, 8th of 13",
+     "detail": "54 pts, 8th of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7281,17 +7215,17 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "100 pts, 1st of 13, top score \u2014 70% share",
-     "amount": 8100,
-     "balance": 4100
+     "detail": "100 pts, 1st of 12, top score \u2014 70% share",
+     "amount": 7400,
+     "balance": 3400
     },
     {
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "28 pts, 13th of 13",
+     "detail": "28 pts, 12th of 12",
      "amount": -1000,
-     "balance": 3100
+     "balance": 2400
     },
     {
      "date": "2026-09-20",
@@ -7299,20 +7233,20 @@
      "month": "SEP",
      "detail": "182 pts, 6th in September",
      "amount": -1500,
-     "balance": 1600
+     "balance": 900
     }
    ]
   },
   "soonlee": {
-   "weekly": 2800,
-   "monthly": 1400,
-   "accrued": 4200,
-   "projected_season": 68000,
+   "weekly": 2200,
+   "monthly": 1100,
+   "accrued": 3300,
+   "projected_season": 62000,
    "delta_last_gw": -2500,
    "by_gameweek": [
-    2900,
+    2600,
     -1000,
-    2900,
+    2600,
     -1000,
     -1000
    ],
@@ -7321,49 +7255,49 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "70 pts, 2nd of 13 \u2014 30% share",
-     "amount": 2900,
-     "balance": 2900
+     "detail": "70 pts, 2nd of 12 \u2014 30% share",
+     "amount": 2600,
+     "balance": 2600
     },
     {
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "101 pts, 5th of 13",
+     "detail": "101 pts, 5th of 12",
      "amount": -1000,
-     "balance": 1900
+     "balance": 1600
     },
     {
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
      "detail": "171 pts, 2nd in August \u2014 30% share",
-     "amount": 2900,
-     "balance": 4800
+     "amount": 2600,
+     "balance": 4200
     },
     {
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "77 pts, 2nd of 13 \u2014 30% share",
-     "amount": 2900,
-     "balance": 7700
+     "detail": "77 pts, 2nd of 12 \u2014 30% share",
+     "amount": 2600,
+     "balance": 6800
     },
     {
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "74 pts, 7th of 13",
+     "detail": "74 pts, 7th of 12",
      "amount": -1000,
-     "balance": 6700
+     "balance": 5800
     },
     {
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "45 pts, 8th of 13",
+     "detail": "45 pts, 7th of 12",
      "amount": -1000,
-     "balance": 5700
+     "balance": 4800
     },
     {
      "date": "2026-09-20",
@@ -7371,7 +7305,7 @@
      "month": "SEP",
      "detail": "196 pts, 3rd in September",
      "amount": -1500,
-     "balance": 4200
+     "balance": 3300
     }
    ]
   },
@@ -7393,7 +7327,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "36 pts, 13th of 13",
+     "detail": "36 pts, 12th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7401,7 +7335,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "70 pts, 11th of 13",
+     "detail": "70 pts, 10th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7409,7 +7343,7 @@
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
-     "detail": "106 pts, 13th in August",
+     "detail": "106 pts, 12th in August",
      "amount": -1000,
      "balance": -3000
     },
@@ -7417,7 +7351,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "56 pts, 7th of 13",
+     "detail": "56 pts, 7th of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7425,7 +7359,7 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "60 pts, 12th of 13",
+     "detail": "60 pts, 12th of 12",
      "amount": -1000,
      "balance": -5000
     },
@@ -7433,7 +7367,7 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "46 pts, 7th of 13",
+     "detail": "46 pts, 6th of 12",
      "amount": -1000,
      "balance": -6000
     },
@@ -7465,7 +7399,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "49 pts, 11th of 13",
+     "detail": "49 pts, 10th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7473,7 +7407,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "103 pts, 4th of 13",
+     "detail": "103 pts, 4th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7489,7 +7423,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "60 pts, 6th of 13",
+     "detail": "60 pts, 6th of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7497,7 +7431,7 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "62 pts, 11th of 13",
+     "detail": "62 pts, 11th of 12",
      "amount": -1000,
      "balance": -5000
     },
@@ -7505,7 +7439,7 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "49 pts, 5th of 13",
+     "detail": "49 pts, 4th of 12",
      "amount": -1000,
      "balance": -6000
     },
@@ -7520,24 +7454,24 @@
    ]
   },
   "chris": {
-   "weekly": 4100,
-   "monthly": 11150,
-   "accrued": 15250,
+   "weekly": 3400,
+   "monthly": 10100,
+   "accrued": 13500,
    "projected_season": -10000,
-   "delta_last_gw": 20250,
+   "delta_last_gw": 18500,
    "by_gameweek": [
     -1000,
     -1000,
     -1000,
     -1000,
-    8100
+    7400
    ],
    "statement": [
     {
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "52 pts, 10th of 13",
+     "detail": "52 pts, 9th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7545,7 +7479,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "83 pts, 9th of 13",
+     "detail": "83 pts, 8th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7553,7 +7487,7 @@
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
-     "detail": "135 pts, 9th in August",
+     "detail": "135 pts, 8th in August",
      "amount": -1000,
      "balance": -3000
     },
@@ -7561,7 +7495,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "74 pts, 3rd of 13",
+     "detail": "74 pts, 3rd of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7569,7 +7503,7 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "73 pts, 9th of 13",
+     "detail": "73 pts, 9th of 12",
      "amount": -1000,
      "balance": -5000
     },
@@ -7577,39 +7511,39 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "51 pts, 1st of 13, top score \u2014 70% share",
-     "amount": 8100,
-     "balance": 3100
+     "detail": "51 pts, 1st of 12, top score \u2014 70% share",
+     "amount": 7400,
+     "balance": 2400
     },
     {
      "date": "2026-09-20",
      "type": "monthly",
      "month": "SEP",
      "detail": "198 pts, 1st in September \u2014 70% share",
-     "amount": 12150,
-     "balance": 15250
+     "amount": 11100,
+     "balance": 13500
     }
    ]
   },
   "calvinfoo": {
-   "weekly": -5000,
+   "weekly": -1400,
    "monthly": -2500,
-   "accrued": -7500,
+   "accrued": -3900,
    "projected_season": -10000,
-   "delta_last_gw": -2500,
+   "delta_last_gw": 1100,
    "by_gameweek": [
     -1000,
     -1000,
     -1000,
     -1000,
-    -1000
+    2600
    ],
    "statement": [
     {
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "66 pts, 3rd of 13",
+     "detail": "66 pts, 3rd of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7617,7 +7551,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "54 pts, 13th of 13",
+     "detail": "54 pts, 12th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7625,7 +7559,7 @@
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
-     "detail": "120 pts, 12th in August",
+     "detail": "120 pts, 11th in August",
      "amount": -1000,
      "balance": -3000
     },
@@ -7633,7 +7567,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "41 pts, 13th of 13",
+     "detail": "41 pts, 12th of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7641,7 +7575,7 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "87 pts, 3rd of 13",
+     "detail": "87 pts, 3rd of 12",
      "amount": -1000,
      "balance": -5000
     },
@@ -7649,9 +7583,9 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "50 pts, 3rd of 13",
-     "amount": -1000,
-     "balance": -6000
+     "detail": "50 pts, 2nd of 12 \u2014 30% share",
+     "amount": 2600,
+     "balance": -2400
     },
     {
      "date": "2026-09-20",
@@ -7659,7 +7593,7 @@
      "month": "SEP",
      "detail": "178 pts, 7th in September",
      "amount": -1500,
-     "balance": -7500
+     "balance": -3900
     }
    ]
   },
@@ -7681,7 +7615,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "48 pts, 12th of 13",
+     "detail": "48 pts, 11th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7689,7 +7623,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "94 pts, 7th of 13",
+     "detail": "94 pts, 7th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7697,7 +7631,7 @@
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
-     "detail": "142 pts, 8th in August",
+     "detail": "142 pts, 7th in August",
      "amount": -1000,
      "balance": -3000
     },
@@ -7705,7 +7639,7 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "51 pts, 10th of 13",
+     "detail": "51 pts, 10th of 12",
      "amount": -1000,
      "balance": -4000
     },
@@ -7713,7 +7647,7 @@
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "76 pts, 5th of 13",
+     "detail": "76 pts, 5th of 12",
      "amount": -1000,
      "balance": -5000
     },
@@ -7721,7 +7655,7 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "50 pts, 4th of 13",
+     "detail": "50 pts, 3rd of 12",
      "amount": -1000,
      "balance": -6000
     },
@@ -7736,15 +7670,15 @@
    ]
   },
   "weichenlim": {
-   "weekly": 4100,
+   "weekly": 3400,
    "monthly": -2500,
-   "accrued": 1600,
+   "accrued": 900,
    "projected_season": -10000,
    "delta_last_gw": -2500,
    "by_gameweek": [
     -1000,
     -1000,
-    8100,
+    7400,
     -1000,
     -1000
    ],
@@ -7753,7 +7687,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "61 pts, 5th of 13",
+     "detail": "61 pts, 5th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7761,7 +7695,7 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "62 pts, 12th of 13",
+     "detail": "62 pts, 11th of 12",
      "amount": -1000,
      "balance": -2000
     },
@@ -7769,7 +7703,7 @@
      "date": "2026-08-31",
      "type": "monthly",
      "month": "AUG",
-     "detail": "123 pts, 11th in August",
+     "detail": "123 pts, 10th in August",
      "amount": -1000,
      "balance": -3000
     },
@@ -7777,25 +7711,25 @@
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "80 pts, 1st of 13, top score \u2014 70% share",
-     "amount": 8100,
-     "balance": 5100
+     "detail": "80 pts, 1st of 12, top score \u2014 70% share",
+     "amount": 7400,
+     "balance": 4400
     },
     {
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "72 pts, 10th of 13",
+     "detail": "72 pts, 10th of 12",
      "amount": -1000,
-     "balance": 4100
+     "balance": 3400
     },
     {
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "42 pts, 9th of 13",
+     "detail": "42 pts, 8th of 12",
      "amount": -1000,
-     "balance": 3100
+     "balance": 2400
     },
     {
      "date": "2026-09-20",
@@ -7803,19 +7737,19 @@
      "month": "SEP",
      "detail": "194 pts, 4th in September",
      "amount": -1500,
-     "balance": 1600
+     "balance": 900
     }
    ]
   },
   "wayshoonlim": {
-   "weekly": 4100,
+   "weekly": 3400,
    "monthly": -2500,
-   "accrued": 1600,
-   "projected_season": 9500,
+   "accrued": 900,
+   "projected_season": 8000,
    "delta_last_gw": -2500,
    "by_gameweek": [
     -1000,
-    8100,
+    7400,
     -1000,
     -1000,
     -1000
@@ -7825,7 +7759,7 @@
      "date": "2026-08-24",
      "type": "weekly",
      "gw": 1,
-     "detail": "52 pts, 9th of 13",
+     "detail": "52 pts, 8th of 12",
      "amount": -1000,
      "balance": -1000
     },
@@ -7833,9 +7767,9 @@
      "date": "2026-08-31",
      "type": "weekly",
      "gw": 2,
-     "detail": "110 pts, 1st of 13, top score \u2014 70% share",
-     "amount": 8100,
-     "balance": 7100
+     "detail": "110 pts, 1st of 12, top score \u2014 70% share",
+     "amount": 7400,
+     "balance": 6400
     },
     {
      "date": "2026-08-31",
@@ -7843,31 +7777,31 @@
      "month": "AUG",
      "detail": "162 pts, 3rd in August",
      "amount": -1000,
-     "balance": 6100
+     "balance": 5400
     },
     {
      "date": "2026-09-06",
      "type": "weekly",
      "gw": 3,
-     "detail": "61 pts, 5th of 13",
+     "detail": "61 pts, 5th of 12",
      "amount": -1000,
-     "balance": 5100
+     "balance": 4400
     },
     {
      "date": "2026-09-14",
      "type": "weekly",
      "gw": 4,
-     "detail": "79 pts, 4th of 13",
+     "detail": "79 pts, 4th of 12",
      "amount": -1000,
-     "balance": 4100
+     "balance": 3400
     },
     {
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "49 pts, 6th of 13",
+     "detail": "49 pts, 5th of 12",
      "amount": -1000,
-     "balance": 3100
+     "balance": 2400
     },
     {
      "date": "2026-09-20",
@@ -7875,79 +7809,7 @@
      "month": "SEP",
      "detail": "189 pts, 5th in September",
      "amount": -1500,
-     "balance": 1600
-    }
-   ]
-  },
-  "robinhoho": {
-   "weekly": -1100,
-   "monthly": -2500,
-   "accrued": -3600,
-   "projected_season": -10000,
-   "delta_last_gw": 1400,
-   "by_gameweek": [
-    -1000,
-    -1000,
-    -1000,
-    -1000,
-    2900
-   ],
-   "statement": [
-    {
-     "date": "2026-08-24",
-     "type": "weekly",
-     "gw": 1,
-     "detail": "60 pts, 6th of 13",
-     "amount": -1000,
-     "balance": -1000
-    },
-    {
-     "date": "2026-08-31",
-     "type": "weekly",
-     "gw": 2,
-     "detail": "84 pts, 8th of 13",
-     "amount": -1000,
-     "balance": -2000
-    },
-    {
-     "date": "2026-08-31",
-     "type": "monthly",
-     "month": "AUG",
-     "detail": "144 pts, 7th in August",
-     "amount": -1000,
-     "balance": -3000
-    },
-    {
-     "date": "2026-09-06",
-     "type": "weekly",
-     "gw": 3,
-     "detail": "44 pts, 12th of 13",
-     "amount": -1000,
-     "balance": -4000
-    },
-    {
-     "date": "2026-09-14",
-     "type": "weekly",
-     "gw": 4,
-     "detail": "40 pts, 13th of 13",
-     "amount": -1000,
-     "balance": -5000
-    },
-    {
-     "date": "2026-09-20",
-     "type": "weekly",
-     "gw": 5,
-     "detail": "51 pts, 2nd of 13 \u2014 30% share",
-     "amount": 2900,
-     "balance": -2100
-    },
-    {
-     "date": "2026-09-20",
-     "type": "monthly",
-     "month": "SEP",
-     "detail": "135 pts, 13th in September",
-     "amount": -1500,
-     "balance": -3600
+     "balance": 900
     }
    ]
   }
@@ -7962,59 +7824,54 @@
     "amount": 7500
    },
    {
-    "from": "calvinfoo",
+    "from": "noel",
     "to": "chris",
+    "amount": 6000
+   },
+   {
+    "from": "noel",
+    "to": "sam",
+    "amount": 1500
+   },
+   {
+    "from": "shaikzahir",
+    "to": "sam",
     "amount": 7500
    },
    {
-    "from": "noel",
-    "to": "chris",
-    "amount": 250
-   },
-   {
-    "from": "noel",
+    "from": "tianpin",
     "to": "sam",
-    "amount": 7250
-   },
-   {
-    "from": "shaikzahir",
-    "to": "sam",
-    "amount": 7350
-   },
-   {
-    "from": "shaikzahir",
-    "to": "soonlee",
-    "amount": 150
+    "amount": 3900
    },
    {
     "from": "tianpin",
     "to": "soonlee",
-    "amount": 4050
+    "amount": 3300
    },
    {
     "from": "tianpin",
     "to": "jack",
-    "amount": 2250
+    "amount": 300
    },
    {
-    "from": "tianpin",
-    "to": "wayshoonlim",
+    "from": "calvinfoo",
+    "to": "jack",
     "amount": 1200
    },
    {
-    "from": "robinhoho",
+    "from": "calvinfoo",
     "to": "wayshoonlim",
-    "amount": 400
+    "amount": 900
    },
    {
-    "from": "robinhoho",
+    "from": "calvinfoo",
     "to": "weichenlim",
-    "amount": 1600
+    "amount": 900
    },
    {
-    "from": "robinhoho",
+    "from": "calvinfoo",
     "to": "weihun",
-    "amount": 1600
+    "amount": 900
    }
   ]
  },
@@ -8028,10 +7885,9 @@
   "tianpin": 0,
   "chris": 2,
   "calvinfoo": 3,
-  "shaikzahir": 0,
+  "shaikzahir": 1,
   "weichenlim": 1,
-  "wayshoonlim": 1,
-  "robinhoho": 1
+  "wayshoonlim": 1
  },
  "weeks_won": {
   "noel": 0,
@@ -8045,11 +7901,10 @@
   "calvinfoo": 0,
   "shaikzahir": 0,
   "weichenlim": 1,
-  "wayshoonlim": 1,
-  "robinhoho": 0
+  "wayshoonlim": 1
  },
  "stats": {
-  "avg_points": 322.4,
+  "avg_points": 326.0,
   "high": {
    "gw": 2,
    "manager": "wayshoonlim",
@@ -8076,37 +7931,35 @@
    {
     "heading": "GW5",
     "lines": [
-     "Chris takes GW5 on 51 pts and is owed RM81.",
-     "Robin is second on 51 and is owed RM29.",
-     "The other 11 managers owe RM10 each. Pot RM130.",
-     "Split by the tiebreak: Won on goals (3 v 2)."
+     "Chris takes GW5 on 51 pts and is owed RM74.",
+     "Calvin is second on 50 and is owed RM26.",
+     "The other 10 managers owe RM10 each. Pot RM120."
     ]
    },
    {
     "heading": "Every score",
     "lines": [
-     "1. Chris \u2014 51 pts (+RM81)",
-     "2. Robin \u2014 51 pts (+RM29)",
-     "3. Calvin \u2014 50 pts (\u2212RM10)",
-     "4. Zahir \u2014 50 pts (\u2212RM10)",
-     "5. Tian Pin \u2014 49 pts (\u2212RM10) [-4 hit]",
-     "6. Way Shoon \u2014 49 pts (\u2212RM10)",
-     "7. Boon \u2014 46 pts (\u2212RM10)",
-     "8. Soon Lee \u2014 45 pts (\u2212RM10)",
-     "9. Wei Chen \u2014 42 pts (\u2212RM10)",
-     "10. Jack \u2014 38 pts (\u2212RM10)",
-     "11. Noel \u2014 38 pts (\u2212RM10)",
-     "12. Sam \u2014 37 pts (\u2212RM10)",
-     "13. Wei Hun \u2014 28 pts (\u2212RM10)"
+     "1. Chris \u2014 51 pts (+RM74)",
+     "2. Calvin \u2014 50 pts (+RM26)",
+     "3. Zahir \u2014 50 pts (\u2212RM10)",
+     "4. Tian Pin \u2014 49 pts (\u2212RM10) [-4 hit]",
+     "5. Way Shoon \u2014 49 pts (\u2212RM10)",
+     "6. Boon \u2014 46 pts (\u2212RM10)",
+     "7. Soon Lee \u2014 45 pts (\u2212RM10)",
+     "8. Wei Chen \u2014 42 pts (\u2212RM10)",
+     "9. Jack \u2014 38 pts (\u2212RM10)",
+     "10. Noel \u2014 38 pts (\u2212RM10)",
+     "11. Sam \u2014 37 pts (\u2212RM10)",
+     "12. Wei Hun \u2014 28 pts (\u2212RM10)"
     ]
    },
    {
     "heading": "September \u2014 settled",
     "lines": [
      "September is settled over GW3\u2013GW5.",
-     "Chris takes the month on 198 pts and is owed RM121.50.",
-     "Jack is second on 198 and is owed RM43.50.",
-     "The other 11 managers owe RM15 each. Pot RM195."
+     "Chris takes the month on 198 pts and is owed RM111.",
+     "Jack is second on 198 and is owed RM39.",
+     "The other 10 managers owe RM15 each. Pot RM180."
     ]
    },
    {
@@ -8120,6 +7973,6 @@
    }
   ],
   "footer": "GW6 deadline: Sat 10 Oct, 18:00 MYT.",
-  "text": "SuperF \u00b7 GW5 settled \u00b7 Sun 20 Sep\n\nGW5\nChris takes GW5 on 51 pts and is owed RM81.\nRobin is second on 51 and is owed RM29.\nThe other 11 managers owe RM10 each. Pot RM130.\nSplit by the tiebreak: Won on goals (3 v 2).\n\nEVERY SCORE\n1. Chris \u2014 51 pts (+RM81)\n2. Robin \u2014 51 pts (+RM29)\n3. Calvin \u2014 50 pts (\u2212RM10)\n4. Zahir \u2014 50 pts (\u2212RM10)\n5. Tian Pin \u2014 49 pts (\u2212RM10) [-4 hit]\n6. Way Shoon \u2014 49 pts (\u2212RM10)\n7. Boon \u2014 46 pts (\u2212RM10)\n8. Soon Lee \u2014 45 pts (\u2212RM10)\n9. Wei Chen \u2014 42 pts (\u2212RM10)\n10. Jack \u2014 38 pts (\u2212RM10)\n11. Noel \u2014 38 pts (\u2212RM10)\n12. Sam \u2014 37 pts (\u2212RM10)\n13. Wei Hun \u2014 28 pts (\u2212RM10)\n\nSEPTEMBER \u2014 SETTLED\nSeptember is settled over GW3\u2013GW5.\nChris takes the month on 198 pts and is owed RM121.50.\nJack is second on 198 and is owed RM43.50.\nThe other 11 managers owe RM15 each. Pot RM195.\n\nSEASON SO FAR\n1. Soon Lee \u2014 367 pts\n2. Jack \u2014 359 pts (8 behind)\n3. Way Shoon \u2014 351 pts (16 behind)\nSoon Lee leads by 8 after 5 gameweeks.\n\nGW6 deadline: Sat 10 Oct, 18:00 MYT.\n"
+  "text": "SuperF \u00b7 GW5 settled \u00b7 Sun 20 Sep\n\nGW5\nChris takes GW5 on 51 pts and is owed RM74.\nCalvin is second on 50 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\n\nEVERY SCORE\n1. Chris \u2014 51 pts (+RM74)\n2. Calvin \u2014 50 pts (+RM26)\n3. Zahir \u2014 50 pts (\u2212RM10)\n4. Tian Pin \u2014 49 pts (\u2212RM10) [-4 hit]\n5. Way Shoon \u2014 49 pts (\u2212RM10)\n6. Boon \u2014 46 pts (\u2212RM10)\n7. Soon Lee \u2014 45 pts (\u2212RM10)\n8. Wei Chen \u2014 42 pts (\u2212RM10)\n9. Jack \u2014 38 pts (\u2212RM10)\n10. Noel \u2014 38 pts (\u2212RM10)\n11. Sam \u2014 37 pts (\u2212RM10)\n12. Wei Hun \u2014 28 pts (\u2212RM10)\n\nSEPTEMBER \u2014 SETTLED\nSeptember is settled over GW3\u2013GW5.\nChris takes the month on 198 pts and is owed RM111.\nJack is second on 198 and is owed RM39.\nThe other 10 managers owe RM15 each. Pot RM180.\n\nSEASON SO FAR\n1. Soon Lee \u2014 367 pts\n2. Jack \u2014 359 pts (8 behind)\n3. Way Shoon \u2014 351 pts (16 behind)\nSoon Lee leads by 8 after 5 gameweeks.\n\nGW6 deadline: Sat 10 Oct, 18:00 MYT.\n"
  }
 }

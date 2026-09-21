@@ -1,5 +1,5 @@
 {
-  "_comment": "Stable slugs, assigned once from entry_id and never changed (spec \u00a75). The API cannot produce these names on its own \u2014 Chris arrives as first_name 'Christopher Chin', last_name 'Jing Haur'. A manager who joins later and is missing here gets an auto-slug; add them so it stays stable.",
+  "_comment": "Stable slugs, assigned once from entry_id and never changed (spec §5). The API cannot produce these names on its own — Chris arrives as first_name 'Christopher Chin', last_name 'Jing Haur'. A manager who joins later and is missing here gets an auto-slug; add them so it stays stable. A manager who is in the FPL league but not in the money league is pinned here with \"excluded\": true - the build drops them from the roster entirely, so every pot from GW1 is computed as if they never joined.",
   "managers": [
     {
       "entry_id": 1652821,
@@ -72,6 +72,14 @@
       "id": "wayshoonlim",
       "display_name": "Way Shoon Lim",
       "short": "Way Shoon"
+    },
+    {
+      "entry_id": 6529703,
+      "id": "robinhoho",
+      "display_name": "Robin Ho Ho",
+      "short": "Robin",
+      "excluded": true,
+      "excluded_note": "Not playing the money league. Removed from the book from GW1 on 21 Sep 2026; every pot GW1-GW5 recomputed without him."
     }
   ]
 }
