@@ -334,7 +334,12 @@ def write_season(
         "version": SNAPSHOT_VERSION,
         "league_name": league_name,
         "events": [
-            {"id": e["id"], "deadline_time": e["deadline_time"]}
+            {
+                "id": e["id"],
+                "deadline_time": e["deadline_time"],
+                "finished": bool(e.get("finished")),
+                "data_checked": bool(e.get("data_checked")),
+            }
             for e in sorted(events, key=lambda e: e["id"])
         ],
         "teams": [

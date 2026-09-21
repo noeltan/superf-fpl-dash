@@ -447,3 +447,40 @@ def test_a_record_written_before_scores_existed_gains_them(tmp_path):
 
 def test_no_provisional_record_reads_as_absent(tmp_path):
     assert snapshot_mod.load_provisional(9, tmp_path) is None
+
+
+def test_a_round_fpl_has_not_reviewed_is_held_even_when_self_consistent(tmp_path):
+    """GW5's lesson: history and squads agreeing is necessary, not sufficient.
+    With the event's data_checked false nothing is frozen and nothing booked."""
+    from superf.fplcal import parse_utc
+
+    fetcher = _Fetcher(tmp_path)
+    gameweeks, states, _ = build_gameweeks(
+        MANAGERS, EVENTS, {1: FIXTURES}, _histories(43), fetcher,
+        parse_utc("2026-08-24T06:00:00Z"), closed={1: False},
+    )
+    assert states[1] == "provisional"
+    assert gameweeks[1].is_final is False
+    assert not snapshot_mod.exists(1, root=tmp_path), "an unreviewed round must not be frozen"
+    assert gameweeks[1].scores["noel"].points == 43, "the page still shows the squads' points"
+
+
+def test_a_snapshot_frozen_before_the_close_stops_the_build(tmp_path):
+    """A snapshot on disk for a round FPL has not closed can be self-consistent
+    and still short. Refuse it and name the file, as for an inconsistent one."""
+    from superf.fplcal import parse_utc
+
+    fetcher = _Fetcher(tmp_path)
+    build_gameweeks(
+        MANAGERS, EVENTS, {1: FIXTURES}, _histories(43), fetcher,
+        parse_utc("2026-08-24T06:00:00Z"), closed={1: True},
+    )
+    assert snapshot_mod.exists(1, root=tmp_path)
+
+    with pytest.raises(LedgerError) as caught:
+        build_gameweeks(
+            MANAGERS, EVENTS, {1: FIXTURES}, _histories(43), _Fetcher(tmp_path),
+            parse_utc("2026-08-24T06:00:00Z"), closed={1: False},
+        )
+    assert "gw-01.json" in str(caught.value)
+    assert "data_checked" in str(caught.value)

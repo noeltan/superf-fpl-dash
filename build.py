@@ -29,6 +29,7 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 import json
 import logging
 import re
@@ -340,7 +341,13 @@ def build_gameweeks(
     histories: dict[int, dict],
     fetcher: Fetcher,
     now: datetime,
+    closed: Mapping[int, bool | None] | None = None,
 ) -> tuple[dict[int, Gameweek], dict[int, str], dict[int, str]]:
+    """``closed`` is ``{gw: event.data_checked}`` — FPL's own word that the
+    round is reviewed. A round it has not closed is held provisional even
+    with every fixture finished, and a snapshot that was frozen before the
+    close stops the build: it may be self-consistent and still short."""
+    closed = closed or {}
     states: dict[int, str] = {}
     dates: dict[int, str] = {}
     gameweeks: dict[int, Gameweek] = {}
@@ -349,8 +356,17 @@ def build_gameweeks(
         gw = event["gw"]
         deadline = parse_utc(event["deadline"])
         raw_fixtures = fixtures_by_gw.get(gw, [])
-        state = gameweek_state(deadline, raw_fixtures, now)
+        state = gameweek_state(deadline, raw_fixtures, now, closed=closed.get(gw))
         states[gw] = state
+
+        if state == "provisional" and closed.get(gw) is False \
+                and snapshot_mod.exists(gw, root=fetcher.raw_dir):
+            raise LedgerError(
+                f"GW{gw}: {snapshot_mod.path_for(gw, fetcher.raw_dir)} was frozen before "
+                "FPL closed the round (data_checked is still false), so the scores in "
+                "it can be short even though they agree with themselves. Delete it; the "
+                "round is re-frozen from the API once FPL closes it."
+            )
         dates[gw] = settled_date(raw_fixtures)
         note = fixture_note(raw_fixtures)
 
@@ -546,8 +562,14 @@ def main() -> int:
             int(m["entry_id"]): (fetcher.entry_history(int(m["entry_id"])) or {})
             for m in managers
         }
+        # FPL's own close of each round. Absent from a season mirror written
+        # before the flag was kept, in which case the fixtures decide alone.
+        closed = {
+            int(e["id"]): (bool(e["data_checked"]) if "data_checked" in e else None)
+            for e in raw_events
+        }
         gameweeks, states, settled_dates = build_gameweeks(
-            managers, events, fixtures_by_gw, histories, fetcher, now
+            managers, events, fixtures_by_gw, histories, fetcher, now, closed=closed
         )
     except FetchError as exc:
         log.error("gameweek detail unavailable: %s", exc)
