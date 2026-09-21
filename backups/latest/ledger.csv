@@ -1,14 +1,14 @@
-manager,team,entry_id,GW1,GW2,GW3,GW4,GW5,points,weekly_rm,monthly_rm,season_rm,season_is_settled,accrued_rm,position
-Soon Lee Loo,SLucky XI,2488327,70,101,77,74,45,367,22.00,11.00,620.00,no (projected),33.00,is owed
-Jack Siah,Apple TV,1427521,58,103,61,99,38,359,-14.00,29.00,200.00,no (projected),15.00,is owed
-Way Shoon Lim,AyamFC,5250642,52,110,61,79,49,351,34.00,-25.00,80.00,no (projected),9.00,is owed
-Sam Lim,GeGe,2686159,74,108,53,74,37,346,70.00,59.00,-100.00,no (projected),129.00,is owed
-Christopher Chin,ChriSpirit,1641730,52,83,74,73,51,333,34.00,101.00,-100.00,no (projected),135.00,is owed
-Tian Pin Lee,Vege went tight,1567532,49,103,60,62,49,323,-50.00,-25.00,-100.00,no (projected),-75.00,owes
-Shaik Zahir,BestPlaya,4882676,48,94,51,76,50,319,-50.00,-25.00,-100.00,no (projected),-75.00,owes
-Wei Chen Lim,chili pan mee,5140825,61,62,80,72,42,317,34.00,-25.00,-100.00,no (projected),9.00,is owed
-Noel Tan,JEONSOMI,1652821,63,98,45,73,38,317,-50.00,-25.00,-100.00,no (projected),-75.00,owes
-Wei Hun Wong,"哑巴吃黄连 , 有苦说不出",4590653,60,72,54,100,28,314,34.00,-25.00,-100.00,no (projected),9.00,is owed
-Calvin Foo,After 22 yrs,4677226,66,54,41,87,50,298,-14.00,-25.00,-100.00,no (projected),-39.00,owes
-Boon Siang Ng,Boon,1840731,36,70,56,60,46,268,-50.00,-25.00,-100.00,no (projected),-75.00,owes
-TOTAL,,,,,,,,,,,,,0.00,
+manager,team,entry_id,GW1,GW2,GW3,GW4,points,weekly_rm,monthly_rm,season_rm,season_is_settled,accrued_rm,position
+Soon Lee Loo,SLucky XI,2488327,70,101,77,74,322,32.00,26.00,620.00,no (projected),58.00,is owed
+Jack Siah,Apple TV,1427521,58,103,61,99,321,-4.00,-10.00,200.00,no (projected),-14.00,owes
+Sam Lim,GeGe,2686159,74,108,53,74,309,80.00,74.00,80.00,no (projected),154.00,is owed
+Way Shoon Lim,AyamFC,5250642,52,110,61,79,302,44.00,-10.00,-100.00,no (projected),34.00,is owed
+Wei Hun Wong,"哑巴吃黄连 , 有苦说不出",4590653,60,72,54,100,286,44.00,-10.00,-100.00,no (projected),34.00,is owed
+Christopher Chin,ChriSpirit,1641730,52,83,74,73,282,-40.00,-10.00,-100.00,no (projected),-50.00,owes
+Noel Tan,JEONSOMI,1652821,63,98,45,73,279,-40.00,-10.00,-100.00,no (projected),-50.00,owes
+Wei Chen Lim,chili pan mee,5140825,61,62,80,72,275,44.00,-10.00,-100.00,no (projected),34.00,is owed
+Tian Pin Lee,Vege went tight,1567532,49,103,60,62,274,-40.00,-10.00,-100.00,no (projected),-50.00,owes
+Shaik Zahir,BestPlaya,4882676,48,94,51,76,269,-40.00,-10.00,-100.00,no (projected),-50.00,owes
+Calvin Foo,After 22 yrs,4677226,66,54,41,87,248,-40.00,-10.00,-100.00,no (projected),-50.00,owes
+Boon Siang Ng,Boon,1840731,36,70,56,60,222,-40.00,-10.00,-100.00,no (projected),-50.00,owes
+TOTAL,,,,,,,,,,,,0.00,

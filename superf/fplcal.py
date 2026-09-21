@@ -74,20 +74,33 @@ def build_breaks(events: Sequence[Mapping], min_days: int = BREAK_MIN_DAYS) -> l
     return breaks
 
 
-def gameweek_state(deadline: datetime, fixtures: Sequence[Mapping], now: datetime) -> str:
+def gameweek_state(
+    deadline: datetime,
+    fixtures: Sequence[Mapping],
+    now: datetime,
+    closed: bool | None = None,
+) -> str:
     """The five states of §11.1.
 
     Order matters. Provisional is tested before Live: when every fixture is
     ``finished_provisional`` but none is ``finished``, "any started and not
     finished" is also true, and calling that Live would let a pot settle on
     bonus that has not landed yet (§11.4 — this is the trap).
+
+    ``closed`` is the event's own ``data_checked`` flag: FPL's statement that
+    it has finished reviewing the round. Fixtures go ``finished`` before that
+    review is over, and in GW5 every fixture said finished, every history row
+    agreed with its squad, and six managers still gained up to 14 points over
+    the next hour. So ``closed=False`` caps the state at Provisional whatever
+    the fixtures say; ``None`` means the flag is unknown (an older season
+    mirror) and the fixtures decide alone.
     """
     if now < deadline:
         return "upcoming"
     if not fixtures:
         return "locked"
     if all(f.get("finished") for f in fixtures):
-        return "final"
+        return "provisional" if closed is False else "final"
     if all(f.get("finished_provisional") for f in fixtures):
         return "provisional"
     if any(f.get("started") for f in fixtures):

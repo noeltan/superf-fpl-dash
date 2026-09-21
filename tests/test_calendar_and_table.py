@@ -208,3 +208,19 @@ def test_settlement_is_empty_when_nobody_owes_anything():
 def test_settlement_is_deterministic():
     totals = {"a": 50, "b": 50, "c": -50, "d": -50}
     assert net_settlement(totals) == net_settlement(totals)
+
+
+def test_final_waits_for_fpl_to_close_the_round():
+    """GW5: every fixture finished, every row self-consistent, and six managers
+    still gained up to 14 points before FPL set data_checked. Finished fixtures
+    are necessary; FPL's own close is what makes a round Final."""
+    fixtures = [
+        fixture(started=True, finished=True, finished_provisional=True) for _ in range(3)
+    ]
+    assert gameweek_state(DEADLINE, fixtures, AFTER, closed=False) == "provisional"
+    assert gameweek_state(DEADLINE, fixtures, AFTER, closed=True) == "final"
+    # An older season mirror does not carry the flag: the fixtures decide alone.
+    assert gameweek_state(DEADLINE, fixtures, AFTER, closed=None) == "final"
+    # The gate only ever holds a round back; it cannot promote one.
+    fixtures[-1]["finished"] = False
+    assert gameweek_state(DEADLINE, fixtures, AFTER, closed=True) == "provisional"

@@ -209,6 +209,21 @@ two in agreement. A snapshot already on disk that fails the same check stops
 the build with the file to delete, because the book must never settle on a
 row the squad contradicts.
 
+That check is necessary and it is not sufficient. In GW5 every fixture said
+`finished`, every history row agreed with its squad, the snapshot froze at
+09:12 UTC on the Monday — and by 10:00 six managers had gained up to 14
+points, and the week had a different winner. FPL had applied one batch to
+both endpoints at once and was still reviewing. The only thing that says the
+review is over is the event's own `data_checked`, so a round is now Final
+only when FPL says it is closed: with the flag false the state is capped at
+*provisional* whatever the fixtures say, the page shows the squads' points
+and says "would", and nothing is booked. The flag is mirrored into
+`raw/season.json` so the offline rebuild applies the same gate. A snapshot
+found on disk for a round FPL has not closed stops the build with the file
+to delete, for the same reason as above: it can be self-consistent and still
+short. The cost is that a week settles a day or so later than the football;
+the alternative was RM120 booked to the wrong manager.
+
 **A fetch failure publishes nothing.** The previous `data.json` stays live and
 ages, which fires the §9.5 stale banner. A stale number that says it is stale
 beats a fresh number built from half an API.
