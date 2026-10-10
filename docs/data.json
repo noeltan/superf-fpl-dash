@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-09T12:59:53Z",
+ "generated_at": "2026-10-10T12:16:56Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 5,
-  "next_gw": 6,
-  "state": "final"
+  "gameweek": 6,
+  "next_gw": 7,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -1420,9 +1420,9 @@
     "ko": "2026-10-10T11:30:00Z",
     "dh": 3,
     "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 0,
+    "started": true,
     "finished": false,
     "finished_provisional": false,
     "id": 51
@@ -7977,7 +7977,7 @@
     ]
    }
   ],
-  "footer": "GW6 deadline: Sat 10 Oct, 18:00 MYT.",
-  "text": "SuperF \u00b7 GW5 settled \u00b7 Sun 20 Sep\n\nGW5\nCalvin takes GW5 on 64 pts and is owed RM74.\nWay Shoon is second on 56 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\nConfirmed bonus moved this one: Chris led at full time, Calvin took it.\n\nEVERY SCORE\n1. Calvin \u2014 64 pts (+RM74)\n2. Way Shoon \u2014 56 pts (+RM26)\n3. Chris \u2014 53 pts (\u2212RM10)\n4. Zahir \u2014 50 pts (\u2212RM10)\n5. Tian Pin \u2014 49 pts (\u2212RM10) [-4 hit]\n6. Soon Lee \u2014 47 pts (\u2212RM10)\n7. Boon \u2014 46 pts (\u2212RM10)\n8. Sam \u2014 44 pts (\u2212RM10)\n9. Wei Chen \u2014 42 pts (\u2212RM10)\n10. Wei Hun \u2014 42 pts (\u2212RM10)\n11. Jack \u2014 38 pts (\u2212RM10)\n12. Noel \u2014 38 pts (\u2212RM10)\n\nSEPTEMBER \u2014 SETTLED\nSeptember is settled over GW3\u2013GW5.\nChris takes the month on 200 pts and is owed RM111.\nSoon Lee is second on 198 and is owed RM39.\nThe other 10 managers owe RM15 each. Pot RM180.\n\nSEASON SO FAR\n1. Soon Lee \u2014 369 pts\n2. Jack \u2014 359 pts (10 behind)\n3. Way Shoon \u2014 358 pts (11 behind)\nSoon Lee leads by 10 after 5 gameweeks.\n\nGW6 deadline: Sat 10 Oct, 18:00 MYT.\n"
+  "footer": "GW7 deadline: Sat 17 Oct, 18:00 MYT.",
+  "text": "SuperF \u00b7 GW5 settled \u00b7 Sun 20 Sep\n\nGW5\nCalvin takes GW5 on 64 pts and is owed RM74.\nWay Shoon is second on 56 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\nConfirmed bonus moved this one: Chris led at full time, Calvin took it.\n\nEVERY SCORE\n1. Calvin \u2014 64 pts (+RM74)\n2. Way Shoon \u2014 56 pts (+RM26)\n3. Chris \u2014 53 pts (\u2212RM10)\n4. Zahir \u2014 50 pts (\u2212RM10)\n5. Tian Pin \u2014 49 pts (\u2212RM10) [-4 hit]\n6. Soon Lee \u2014 47 pts (\u2212RM10)\n7. Boon \u2014 46 pts (\u2212RM10)\n8. Sam \u2014 44 pts (\u2212RM10)\n9. Wei Chen \u2014 42 pts (\u2212RM10)\n10. Wei Hun \u2014 42 pts (\u2212RM10)\n11. Jack \u2014 38 pts (\u2212RM10)\n12. Noel \u2014 38 pts (\u2212RM10)\n\nSEPTEMBER \u2014 SETTLED\nSeptember is settled over GW3\u2013GW5.\nChris takes the month on 200 pts and is owed RM111.\nSoon Lee is second on 198 and is owed RM39.\nThe other 10 managers owe RM15 each. Pot RM180.\n\nSEASON SO FAR\n1. Soon Lee \u2014 369 pts\n2. Jack \u2014 359 pts (10 behind)\n3. Way Shoon \u2014 358 pts (11 behind)\nSoon Lee leads by 10 after 5 gameweeks.\n\nGW7 deadline: Sat 17 Oct, 18:00 MYT.\n"
  }
 }
