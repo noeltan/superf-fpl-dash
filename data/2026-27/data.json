@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-13T07:22:17Z",
+ "generated_at": "2026-10-13T13:59:00Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -1423,7 +1423,7 @@
     "hs": 2,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 51
    },
@@ -1436,7 +1436,7 @@
     "hs": 2,
     "as": 2,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 52
    },
@@ -1449,7 +1449,7 @@
     "hs": 5,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 53
    },
@@ -1462,7 +1462,7 @@
     "hs": 2,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 57
    },
@@ -1475,7 +1475,7 @@
     "hs": 0,
     "as": 2,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 60
    },
@@ -1488,7 +1488,7 @@
     "hs": 1,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 59
    },
@@ -1501,7 +1501,7 @@
     "hs": 3,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 55
    },
@@ -1514,7 +1514,7 @@
     "hs": 2,
     "as": 2,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 56
    },
@@ -1527,7 +1527,7 @@
     "hs": 0,
     "as": 3,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 58
    },
@@ -1540,7 +1540,7 @@
     "hs": 4,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 54
    }
@@ -6781,7 +6781,7 @@
     "chip": null
    },
    "tianpin": {
-    "points": 62,
+    "points": 70,
     "hits": 8,
     "chip": null
    },
@@ -6791,7 +6791,7 @@
     "chip": null
    },
    "weichenlim": {
-    "points": 73,
+    "points": 75,
     "hits": 0,
     "chip": null
    },
@@ -6837,9 +6837,9 @@
     "sam": 71,
     "shaikzahir": 55,
     "soonlee": 81,
-    "tianpin": 62,
+    "tianpin": 70,
     "wayshoonlim": 58,
-    "weichenlim": 73,
+    "weichenlim": 75,
     "weihun": 83
    },
    "order": [
@@ -6867,9 +6867,9 @@
     "sam": 71,
     "shaikzahir": 51,
     "soonlee": 77,
-    "tianpin": 54,
+    "tianpin": 62,
     "wayshoonlim": 58,
-    "weichenlim": 73,
+    "weichenlim": 75,
     "weihun": 83
    },
    "totals": {
@@ -6881,9 +6881,9 @@
     "sam": 424,
     "shaikzahir": 370,
     "soonlee": 446,
-    "tianpin": 377,
+    "tianpin": 385,
     "wayshoonlim": 416,
-    "weichenlim": 390,
+    "weichenlim": 392,
     "weihun": 411
    },
    "order": [
@@ -6909,9 +6909,9 @@
     "sam": 22,
     "shaikzahir": 76,
     "soonlee": 0,
-    "tianpin": 69,
+    "tianpin": 61,
     "wayshoonlim": 30,
-    "weichenlim": 56,
+    "weichenlim": 54,
     "weihun": 35
    },
    "rank_prev": {
