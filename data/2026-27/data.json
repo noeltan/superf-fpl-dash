@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-12T15:05:36Z",
+ "generated_at": "2026-10-13T02:54:10Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -10,7 +10,7 @@
   "season": "2026/27",
   "gameweek": 6,
   "next_gw": 7,
-  "state": "live"
+  "state": "provisional"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -1537,11 +1537,11 @@
     "ko": "2026-10-12T19:00:00Z",
     "dh": 3,
     "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 4,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 54
    }
   ],
@@ -5964,20 +5964,20 @@
   {
    "pos": 11,
    "team": 17,
-   "p": 5,
+   "p": 6,
    "w": 2,
    "d": 2,
-   "l": 1,
-   "gf": 9,
-   "ga": 9,
-   "gd": 0,
+   "l": 2,
+   "gf": 10,
+   "ga": 13,
+   "gd": -3,
    "pts": 8,
    "form": [
-    "D",
     "W",
     "D",
     "L",
-    "W"
+    "W",
+    "L"
    ]
   },
   {
@@ -6020,6 +6020,25 @@
   },
   {
    "pos": 14,
+   "team": 7,
+   "p": 6,
+   "w": 2,
+   "d": 0,
+   "l": 4,
+   "gf": 5,
+   "ga": 11,
+   "gd": -6,
+   "pts": 6,
+   "form": [
+    "L",
+    "L",
+    "L",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 15,
    "team": 18,
    "p": 6,
    "w": 1,
@@ -6038,7 +6057,7 @@
    ]
   },
   {
-   "pos": 15,
+   "pos": 16,
    "team": 2,
    "p": 6,
    "w": 1,
@@ -6057,7 +6076,7 @@
    ]
   },
   {
-   "pos": 16,
+   "pos": 17,
    "team": 20,
    "p": 6,
    "w": 1,
@@ -6076,7 +6095,7 @@
    ]
   },
   {
-   "pos": 17,
+   "pos": 18,
    "team": 3,
    "p": 6,
    "w": 0,
@@ -6095,7 +6114,7 @@
    ]
   },
   {
-   "pos": 18,
+   "pos": 19,
    "team": 19,
    "p": 6,
    "w": 0,
@@ -6111,25 +6130,6 @@
     "D",
     "L",
     "D"
-   ]
-  },
-  {
-   "pos": 19,
-   "team": 7,
-   "p": 5,
-   "w": 1,
-   "d": 0,
-   "l": 4,
-   "gf": 1,
-   "ga": 10,
-   "gd": -9,
-   "pts": 3,
-   "form": [
-    "L",
-    "L",
-    "L",
-    "L",
-    "W"
    ]
   },
   {
@@ -6728,7 +6728,208 @@
    }
   }
  ],
- "provisional": null,
+ "provisional": {
+  "gw": 6,
+  "observed_at": "2026-10-13T02:54:10Z",
+  "leader": "boonsiang",
+  "runner_up": "weihun",
+  "margin": 8,
+  "pot": 120,
+  "net": [
+   74,
+   26
+  ],
+  "scores": {
+   "boonsiang": {
+    "points": 91,
+    "hits": 0,
+    "chip": null
+   },
+   "calvinfoo": {
+    "points": 61,
+    "hits": 0,
+    "chip": null
+   },
+   "chris": {
+    "points": 71,
+    "hits": 0,
+    "chip": null
+   },
+   "jack": {
+    "points": 58,
+    "hits": 0,
+    "chip": "wildcard"
+   },
+   "noel": {
+    "points": 56,
+    "hits": 0,
+    "chip": null
+   },
+   "sam": {
+    "points": 71,
+    "hits": 0,
+    "chip": "wildcard"
+   },
+   "shaikzahir": {
+    "points": 55,
+    "hits": 4,
+    "chip": null
+   },
+   "soonlee": {
+    "points": 81,
+    "hits": 4,
+    "chip": null
+   },
+   "tianpin": {
+    "points": 62,
+    "hits": 8,
+    "chip": null
+   },
+   "wayshoonlim": {
+    "points": 58,
+    "hits": 0,
+    "chip": null
+   },
+   "weichenlim": {
+    "points": 73,
+    "hits": 0,
+    "chip": null
+   },
+   "weihun": {
+    "points": 83,
+    "hits": 0,
+    "chip": null
+   }
+  },
+  "order": [
+   "boonsiang",
+   "weihun",
+   "soonlee",
+   "weichenlim",
+   "chris",
+   "sam",
+   "tianpin",
+   "calvinfoo",
+   "jack",
+   "wayshoonlim",
+   "noel",
+   "shaikzahir"
+  ],
+  "month": {
+   "month": "OCT",
+   "gameweeks": 4,
+   "played": [
+    6
+   ],
+   "remaining": 3,
+   "stake": 20,
+   "pot": 240,
+   "net": [
+    148,
+    52
+   ],
+   "totals": {
+    "boonsiang": 91,
+    "calvinfoo": 61,
+    "chris": 71,
+    "jack": 58,
+    "noel": 56,
+    "sam": 71,
+    "shaikzahir": 55,
+    "soonlee": 81,
+    "tianpin": 62,
+    "wayshoonlim": 58,
+    "weichenlim": 73,
+    "weihun": 83
+   },
+   "order": [
+    "boonsiang",
+    "weihun",
+    "soonlee",
+    "weichenlim",
+    "chris",
+    "sam",
+    "tianpin",
+    "calvinfoo",
+    "jack",
+    "wayshoonlim",
+    "noel",
+    "shaikzahir"
+   ]
+  },
+  "season": {
+   "round": {
+    "boonsiang": 91,
+    "calvinfoo": 61,
+    "chris": 71,
+    "jack": 58,
+    "noel": 56,
+    "sam": 71,
+    "shaikzahir": 51,
+    "soonlee": 77,
+    "tianpin": 54,
+    "wayshoonlim": 58,
+    "weichenlim": 73,
+    "weihun": 83
+   },
+   "totals": {
+    "boonsiang": 359,
+    "calvinfoo": 373,
+    "chris": 406,
+    "jack": 417,
+    "noel": 373,
+    "sam": 424,
+    "shaikzahir": 370,
+    "soonlee": 446,
+    "tianpin": 377,
+    "wayshoonlim": 416,
+    "weichenlim": 390,
+    "weihun": 411
+   },
+   "order": [
+    "soonlee",
+    "sam",
+    "jack",
+    "wayshoonlim",
+    "weihun",
+    "chris",
+    "weichenlim",
+    "tianpin",
+    "calvinfoo",
+    "noel",
+    "shaikzahir",
+    "boonsiang"
+   ],
+   "behind": {
+    "boonsiang": 87,
+    "calvinfoo": 73,
+    "chris": 40,
+    "jack": 29,
+    "noel": 73,
+    "sam": 22,
+    "shaikzahir": 76,
+    "soonlee": 0,
+    "tianpin": 69,
+    "wayshoonlim": 30,
+    "weichenlim": 56,
+    "weihun": 35
+   },
+   "rank_prev": {
+    "soonlee": 1,
+    "jack": 2,
+    "wayshoonlim": 3,
+    "sam": 4,
+    "chris": 5,
+    "weihun": 6,
+    "tianpin": 7,
+    "shaikzahir": 8,
+    "weichenlim": 9,
+    "noel": 10,
+    "calvinfoo": 11,
+    "boonsiang": 12
+   }
+  }
+ },
  "months": [
   {
    "month": "AUG",
