@@ -198,7 +198,14 @@
   },
   "reasoning": "Wei Hun Wong leads on 84.7 and, crucially, 65.0 of that is banked \u2014 the biggest finished total in the league. His remaining 19.7 is the thinnest of the top four, but a lead built on points already scored beats one built on projection. Boon Siang Ng is next on 78.8 with 21.8 still live across Barry, Gibbs-White, Gu\u00e9hi, Cunha and Cherki, spread over four fixtures. Sam Lim's wildcard gives him a clean eleven and a Haaland captaincy, so he can jump Ng at Anfield. Tian Pin Lee took an 8-point hit and needs Jo\u00e3o Pedro big. The structural risk is obvious: almost everyone's week ends at Liverpool v City, difficulty 4/4."
  },
- "result": null,
+ "result": {
+  "actual_first": "boonsiang",
+  "actual_second": "weihun",
+  "exact_hit": false,
+  "podium_hit": true,
+  "pair_hit": true,
+  "mean_rank_error": 1.0
+ },
  "record": {
   "played": 0,
   "exact": 0,
