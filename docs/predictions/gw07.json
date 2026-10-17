@@ -1,0 +1,207 @@
+{
+ "gw": 7,
+ "generated_at": "2026-10-17T13:33:29Z",
+ "model": "claude-opus-5",
+ "mode": "mid_round",
+ "mid_round": {
+  "as_of": "2026-10-17T13:33:29Z",
+  "played": 1,
+  "remaining": 9,
+  "total": 10
+ },
+ "projections": [
+  {
+   "manager": "boonsiang",
+   "xp": 67.6,
+   "captain": "Saka",
+   "captain_xp": 5.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "chip": "bboost",
+   "squad": 15,
+   "banked": 6.0,
+   "remaining": 61.6
+  },
+  {
+   "manager": "tianpin",
+   "xp": 58.4,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 2
+   },
+   "banked": 2.0,
+   "remaining": 56.4
+  },
+  {
+   "manager": "chris",
+   "xp": 56.5,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 4.0,
+   "remaining": 52.5
+  },
+  {
+   "manager": "wayshoonlim",
+   "xp": 56.4,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 2
+   },
+   "banked": 2.0,
+   "remaining": 54.4
+  },
+  {
+   "manager": "jack",
+   "xp": 56.2,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 4.0,
+   "remaining": 52.2
+  },
+  {
+   "manager": "shaikzahir",
+   "xp": 56.1,
+   "captain": "De Cuyper",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 2.0,
+   "remaining": 54.1
+  },
+  {
+   "manager": "sam",
+   "xp": 55.5,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 4.0,
+   "remaining": 51.5
+  },
+  {
+   "manager": "noel",
+   "xp": 55.4,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 2.0,
+   "remaining": 53.4
+  },
+  {
+   "manager": "weihun",
+   "xp": 55.4,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 6.0,
+   "remaining": 49.4
+  },
+  {
+   "manager": "calvinfoo",
+   "xp": 54.0,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 6.0,
+   "remaining": 48.0
+  },
+  {
+   "manager": "soonlee",
+   "xp": 53.7,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 3
+   },
+   "banked": 4.0,
+   "remaining": 49.7
+  },
+  {
+   "manager": "weichenlim",
+   "xp": 49.5,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 6.0,
+   "remaining": 43.5
+  }
+ ],
+ "call": {
+  "first": {
+   "manager": "boonsiang",
+   "confidence": "medium"
+  },
+  "second": {
+   "manager": "tianpin",
+   "confidence": "low"
+  },
+  "agrees_with_projection": true,
+  "swing_player": {
+   "name": "Haaland",
+   "owned_by": [
+    "noel",
+    "jack",
+    "sam",
+    "weihun",
+    "soonlee",
+    "tianpin",
+    "chris",
+    "calvinfoo",
+    "weichenlim",
+    "wayshoonlim"
+   ],
+   "why": "Ten of twelve own him and all ten captained him against Ipswich at the Etihad; Boon Siang Ng doesn't. If Haaland hauls, the chip lead is gone \u2014 if he blanks, Saka and the bench boost decide it."
+  },
+  "reasoning": "Boon Siang Ng leads on 67.6, but almost all of it is projection \u2014 only 6.0 banked, with fifteen players still feeding him on the bench boost. That's the whole call: he's scoring from a bigger squad than anyone else, and three Arsenal at Forest plus Cherki and Doku at the Etihad give him volume nobody can match. The risk is that he's the one manager without Haaland, and ten rivals captained the Norwegian against Ipswich. Tian Pin Lee is my second on 58.4 \u2014 Haaland armband, two Brighton, Cherki \u2014 but he's barely clear of Chris, Way Shoon and Jack, so that's a low-confidence pick for a 30% slice."
+ },
+ "result": null,
+ "record": {
+  "played": 0,
+  "exact": 0,
+  "podium": 0,
+  "pair": 0
+ }
+}

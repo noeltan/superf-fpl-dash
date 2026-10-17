@@ -1,183 +1,181 @@
 {
- "gw": 6,
- "generated_at": "2026-10-10T15:50:34Z",
+ "gw": 7,
+ "generated_at": "2026-10-17T13:33:29Z",
  "model": "claude-opus-5",
  "mode": "mid_round",
  "mid_round": {
-  "as_of": "2026-10-10T15:50:34Z",
-  "played": 5,
-  "remaining": 5,
+  "as_of": "2026-10-17T13:33:29Z",
+  "played": 1,
+  "remaining": 9,
   "total": 10
  },
  "projections": [
   {
-   "manager": "weihun",
-   "xp": 84.7,
-   "captain": "Haaland",
-   "captain_xp": 5.9,
-   "hits": 0,
-   "concentration": {
-    "club": "BHA",
-    "players": 3
-   },
-   "banked": 65.0,
-   "remaining": 19.7
-  },
-  {
    "manager": "boonsiang",
-   "xp": 78.8,
+   "xp": 67.6,
    "captain": "Saka",
-   "captain_xp": 2.0,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 2
-   },
-   "banked": 57.0,
-   "remaining": 21.8
-  },
-  {
-   "manager": "sam",
-   "xp": 77.9,
-   "captain": "Haaland",
-   "captain_xp": 5.9,
+   "captain_xp": 5.6,
    "hits": 0,
    "concentration": {
     "club": "ARS",
     "players": 3
    },
-   "chip": "wildcard",
-   "squad": 11,
-   "banked": 57.0,
-   "remaining": 20.9
+   "chip": "bboost",
+   "squad": 15,
+   "banked": 6.0,
+   "remaining": 61.6
   },
   {
    "manager": "tianpin",
-   "xp": 73.1,
-   "captain": "Jo\u00e3o Pedro",
-   "captain_xp": 12.0,
-   "hits": 8,
+   "xp": 58.4,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
    "concentration": {
     "club": "BHA",
     "players": 2
    },
-   "banked": 48.0,
-   "remaining": 25.1
-  },
-  {
-   "manager": "soonlee",
-   "xp": 71.8,
-   "captain": "Rogers",
-   "captain_xp": 9.0,
-   "hits": 4,
-   "concentration": {
-    "club": "ARS",
-    "players": 3
-   },
-   "banked": 55.0,
-   "remaining": 16.8
-  },
-  {
-   "manager": "noel",
-   "xp": 70.6,
-   "captain": "B.Fernandes",
-   "captain_xp": 6.3,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 2
-   },
-   "banked": 41.0,
-   "remaining": 29.6
+   "banked": 2.0,
+   "remaining": 56.4
   },
   {
    "manager": "chris",
-   "xp": 69.6,
-   "captain": "Saka",
-   "captain_xp": 2.0,
+   "xp": 56.5,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
    "hits": 0,
    "concentration": {
     "club": "ARS",
     "players": 3
    },
-   "banked": 52.0,
-   "remaining": 17.6
+   "banked": 4.0,
+   "remaining": 52.5
   },
   {
    "manager": "wayshoonlim",
-   "xp": 69.1,
+   "xp": 56.4,
    "captain": "Haaland",
-   "captain_xp": 5.9,
+   "captain_xp": 6.6,
    "hits": 0,
    "concentration": {
     "club": "BHA",
     "players": 2
    },
-   "banked": 39.0,
-   "remaining": 30.1
+   "banked": 2.0,
+   "remaining": 54.4
   },
   {
    "manager": "jack",
-   "xp": 67.5,
-   "captain": "Saka",
-   "captain_xp": 2.0,
+   "xp": 56.2,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
    "hits": 0,
    "concentration": {
     "club": "ARS",
     "players": 2
    },
-   "chip": "wildcard",
-   "squad": 11,
-   "banked": 49.0,
-   "remaining": 18.5
+   "banked": 4.0,
+   "remaining": 52.2
   },
   {
    "manager": "shaikzahir",
-   "xp": 65.3,
-   "captain": "Barnes",
-   "captain_xp": 3.6,
-   "hits": 4,
-   "concentration": {
-    "club": "ARS",
-    "players": 3
-   },
-   "banked": 39.0,
-   "remaining": 26.3
-  },
-  {
-   "manager": "calvinfoo",
-   "xp": 64.3,
-   "captain": "Saka",
-   "captain_xp": 2.0,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 3
-   },
-   "banked": 54.0,
-   "remaining": 10.3
-  },
-  {
-   "manager": "weichenlim",
-   "xp": 62.9,
-   "captain": "Rogers",
-   "captain_xp": 9.0,
+   "xp": 56.1,
+   "captain": "De Cuyper",
+   "captain_xp": 6.4,
    "hits": 0,
    "concentration": {
     "club": "ARS",
     "players": 2
    },
-   "banked": 39.0,
-   "remaining": 23.9
+   "banked": 2.0,
+   "remaining": 54.1
+  },
+  {
+   "manager": "sam",
+   "xp": 55.5,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 4.0,
+   "remaining": 51.5
+  },
+  {
+   "manager": "noel",
+   "xp": 55.4,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 2.0,
+   "remaining": 53.4
+  },
+  {
+   "manager": "weihun",
+   "xp": 55.4,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 6.0,
+   "remaining": 49.4
+  },
+  {
+   "manager": "calvinfoo",
+   "xp": 54.0,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 6.0,
+   "remaining": 48.0
+  },
+  {
+   "manager": "soonlee",
+   "xp": 53.7,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 3
+   },
+   "banked": 4.0,
+   "remaining": 49.7
+  },
+  {
+   "manager": "weichenlim",
+   "xp": 49.5,
+   "captain": "Haaland",
+   "captain_xp": 6.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 6.0,
+   "remaining": 43.5
   }
  ],
  "call": {
   "first": {
-   "manager": "weihun",
+   "manager": "boonsiang",
    "confidence": "medium"
   },
   "second": {
-   "manager": "boonsiang",
+   "manager": "tianpin",
    "confidence": "low"
   },
   "agrees_with_projection": true,
@@ -189,23 +187,17 @@
     "sam",
     "weihun",
     "soonlee",
+    "tianpin",
     "chris",
     "calvinfoo",
     "weichenlim",
     "wayshoonlim"
    ],
-   "why": "Nine of twelve own him and three captain him, including leader Wei Hun Wong, so Liverpool v City on Sunday night either locks the pot in or blows it open. Only Boon Siang Ng, Tian Pin Lee and Shaik Zahir sit it out."
+   "why": "Ten of twelve own him and all ten captained him against Ipswich at the Etihad; Boon Siang Ng doesn't. If Haaland hauls, the chip lead is gone \u2014 if he blanks, Saka and the bench boost decide it."
   },
-  "reasoning": "Wei Hun Wong leads on 84.7 and, crucially, 65.0 of that is banked \u2014 the biggest finished total in the league. His remaining 19.7 is the thinnest of the top four, but a lead built on points already scored beats one built on projection. Boon Siang Ng is next on 78.8 with 21.8 still live across Barry, Gibbs-White, Gu\u00e9hi, Cunha and Cherki, spread over four fixtures. Sam Lim's wildcard gives him a clean eleven and a Haaland captaincy, so he can jump Ng at Anfield. Tian Pin Lee took an 8-point hit and needs Jo\u00e3o Pedro big. The structural risk is obvious: almost everyone's week ends at Liverpool v City, difficulty 4/4."
+  "reasoning": "Boon Siang Ng leads on 67.6, but almost all of it is projection \u2014 only 6.0 banked, with fifteen players still feeding him on the bench boost. That's the whole call: he's scoring from a bigger squad than anyone else, and three Arsenal at Forest plus Cherki and Doku at the Etihad give him volume nobody can match. The risk is that he's the one manager without Haaland, and ten rivals captained the Norwegian against Ipswich. Tian Pin Lee is my second on 58.4 \u2014 Haaland armband, two Brighton, Cherki \u2014 but he's barely clear of Chris, Way Shoon and Jack, so that's a low-confidence pick for a 30% slice."
  },
- "result": {
-  "actual_first": "boonsiang",
-  "actual_second": "weihun",
-  "exact_hit": false,
-  "podium_hit": true,
-  "pair_hit": true,
-  "mean_rank_error": 1.0
- },
+ "result": null,
  "record": {
   "played": 0,
   "exact": 0,
