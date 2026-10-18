@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-16T11:09:26Z",
+ "generated_at": "2026-10-18T10:48:00Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 6,
-  "next_gw": 7,
-  "state": "final"
+  "gameweek": 7,
+  "next_gw": 8,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -1552,11 +1552,11 @@
     "ko": "2026-10-17T11:30:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 64
    },
    {
@@ -1565,11 +1565,11 @@
     "ko": "2026-10-17T14:00:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 62
    },
    {
@@ -1578,11 +1578,11 @@
     "ko": "2026-10-17T14:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 65
    },
    {
@@ -1591,11 +1591,11 @@
     "ko": "2026-10-17T14:00:00Z",
     "dh": 2,
     "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 3,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 67
    },
    {
@@ -1604,11 +1604,11 @@
     "ko": "2026-10-17T16:30:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 68
    },
    {
@@ -5774,14 +5774,14 @@
   {
    "pos": 1,
    "team": 15,
-   "p": 6,
-   "w": 6,
+   "p": 7,
+   "w": 7,
    "d": 0,
    "l": 0,
-   "gf": 16,
-   "ga": 5,
-   "gd": 11,
-   "pts": 18,
+   "gf": 19,
+   "ga": 7,
+   "gd": 12,
+   "pts": 21,
    "form": [
     "W",
     "W",
@@ -5830,63 +5830,82 @@
   },
   {
    "pos": 4,
-   "team": 4,
-   "p": 6,
-   "w": 2,
-   "d": 4,
-   "l": 0,
-   "gf": 12,
-   "ga": 6,
-   "gd": 6,
-   "pts": 10,
+   "team": 6,
+   "p": 7,
+   "w": 4,
+   "d": 1,
+   "l": 2,
+   "gf": 17,
+   "ga": 13,
+   "gd": 4,
+   "pts": 13,
    "form": [
+    "L",
     "D",
-    "D",
-    "D",
+    "L",
     "W",
-    "D"
+    "W"
    ]
   },
   {
    "pos": 5,
-   "team": 9,
-   "p": 6,
-   "w": 2,
-   "d": 4,
-   "l": 0,
-   "gf": 8,
-   "ga": 5,
-   "gd": 3,
-   "pts": 10,
-   "form": [
-    "D",
-    "D",
-    "D",
-    "W",
-    "D"
-   ]
-  },
-  {
-   "pos": 6,
-   "team": 6,
-   "p": 6,
+   "team": 14,
+   "p": 7,
    "w": 3,
-   "d": 1,
-   "l": 2,
-   "gf": 15,
-   "ga": 13,
-   "gd": 2,
-   "pts": 10,
+   "d": 3,
+   "l": 1,
+   "gf": 9,
+   "ga": 8,
+   "gd": 1,
+   "pts": 12,
    "form": [
     "W",
-    "L",
     "D",
+    "W",
     "L",
     "W"
    ]
   },
   {
+   "pos": 6,
+   "team": 4,
+   "p": 7,
+   "w": 2,
+   "d": 4,
+   "l": 1,
+   "gf": 13,
+   "ga": 8,
+   "gd": 5,
+   "pts": 10,
+   "form": [
+    "D",
+    "D",
+    "W",
+    "D",
+    "L"
+   ]
+  },
+  {
    "pos": 7,
+   "team": 9,
+   "p": 7,
+   "w": 2,
+   "d": 4,
+   "l": 1,
+   "gf": 8,
+   "ga": 7,
+   "gd": 1,
+   "pts": 10,
+   "form": [
+    "D",
+    "D",
+    "W",
+    "D",
+    "L"
+   ]
+  },
+  {
+   "pos": 8,
    "team": 13,
    "p": 6,
    "w": 2,
@@ -5905,83 +5924,83 @@
    ]
   },
   {
-   "pos": 8,
+   "pos": 9,
    "team": 11,
-   "p": 6,
+   "p": 7,
    "w": 2,
    "d": 3,
-   "l": 1,
+   "l": 2,
    "gf": 8,
-   "ga": 6,
-   "gd": 2,
+   "ga": 7,
+   "gd": 1,
    "pts": 9,
    "form": [
-    "W",
     "D",
     "D",
     "L",
-    "D"
-   ]
-  },
-  {
-   "pos": 9,
-   "team": 14,
-   "p": 6,
-   "w": 2,
-   "d": 3,
-   "l": 1,
-   "gf": 7,
-   "ga": 7,
-   "gd": 0,
-   "pts": 9,
-   "form": [
     "D",
-    "W",
-    "D",
-    "W",
     "L"
    ]
   },
   {
    "pos": 10,
    "team": 12,
-   "p": 6,
+   "p": 7,
    "w": 3,
    "d": 0,
-   "l": 3,
-   "gf": 9,
-   "ga": 12,
-   "gd": -3,
+   "l": 4,
+   "gf": 11,
+   "ga": 15,
+   "gd": -4,
    "pts": 9,
    "form": [
     "L",
-    "L",
     "W",
-    "L",
-    "W"
-   ]
-  },
-  {
-   "pos": 11,
-   "team": 17,
-   "p": 6,
-   "w": 2,
-   "d": 2,
-   "l": 2,
-   "gf": 10,
-   "ga": 13,
-   "gd": -3,
-   "pts": 8,
-   "form": [
-    "W",
-    "D",
     "L",
     "W",
     "L"
    ]
   },
   {
+   "pos": 11,
+   "team": 17,
+   "p": 7,
+   "w": 2,
+   "d": 2,
+   "l": 3,
+   "gf": 10,
+   "ga": 14,
+   "gd": -4,
+   "pts": 8,
+   "form": [
+    "D",
+    "L",
+    "W",
+    "L",
+    "L"
+   ]
+  },
+  {
    "pos": 12,
+   "team": 2,
+   "p": 7,
+   "w": 2,
+   "d": 2,
+   "l": 3,
+   "gf": 7,
+   "ga": 11,
+   "gd": -4,
+   "pts": 8,
+   "form": [
+    "D",
+    "L",
+    "W",
+    "D",
+    "W"
+   ]
+  },
+  {
+   "pos": 13,
    "team": 8,
    "p": 6,
    "w": 2,
@@ -6000,7 +6019,7 @@
    ]
   },
   {
-   "pos": 13,
+   "pos": 14,
    "team": 16,
    "p": 6,
    "w": 1,
@@ -6019,7 +6038,7 @@
    ]
   },
   {
-   "pos": 14,
+   "pos": 15,
    "team": 7,
    "p": 6,
    "w": 2,
@@ -6038,7 +6057,26 @@
    ]
   },
   {
-   "pos": 15,
+   "pos": 16,
+   "team": 10,
+   "p": 7,
+   "w": 1,
+   "d": 2,
+   "l": 4,
+   "gf": 7,
+   "ga": 10,
+   "gd": -3,
+   "pts": 5,
+   "form": [
+    "L",
+    "D",
+    "D",
+    "L",
+    "W"
+   ]
+  },
+  {
+   "pos": 17,
    "team": 18,
    "p": 6,
    "w": 1,
@@ -6057,26 +6095,7 @@
    ]
   },
   {
-   "pos": 16,
-   "team": 2,
-   "p": 6,
-   "w": 1,
-   "d": 2,
-   "l": 3,
-   "gf": 6,
-   "ga": 11,
-   "gd": -5,
-   "pts": 5,
-   "form": [
-    "L",
-    "D",
-    "L",
-    "W",
-    "D"
-   ]
-  },
-  {
-   "pos": 17,
+   "pos": 18,
    "team": 20,
    "p": 6,
    "w": 1,
@@ -6095,7 +6114,7 @@
    ]
   },
   {
-   "pos": 18,
+   "pos": 19,
    "team": 3,
    "p": 6,
    "w": 0,
@@ -6114,7 +6133,7 @@
    ]
   },
   {
-   "pos": 19,
+   "pos": 20,
    "team": 19,
    "p": 6,
    "w": 0,
@@ -6130,25 +6149,6 @@
     "D",
     "L",
     "D"
-   ]
-  },
-  {
-   "pos": 20,
-   "team": 10,
-   "p": 6,
-   "w": 0,
-   "d": 2,
-   "l": 4,
-   "gf": 6,
-   "ga": 10,
-   "gd": -4,
-   "pts": 2,
-   "form": [
-    "L",
-    "L",
-    "D",
-    "D",
-    "L"
    ]
   }
  ],
@@ -8227,7 +8227,7 @@
     ]
    }
   ],
-  "footer": "GW7 deadline: Sat 17 Oct, 18:00 MYT.",
-  "text": "SuperF \u00b7 GW6 settled \u00b7 Mon 12 Oct\n\nGW6\nBoon takes GW6 on 91 pts and is owed RM74.\nWei Hun is second on 83 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\n\nEVERY SCORE\n1. Boon \u2014 91 pts (+RM74)\n2. Wei Hun \u2014 83 pts (+RM26)\n3. Soon Lee \u2014 81 pts (\u2212RM10) [-4 hit]\n4. Wei Chen \u2014 75 pts (\u2212RM10)\n5. Chris \u2014 71 pts (\u2212RM10)\n6. Sam \u2014 71 pts (\u2212RM10) [wildcard]\n7. Tian Pin \u2014 70 pts (\u2212RM10) [-8 hit]\n8. Calvin \u2014 61 pts (\u2212RM10)\n9. Jack \u2014 58 pts (\u2212RM10) [wildcard]\n10. Way Shoon \u2014 58 pts (\u2212RM10)\n11. Noel \u2014 56 pts (\u2212RM10)\n12. Zahir \u2014 55 pts (\u2212RM10) [-4 hit]\n\nOCTOBER \u2014 RUNNING\nOctober is 1 of 4 gameweeks in \u2014 RM240 in the pot, 3 gameweeks left.\n1. Boon \u2014 91 pts\n2. Wei Hun \u2014 83 pts\n3. Soon Lee \u2014 81 pts\nBoon would take RM148 if it held \u2014 would, not is. Nothing settles until GW9 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 450 pts\n2. Sam \u2014 424 pts (26 behind)\n3. Jack \u2014 417 pts (33 behind)\nSoon Lee leads by 26 after 6 gameweeks.\n\nGW7 deadline: Sat 17 Oct, 18:00 MYT.\n"
+  "footer": "GW8 deadline: Sat 24 Oct, 01:30 MYT.",
+  "text": "SuperF \u00b7 GW6 settled \u00b7 Mon 12 Oct\n\nGW6\nBoon takes GW6 on 91 pts and is owed RM74.\nWei Hun is second on 83 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\n\nEVERY SCORE\n1. Boon \u2014 91 pts (+RM74)\n2. Wei Hun \u2014 83 pts (+RM26)\n3. Soon Lee \u2014 81 pts (\u2212RM10) [-4 hit]\n4. Wei Chen \u2014 75 pts (\u2212RM10)\n5. Chris \u2014 71 pts (\u2212RM10)\n6. Sam \u2014 71 pts (\u2212RM10) [wildcard]\n7. Tian Pin \u2014 70 pts (\u2212RM10) [-8 hit]\n8. Calvin \u2014 61 pts (\u2212RM10)\n9. Jack \u2014 58 pts (\u2212RM10) [wildcard]\n10. Way Shoon \u2014 58 pts (\u2212RM10)\n11. Noel \u2014 56 pts (\u2212RM10)\n12. Zahir \u2014 55 pts (\u2212RM10) [-4 hit]\n\nOCTOBER \u2014 RUNNING\nOctober is 1 of 4 gameweeks in \u2014 RM240 in the pot, 3 gameweeks left.\n1. Boon \u2014 91 pts\n2. Wei Hun \u2014 83 pts\n3. Soon Lee \u2014 81 pts\nBoon would take RM148 if it held \u2014 would, not is. Nothing settles until GW9 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 450 pts\n2. Sam \u2014 424 pts (26 behind)\n3. Jack \u2014 417 pts (33 behind)\nSoon Lee leads by 26 after 6 gameweeks.\n\nGW8 deadline: Sat 24 Oct, 01:30 MYT.\n"
  }
 }
