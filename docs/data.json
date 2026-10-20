@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-19T12:48:37Z",
+ "generated_at": "2026-10-20T00:50:06Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -10,7 +10,7 @@
   "season": "2026/27",
   "gameweek": 7,
   "next_gw": 8,
-  "state": "live"
+  "state": "provisional"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -495,12 +495,12 @@
   },
   {
    "gw": 13,
-   "deadline": "2026-12-02T18:30:00Z",
+   "deadline": "2026-12-01T18:30:00Z",
    "month": "DEC"
   },
   {
    "gw": 14,
-   "deadline": "2026-12-05T13:30:00Z",
+   "deadline": "2026-12-05T11:00:00Z",
    "month": "DEC"
   },
   {
@@ -510,7 +510,7 @@
   },
   {
    "gw": 16,
-   "deadline": "2026-12-19T13:30:00Z",
+   "deadline": "2026-12-19T11:00:00Z",
    "month": "DEC"
   },
   {
@@ -1669,11 +1669,11 @@
     "ko": "2026-10-19T19:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 3,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 70
    }
   ],
@@ -2339,61 +2339,9 @@
   ],
   "13": [
    {
-    "h": 2,
-    "a": 9,
-    "ko": "2026-12-02T20:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 121
-   },
-   {
-    "h": 3,
-    "a": 5,
-    "ko": "2026-12-02T20:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 122
-   },
-   {
-    "h": 4,
-    "a": 1,
-    "ko": "2026-12-02T20:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 123
-   },
-   {
-    "h": 6,
-    "a": 8,
-    "ko": "2026-12-02T20:00:00Z",
-    "dh": 2,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 124
-   },
-   {
     "h": 7,
     "a": 12,
-    "ko": "2026-12-02T20:00:00Z",
+    "ko": "2026-12-01T20:00:00Z",
     "dh": 2,
     "da": 2,
     "hs": null,
@@ -2404,9 +2352,22 @@
     "id": 125
    },
    {
+    "h": 6,
+    "a": 8,
+    "ko": "2026-12-02T19:30:00Z",
+    "dh": 2,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 124
+   },
+   {
     "h": 11,
     "a": 18,
-    "ko": "2026-12-02T20:00:00Z",
+    "ko": "2026-12-02T19:30:00Z",
     "dh": 3,
     "da": 2,
     "hs": null,
@@ -2419,7 +2380,7 @@
    {
     "h": 14,
     "a": 20,
-    "ko": "2026-12-02T20:00:00Z",
+    "ko": "2026-12-02T19:30:00Z",
     "dh": 3,
     "da": 4,
     "hs": null,
@@ -2432,7 +2393,7 @@
    {
     "h": 15,
     "a": 13,
-    "ko": "2026-12-02T20:00:00Z",
+    "ko": "2026-12-02T19:30:00Z",
     "dh": 3,
     "da": 5,
     "hs": null,
@@ -2443,9 +2404,48 @@
     "id": 128
    },
    {
+    "h": 2,
+    "a": 9,
+    "ko": "2026-12-02T20:15:00Z",
+    "dh": 3,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 121
+   },
+   {
+    "h": 3,
+    "a": 5,
+    "ko": "2026-12-02T20:15:00Z",
+    "dh": 3,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 122
+   },
+   {
+    "h": 4,
+    "a": 1,
+    "ko": "2026-12-02T20:15:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 123
+   },
+   {
     "h": 17,
     "a": 16,
-    "ko": "2026-12-02T20:00:00Z",
+    "ko": "2026-12-02T20:15:00Z",
     "dh": 4,
     "da": 3,
     "hs": null,
@@ -2458,7 +2458,7 @@
    {
     "h": 19,
     "a": 10,
-    "ko": "2026-12-02T20:00:00Z",
+    "ko": "2026-12-03T20:00:00Z",
     "dh": 2,
     "da": 3,
     "hs": null,
@@ -2470,6 +2470,19 @@
    }
   ],
   "14": [
+   {
+    "h": 6,
+    "a": 14,
+    "ko": "2026-12-05T12:30:00Z",
+    "dh": 4,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 134
+   },
    {
     "h": 2,
     "a": 8,
@@ -2495,45 +2508,6 @@
     "finished": false,
     "finished_provisional": false,
     "id": 132
-   },
-   {
-    "h": 4,
-    "a": 15,
-    "ko": "2026-12-05T15:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 133
-   },
-   {
-    "h": 6,
-    "a": 14,
-    "ko": "2026-12-05T15:00:00Z",
-    "dh": 4,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 134
-   },
-   {
-    "h": 9,
-    "a": 10,
-    "ko": "2026-12-05T15:00:00Z",
-    "dh": 2,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 135
    },
    {
     "h": 13,
@@ -2562,22 +2536,9 @@
     "id": 137
    },
    {
-    "h": 17,
-    "a": 20,
-    "ko": "2026-12-05T15:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 138
-   },
-   {
     "h": 18,
     "a": 5,
-    "ko": "2026-12-05T15:00:00Z",
+    "ko": "2026-12-05T17:30:00Z",
     "dh": 3,
     "da": 3,
     "hs": null,
@@ -2588,9 +2549,48 @@
     "id": 139
    },
    {
+    "h": 4,
+    "a": 15,
+    "ko": "2026-12-05T20:00:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 133
+   },
+   {
+    "h": 9,
+    "a": 10,
+    "ko": "2026-12-06T14:00:00Z",
+    "dh": 2,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 135
+   },
+   {
+    "h": 17,
+    "a": 20,
+    "ko": "2026-12-06T14:00:00Z",
+    "dh": 3,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 138
+   },
+   {
     "h": 19,
     "a": 1,
-    "ko": "2026-12-05T15:00:00Z",
+    "ko": "2026-12-06T16:30:00Z",
     "dh": 4,
     "da": 3,
     "hs": null,
@@ -2603,58 +2603,6 @@
   ],
   "15": [
    {
-    "h": 1,
-    "a": 3,
-    "ko": "2026-12-12T15:00:00Z",
-    "dh": 3,
-    "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 141
-   },
-   {
-    "h": 5,
-    "a": 9,
-    "ko": "2026-12-12T15:00:00Z",
-    "dh": 3,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 142
-   },
-   {
-    "h": 7,
-    "a": 2,
-    "ko": "2026-12-12T15:00:00Z",
-    "dh": 3,
-    "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 143
-   },
-   {
-    "h": 8,
-    "a": 16,
-    "ko": "2026-12-12T15:00:00Z",
-    "dh": 4,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 144
-   },
-   {
     "h": 10,
     "a": 4,
     "ko": "2026-12-12T15:00:00Z",
@@ -2666,19 +2614,6 @@
     "finished": false,
     "finished_provisional": false,
     "id": 145
-   },
-   {
-    "h": 11,
-    "a": 19,
-    "ko": "2026-12-12T15:00:00Z",
-    "dh": 2,
-    "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 146
    },
    {
     "h": 12,
@@ -2709,7 +2644,7 @@
    {
     "h": 15,
     "a": 6,
-    "ko": "2026-12-12T15:00:00Z",
+    "ko": "2026-12-12T17:30:00Z",
     "dh": 4,
     "da": 5,
     "hs": null,
@@ -2720,9 +2655,35 @@
     "id": 149
    },
    {
+    "h": 1,
+    "a": 3,
+    "ko": "2026-12-13T14:00:00Z",
+    "dh": 3,
+    "da": 5,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 141
+   },
+   {
+    "h": 5,
+    "a": 9,
+    "ko": "2026-12-13T14:00:00Z",
+    "dh": 3,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 142
+   },
+   {
     "h": 20,
     "a": 18,
-    "ko": "2026-12-12T15:00:00Z",
+    "ko": "2026-12-13T14:00:00Z",
     "dh": 3,
     "da": 3,
     "hs": null,
@@ -2731,21 +2692,60 @@
     "finished": false,
     "finished_provisional": false,
     "id": 150
-   }
-  ],
-  "16": [
+   },
    {
-    "h": 1,
-    "a": 16,
-    "ko": "2026-12-19T15:00:00Z",
-    "dh": 4,
-    "da": 5,
+    "h": 7,
+    "a": 2,
+    "ko": "2026-12-13T16:30:00Z",
+    "dh": 3,
+    "da": 2,
     "hs": null,
     "as": null,
     "started": false,
     "finished": false,
     "finished_provisional": false,
-    "id": 151
+    "id": 143
+   },
+   {
+    "h": 8,
+    "a": 16,
+    "ko": "2026-12-13T19:00:00Z",
+    "dh": 4,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 144
+   },
+   {
+    "h": 11,
+    "a": 19,
+    "ko": "2026-12-14T20:00:00Z",
+    "dh": 2,
+    "da": 2,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 146
+   }
+  ],
+  "16": [
+   {
+    "h": 4,
+    "a": 17,
+    "ko": "2026-12-19T12:30:00Z",
+    "dh": 3,
+    "da": 3,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 153
    },
    {
     "h": 3,
@@ -2761,45 +2761,6 @@
     "id": 152
    },
    {
-    "h": 4,
-    "a": 17,
-    "ko": "2026-12-19T15:00:00Z",
-    "dh": 3,
-    "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 153
-   },
-   {
-    "h": 5,
-    "a": 12,
-    "ko": "2026-12-19T15:00:00Z",
-    "dh": 2,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 154
-   },
-   {
-    "h": 6,
-    "a": 2,
-    "ko": "2026-12-19T15:00:00Z",
-    "dh": 3,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 155
-   },
-   {
     "h": 13,
     "a": 10,
     "ko": "2026-12-19T15:00:00Z",
@@ -2811,19 +2772,6 @@
     "finished": false,
     "finished_provisional": false,
     "id": 156
-   },
-   {
-    "h": 14,
-    "a": 19,
-    "ko": "2026-12-19T15:00:00Z",
-    "dh": 2,
-    "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
-    "finished": false,
-    "finished_provisional": false,
-    "id": 157
    },
    {
     "h": 15,
@@ -2852,9 +2800,35 @@
     "id": 159
    },
    {
+    "h": 14,
+    "a": 19,
+    "ko": "2026-12-19T17:30:00Z",
+    "dh": 2,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 157
+   },
+   {
+    "h": 5,
+    "a": 12,
+    "ko": "2026-12-20T14:00:00Z",
+    "dh": 2,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 154
+   },
+   {
     "h": 20,
     "a": 8,
-    "ko": "2026-12-19T15:00:00Z",
+    "ko": "2026-12-20T14:00:00Z",
     "dh": 2,
     "da": 3,
     "hs": null,
@@ -2863,6 +2837,32 @@
     "finished": false,
     "finished_provisional": false,
     "id": 160
+   },
+   {
+    "h": 1,
+    "a": 16,
+    "ko": "2026-12-20T16:30:00Z",
+    "dh": 4,
+    "da": 5,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 151
+   },
+   {
+    "h": 6,
+    "a": 2,
+    "ko": "2026-12-21T20:00:00Z",
+    "dh": 3,
+    "da": 4,
+    "hs": null,
+    "as": null,
+    "started": false,
+    "finished": false,
+    "finished_provisional": false,
+    "id": 155
    }
   ],
   "17": [
@@ -6058,25 +6058,44 @@
   },
   {
    "pos": 16,
-   "team": 7,
-   "p": 6,
-   "w": 2,
-   "d": 0,
-   "l": 4,
-   "gf": 5,
-   "ga": 11,
-   "gd": -6,
+   "team": 19,
+   "p": 7,
+   "w": 1,
+   "d": 3,
+   "l": 3,
+   "gf": 6,
+   "ga": 10,
+   "gd": -4,
    "pts": 6,
    "form": [
+    "D",
+    "D",
     "L",
-    "L",
-    "L",
-    "W",
+    "D",
     "W"
    ]
   },
   {
    "pos": 17,
+   "team": 7,
+   "p": 7,
+   "w": 2,
+   "d": 0,
+   "l": 5,
+   "gf": 6,
+   "ga": 14,
+   "gd": -8,
+   "pts": 6,
+   "form": [
+    "L",
+    "L",
+    "W",
+    "W",
+    "L"
+   ]
+  },
+  {
+   "pos": 18,
    "team": 10,
    "p": 7,
    "w": 1,
@@ -6095,7 +6114,7 @@
    ]
   },
   {
-   "pos": 18,
+   "pos": 19,
    "team": 18,
    "p": 7,
    "w": 1,
@@ -6114,7 +6133,7 @@
    ]
   },
   {
-   "pos": 19,
+   "pos": 20,
    "team": 20,
    "p": 7,
    "w": 1,
@@ -6130,25 +6149,6 @@
     "L",
     "L",
     "L"
-   ]
-  },
-  {
-   "pos": 20,
-   "team": 19,
-   "p": 6,
-   "w": 0,
-   "d": 3,
-   "l": 3,
-   "gf": 3,
-   "ga": 9,
-   "gd": -6,
-   "pts": 3,
-   "form": [
-    "L",
-    "D",
-    "D",
-    "L",
-    "D"
    ]
   }
  ],
@@ -6842,7 +6842,209 @@
    "bonus_change": null
   }
  ],
- "provisional": null,
+ "provisional": {
+  "gw": 7,
+  "observed_at": "2026-10-20T00:50:06Z",
+  "leader": "sam",
+  "runner_up": "calvinfoo",
+  "margin": 7,
+  "pot": 120,
+  "net": [
+   74,
+   26
+  ],
+  "scores": {
+   "boonsiang": {
+    "points": 50,
+    "hits": 0,
+    "chip": "bboost"
+   },
+   "calvinfoo": {
+    "points": 72,
+    "hits": 0,
+    "chip": null
+   },
+   "chris": {
+    "points": 56,
+    "hits": 0,
+    "chip": null
+   },
+   "jack": {
+    "points": 66,
+    "hits": 0,
+    "chip": null
+   },
+   "noel": {
+    "points": 72,
+    "hits": 0,
+    "chip": null
+   },
+   "sam": {
+    "points": 79,
+    "hits": 0,
+    "chip": null
+   },
+   "shaikzahir": {
+    "points": 38,
+    "hits": 0,
+    "chip": null
+   },
+   "soonlee": {
+    "points": 57,
+    "hits": 0,
+    "chip": null
+   },
+   "tianpin": {
+    "points": 55,
+    "hits": 0,
+    "chip": null
+   },
+   "wayshoonlim": {
+    "points": 53,
+    "hits": 0,
+    "chip": null
+   },
+   "weichenlim": {
+    "points": 60,
+    "hits": 0,
+    "chip": null
+   },
+   "weihun": {
+    "points": 64,
+    "hits": 0,
+    "chip": null
+   }
+  },
+  "order": [
+   "sam",
+   "calvinfoo",
+   "noel",
+   "jack",
+   "weihun",
+   "weichenlim",
+   "soonlee",
+   "chris",
+   "tianpin",
+   "wayshoonlim",
+   "boonsiang",
+   "shaikzahir"
+  ],
+  "month": {
+   "month": "OCT",
+   "gameweeks": 4,
+   "played": [
+    6,
+    7
+   ],
+   "remaining": 2,
+   "stake": 20,
+   "pot": 240,
+   "net": [
+    148,
+    52
+   ],
+   "totals": {
+    "boonsiang": 141,
+    "calvinfoo": 133,
+    "chris": 127,
+    "jack": 124,
+    "noel": 128,
+    "sam": 150,
+    "shaikzahir": 93,
+    "soonlee": 138,
+    "tianpin": 125,
+    "wayshoonlim": 111,
+    "weichenlim": 135,
+    "weihun": 147
+   },
+   "order": [
+    "sam",
+    "weihun",
+    "boonsiang",
+    "soonlee",
+    "weichenlim",
+    "calvinfoo",
+    "noel",
+    "chris",
+    "tianpin",
+    "jack",
+    "wayshoonlim",
+    "shaikzahir"
+   ]
+  },
+  "season": {
+   "round": {
+    "boonsiang": 50,
+    "calvinfoo": 72,
+    "chris": 56,
+    "jack": 66,
+    "noel": 72,
+    "sam": 79,
+    "shaikzahir": 38,
+    "soonlee": 57,
+    "tianpin": 55,
+    "wayshoonlim": 53,
+    "weichenlim": 60,
+    "weihun": 64
+   },
+   "totals": {
+    "boonsiang": 409,
+    "calvinfoo": 445,
+    "chris": 462,
+    "jack": 483,
+    "noel": 445,
+    "sam": 503,
+    "shaikzahir": 412,
+    "soonlee": 507,
+    "tianpin": 448,
+    "wayshoonlim": 469,
+    "weichenlim": 452,
+    "weihun": 475
+   },
+   "order": [
+    "soonlee",
+    "sam",
+    "jack",
+    "weihun",
+    "wayshoonlim",
+    "chris",
+    "weichenlim",
+    "tianpin",
+    "calvinfoo",
+    "noel",
+    "shaikzahir",
+    "boonsiang"
+   ],
+   "behind": {
+    "boonsiang": 98,
+    "calvinfoo": 62,
+    "chris": 45,
+    "jack": 24,
+    "noel": 62,
+    "sam": 4,
+    "shaikzahir": 95,
+    "soonlee": 0,
+    "tianpin": 59,
+    "wayshoonlim": 38,
+    "weichenlim": 55,
+    "weihun": 32
+   },
+   "rank_prev": {
+    "soonlee": 1,
+    "sam": 2,
+    "jack": 3,
+    "wayshoonlim": 4,
+    "weihun": 5,
+    "chris": 6,
+    "tianpin": 7,
+    "weichenlim": 8,
+    "shaikzahir": 9,
+    "noel": 10,
+    "calvinfoo": 11,
+    "boonsiang": 12
+   }
+  }
+ },
  "months": [
   {
    "month": "AUG",
