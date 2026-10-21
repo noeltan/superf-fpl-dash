@@ -197,7 +197,14 @@
   },
   "reasoning": "Boon Siang Ng leads on 67.6, but almost all of it is projection \u2014 only 6.0 banked, with fifteen players still feeding him on the bench boost. That's the whole call: he's scoring from a bigger squad than anyone else, and three Arsenal at Forest plus Cherki and Doku at the Etihad give him volume nobody can match. The risk is that he's the one manager without Haaland, and ten rivals captained the Norwegian against Ipswich. Tian Pin Lee is my second on 58.4 \u2014 Haaland armband, two Brighton, Cherki \u2014 but he's barely clear of Chris, Way Shoon and Jack, so that's a low-confidence pick for a 30% slice."
  },
- "result": null,
+ "result": {
+  "actual_first": "sam",
+  "actual_second": "calvinfoo",
+  "exact_hit": false,
+  "podium_hit": false,
+  "pair_hit": false,
+  "mean_rank_error": 8.5
+ },
  "record": {
   "played": 0,
   "exact": 0,
