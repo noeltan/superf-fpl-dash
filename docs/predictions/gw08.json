@@ -1,0 +1,207 @@
+{
+ "gw": 8,
+ "generated_at": "2026-10-23T20:36:24Z",
+ "model": "claude-opus-5",
+ "mode": "mid_round",
+ "mid_round": {
+  "as_of": "2026-10-23T20:36:24Z",
+  "played": 1,
+  "remaining": 9,
+  "total": 10
+ },
+ "projections": [
+  {
+   "manager": "wayshoonlim",
+   "xp": 60.6,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "chip": "wildcard",
+   "squad": 11,
+   "banked": 0.0,
+   "remaining": 60.6
+  },
+  {
+   "manager": "calvinfoo",
+   "xp": 60.3,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 0.0,
+   "remaining": 60.3
+  },
+  {
+   "manager": "chris",
+   "xp": 58.8,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 0.0,
+   "remaining": 58.8
+  },
+  {
+   "manager": "soonlee",
+   "xp": 58.4,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 0.0,
+   "remaining": 58.4
+  },
+  {
+   "manager": "jack",
+   "xp": 57.3,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "CHE",
+    "players": 3
+   },
+   "banked": 0.0,
+   "remaining": 57.3
+  },
+  {
+   "manager": "weihun",
+   "xp": 56.9,
+   "captain": "Jo\u00e3o Pedro",
+   "captain_xp": 5.2,
+   "hits": 0,
+   "concentration": {
+    "club": "CHE",
+    "players": 3
+   },
+   "banked": 0.0,
+   "remaining": 56.9
+  },
+  {
+   "manager": "tianpin",
+   "xp": 56.5,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 2
+   },
+   "banked": 0.0,
+   "remaining": 56.5
+  },
+  {
+   "manager": "sam",
+   "xp": 56.1,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 2.0,
+   "remaining": 54.1
+  },
+  {
+   "manager": "noel",
+   "xp": 55.8,
+   "captain": "Haaland",
+   "captain_xp": 6.4,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 0.0,
+   "remaining": 55.8
+  },
+  {
+   "manager": "boonsiang",
+   "xp": 55.2,
+   "captain": "Palmer",
+   "captain_xp": 4.2,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 3
+   },
+   "banked": 0.0,
+   "remaining": 55.2
+  },
+  {
+   "manager": "weichenlim",
+   "xp": 54.7,
+   "captain": "Jo\u00e3o Pedro",
+   "captain_xp": 5.2,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 0.0,
+   "remaining": 54.7
+  },
+  {
+   "manager": "shaikzahir",
+   "xp": 49.4,
+   "captain": "De Cuyper",
+   "captain_xp": 5.1,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 0.0,
+   "remaining": 49.4
+  }
+ ],
+ "call": {
+  "first": {
+   "manager": "wayshoonlim",
+   "confidence": "low"
+  },
+  "second": {
+   "manager": "calvinfoo",
+   "confidence": "low"
+  },
+  "agrees_with_projection": true,
+  "swing_player": {
+   "name": "Haaland",
+   "owned_by": [
+    "noel",
+    "jack",
+    "sam",
+    "weihun",
+    "soonlee",
+    "tianpin",
+    "chris",
+    "calvinfoo",
+    "weichenlim",
+    "wayshoonlim"
+   ],
+   "why": "Eight of twelve captain him at Villa Park on Saturday morning, so he is double-weighted for almost the whole league. Wei Hun Wong, Wei Chen Lim, Boon Siang Ng and Shaik Zahir took him off the armband or out entirely \u2014 a Haaland haul buries them, a blank hands them the pot."
+  },
+  "reasoning": "Nobody has banked anything except Sam Lim's two points, so every lead here is projection, not money in the bank \u2014 this is wide open. Way Shoon Lim tops it on a wildcard, a clean rebuild with no hits, Mbeumo and three Arsenal against Everton, but his edge over Calvin Foo is paper-thin, hence low confidence on both. Calvin Foo's Brighton trio travel to Anfield, which is the riskiest of the club blocks. The structural story is the Villa\u2013City kickoff: eight managers captain Haaland there, and almost everyone holds Calafiori and Jo\u00e3o Pedro, so the real separation is Chelsea versus Brighton. Boon Siang Ng and Shaik Zahir went differential at captain and need Haaland to misfire."
+ },
+ "result": null,
+ "record": {
+  "played": 0,
+  "exact": 0,
+  "podium": 0,
+  "pair": 0
+ }
+}
