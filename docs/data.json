@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T11:23:18Z",
+ "generated_at": "2026-10-24T10:42:37Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 7,
-  "next_gw": 8,
-  "state": "final"
+  "gameweek": 8,
+  "next_gw": 9,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -1684,11 +1684,11 @@
     "ko": "2026-10-23T19:00:00Z",
     "dh": 3,
     "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 77
    },
    {
@@ -5925,6 +5925,25 @@
   },
   {
    "pos": 9,
+   "team": 12,
+   "p": 8,
+   "w": 3,
+   "d": 1,
+   "l": 4,
+   "gf": 12,
+   "ga": 16,
+   "gd": -4,
+   "pts": 10,
+   "form": [
+    "W",
+    "L",
+    "W",
+    "L",
+    "D"
+   ]
+  },
+  {
+   "pos": 10,
    "team": 11,
    "p": 7,
    "w": 2,
@@ -5939,25 +5958,6 @@
     "D",
     "L",
     "D",
-    "L"
-   ]
-  },
-  {
-   "pos": 10,
-   "team": 12,
-   "p": 7,
-   "w": 3,
-   "d": 0,
-   "l": 4,
-   "gf": 11,
-   "ga": 15,
-   "gd": -4,
-   "pts": 9,
-   "form": [
-    "L",
-    "W",
-    "L",
-    "W",
     "L"
    ]
   },
@@ -6058,6 +6058,25 @@
   },
   {
    "pos": 16,
+   "team": 18,
+   "p": 8,
+   "w": 1,
+   "d": 3,
+   "l": 4,
+   "gf": 6,
+   "ga": 10,
+   "gd": -4,
+   "pts": 6,
+   "form": [
+    "W",
+    "L",
+    "L",
+    "L",
+    "D"
+   ]
+  },
+  {
+   "pos": 17,
    "team": 19,
    "p": 7,
    "w": 1,
@@ -6076,7 +6095,7 @@
    ]
   },
   {
-   "pos": 17,
+   "pos": 18,
    "team": 7,
    "p": 7,
    "w": 2,
@@ -6095,7 +6114,7 @@
    ]
   },
   {
-   "pos": 18,
+   "pos": 19,
    "team": 10,
    "p": 7,
    "w": 1,
@@ -6111,25 +6130,6 @@
     "D",
     "L",
     "W"
-   ]
-  },
-  {
-   "pos": 19,
-   "team": 18,
-   "p": 7,
-   "w": 1,
-   "d": 2,
-   "l": 4,
-   "gf": 5,
-   "ga": 9,
-   "gd": -4,
-   "pts": 5,
-   "form": [
-    "D",
-    "W",
-    "L",
-    "L",
-    "L"
    ]
   },
   {
@@ -8450,7 +8450,7 @@
     ]
    }
   ],
-  "footer": "GW8 deadline: Sat 24 Oct, 01:30 MYT.",
-  "text": "SuperF \u00b7 GW7 settled \u00b7 Mon 19 Oct\n\nGW7\nSam takes GW7 on 79 pts and is owed RM74.\nCalvin is second on 73 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\n\nEVERY SCORE\n1. Sam \u2014 79 pts (+RM74)\n2. Calvin \u2014 73 pts (+RM26)\n3. Noel \u2014 72 pts (\u2212RM10)\n4. Wei Hun \u2014 67 pts (\u2212RM10)\n5. Jack \u2014 66 pts (\u2212RM10)\n6. Wei Chen \u2014 60 pts (\u2212RM10)\n7. Soon Lee \u2014 57 pts (\u2212RM10)\n8. Chris \u2014 56 pts (\u2212RM10)\n9. Tian Pin \u2014 56 pts (\u2212RM10)\n10. Way Shoon \u2014 53 pts (\u2212RM10)\n11. Boon \u2014 50 pts (\u2212RM10) [bboost]\n12. Zahir \u2014 43 pts (\u2212RM10)\n\nOCTOBER \u2014 RUNNING\nOctober is 2 of 4 gameweeks in \u2014 RM240 in the pot, 2 gameweeks left.\n1. Sam \u2014 150 pts\n2. Wei Hun \u2014 150 pts\n3. Boon \u2014 141 pts\nSam would take RM148 if it held \u2014 would, not is. Nothing settles until GW9 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 507 pts\n2. Sam \u2014 503 pts (4 behind)\n3. Jack \u2014 483 pts (24 behind)\nSoon Lee leads by 4 after 7 gameweeks.\n\nGW8 deadline: Sat 24 Oct, 01:30 MYT.\n"
+  "footer": "GW9 deadline: Sat 31 Oct, 19:00 MYT.",
+  "text": "SuperF \u00b7 GW7 settled \u00b7 Mon 19 Oct\n\nGW7\nSam takes GW7 on 79 pts and is owed RM74.\nCalvin is second on 73 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\n\nEVERY SCORE\n1. Sam \u2014 79 pts (+RM74)\n2. Calvin \u2014 73 pts (+RM26)\n3. Noel \u2014 72 pts (\u2212RM10)\n4. Wei Hun \u2014 67 pts (\u2212RM10)\n5. Jack \u2014 66 pts (\u2212RM10)\n6. Wei Chen \u2014 60 pts (\u2212RM10)\n7. Soon Lee \u2014 57 pts (\u2212RM10)\n8. Chris \u2014 56 pts (\u2212RM10)\n9. Tian Pin \u2014 56 pts (\u2212RM10)\n10. Way Shoon \u2014 53 pts (\u2212RM10)\n11. Boon \u2014 50 pts (\u2212RM10) [bboost]\n12. Zahir \u2014 43 pts (\u2212RM10)\n\nOCTOBER \u2014 RUNNING\nOctober is 2 of 4 gameweeks in \u2014 RM240 in the pot, 2 gameweeks left.\n1. Sam \u2014 150 pts\n2. Wei Hun \u2014 150 pts\n3. Boon \u2014 141 pts\nSam would take RM148 if it held \u2014 would, not is. Nothing settles until GW9 is final.\n\nSEASON SO FAR\n1. Soon Lee \u2014 507 pts\n2. Sam \u2014 503 pts (4 behind)\n3. Jack \u2014 483 pts (24 behind)\nSoon Lee leads by 4 after 7 gameweeks.\n\nGW9 deadline: Sat 31 Oct, 19:00 MYT.\n"
  }
 }
