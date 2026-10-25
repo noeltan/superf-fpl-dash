@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-24T10:42:37Z",
+ "generated_at": "2026-10-25T11:08:11Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -1697,11 +1697,11 @@
     "ko": "2026-10-24T11:30:00Z",
     "dh": 4,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 72
    },
    {
@@ -1710,11 +1710,11 @@
     "ko": "2026-10-24T14:00:00Z",
     "dh": 3,
     "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 71
    },
    {
@@ -1723,11 +1723,11 @@
     "ko": "2026-10-24T14:00:00Z",
     "dh": 2,
     "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 74
    },
    {
@@ -1736,11 +1736,11 @@
     "ko": "2026-10-24T16:30:00Z",
     "dh": 2,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 73
    },
    {
@@ -5774,37 +5774,37 @@
   {
    "pos": 1,
    "team": 15,
-   "p": 7,
+   "p": 8,
    "w": 7,
    "d": 0,
-   "l": 0,
-   "gf": 19,
-   "ga": 7,
-   "gd": 12,
+   "l": 1,
+   "gf": 20,
+   "ga": 9,
+   "gd": 11,
    "pts": 21,
    "form": [
     "W",
     "W",
     "W",
     "W",
-    "W"
+    "L"
    ]
   },
   {
    "pos": 2,
    "team": 1,
-   "p": 7,
-   "w": 6,
+   "p": 8,
+   "w": 7,
    "d": 0,
    "l": 1,
-   "gf": 11,
+   "gf": 13,
    "ga": 5,
-   "gd": 6,
-   "pts": 18,
+   "gd": 8,
+   "pts": 21,
    "form": [
     "W",
-    "W",
     "L",
+    "W",
     "W",
     "W"
    ]
@@ -5831,20 +5831,20 @@
   {
    "pos": 4,
    "team": 6,
-   "p": 7,
+   "p": 8,
    "w": 4,
    "d": 1,
-   "l": 2,
+   "l": 3,
    "gf": 17,
-   "ga": 13,
-   "gd": 4,
+   "ga": 15,
+   "gd": 2,
    "pts": 13,
    "form": [
-    "L",
     "D",
     "L",
     "W",
-    "W"
+    "W",
+    "L"
    ]
   },
   {
@@ -5868,6 +5868,25 @@
   },
   {
    "pos": 6,
+   "team": 2,
+   "p": 8,
+   "w": 3,
+   "d": 2,
+   "l": 3,
+   "gf": 9,
+   "ga": 12,
+   "gd": -3,
+   "pts": 11,
+   "form": [
+    "L",
+    "W",
+    "D",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 7,
    "team": 4,
    "p": 7,
    "w": 2,
@@ -5886,7 +5905,7 @@
    ]
   },
   {
-   "pos": 7,
+   "pos": 8,
    "team": 13,
    "p": 7,
    "w": 2,
@@ -5905,26 +5924,26 @@
    ]
   },
   {
-   "pos": 8,
+   "pos": 9,
    "team": 9,
-   "p": 7,
+   "p": 8,
    "w": 2,
    "d": 4,
-   "l": 1,
+   "l": 2,
    "gf": 8,
-   "ga": 7,
-   "gd": 1,
+   "ga": 9,
+   "gd": -1,
    "pts": 10,
    "form": [
     "D",
-    "D",
     "W",
     "D",
+    "L",
     "L"
    ]
   },
   {
-   "pos": 9,
+   "pos": 10,
    "team": 12,
    "p": 8,
    "w": 3,
@@ -5943,7 +5962,7 @@
    ]
   },
   {
-   "pos": 10,
+   "pos": 11,
    "team": 11,
    "p": 7,
    "w": 2,
@@ -5962,7 +5981,45 @@
    ]
   },
   {
-   "pos": 11,
+   "pos": 12,
+   "team": 19,
+   "p": 8,
+   "w": 2,
+   "d": 3,
+   "l": 3,
+   "gf": 8,
+   "ga": 10,
+   "gd": -2,
+   "pts": 9,
+   "form": [
+    "D",
+    "L",
+    "D",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 13,
+   "team": 10,
+   "p": 8,
+   "w": 2,
+   "d": 2,
+   "l": 4,
+   "gf": 8,
+   "ga": 10,
+   "gd": -2,
+   "pts": 8,
+   "form": [
+    "D",
+    "D",
+    "L",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 14,
    "team": 17,
    "p": 7,
    "w": 2,
@@ -5981,26 +6038,7 @@
    ]
   },
   {
-   "pos": 12,
-   "team": 2,
-   "p": 7,
-   "w": 2,
-   "d": 2,
-   "l": 3,
-   "gf": 7,
-   "ga": 11,
-   "gd": -4,
-   "pts": 8,
-   "form": [
-    "D",
-    "L",
-    "W",
-    "D",
-    "W"
-   ]
-  },
-  {
-   "pos": 13,
+   "pos": 15,
    "team": 16,
    "p": 7,
    "w": 1,
@@ -6019,7 +6057,7 @@
    ]
   },
   {
-   "pos": 14,
+   "pos": 16,
    "team": 8,
    "p": 7,
    "w": 2,
@@ -6038,7 +6076,7 @@
    ]
   },
   {
-   "pos": 15,
+   "pos": 17,
    "team": 3,
    "p": 7,
    "w": 1,
@@ -6057,7 +6095,7 @@
    ]
   },
   {
-   "pos": 16,
+   "pos": 18,
    "team": 18,
    "p": 8,
    "w": 1,
@@ -6076,60 +6114,22 @@
    ]
   },
   {
-   "pos": 17,
-   "team": 19,
-   "p": 7,
-   "w": 1,
-   "d": 3,
-   "l": 3,
-   "gf": 6,
-   "ga": 10,
-   "gd": -4,
-   "pts": 6,
-   "form": [
-    "D",
-    "D",
-    "L",
-    "D",
-    "W"
-   ]
-  },
-  {
-   "pos": 18,
+   "pos": 19,
    "team": 7,
-   "p": 7,
+   "p": 8,
    "w": 2,
    "d": 0,
-   "l": 5,
+   "l": 6,
    "gf": 6,
-   "ga": 14,
-   "gd": -8,
+   "ga": 15,
+   "gd": -9,
    "pts": 6,
    "form": [
     "L",
+    "W",
+    "W",
     "L",
-    "W",
-    "W",
     "L"
-   ]
-  },
-  {
-   "pos": 19,
-   "team": 10,
-   "p": 7,
-   "w": 1,
-   "d": 2,
-   "l": 4,
-   "gf": 7,
-   "ga": 10,
-   "gd": -3,
-   "pts": 5,
-   "form": [
-    "L",
-    "D",
-    "D",
-    "L",
-    "W"
    ]
   },
   {
