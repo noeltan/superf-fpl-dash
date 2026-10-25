@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-25T11:08:11Z",
+ "generated_at": "2026-10-25T21:58:02Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -10,7 +10,7 @@
   "season": "2026/27",
   "gameweek": 8,
   "next_gw": 9,
-  "state": "live"
+  "state": "provisional"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -1749,11 +1749,11 @@
     "ko": "2026-10-25T14:00:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 2,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 75
    },
    {
@@ -1762,11 +1762,11 @@
     "ko": "2026-10-25T14:00:00Z",
     "dh": 3,
     "da": 2,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 76
    },
    {
@@ -1775,11 +1775,11 @@
     "ko": "2026-10-25T14:00:00Z",
     "dh": 3,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 2,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 78
    },
    {
@@ -1788,11 +1788,11 @@
     "ko": "2026-10-25T14:00:00Z",
     "dh": 3,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 3,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 79
    },
    {
@@ -1801,11 +1801,11 @@
     "ko": "2026-10-25T16:30:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 0,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 80
    }
   ],
@@ -5812,24 +5812,43 @@
   {
    "pos": 3,
    "team": 5,
-   "p": 7,
+   "p": 8,
    "w": 5,
    "d": 1,
-   "l": 1,
+   "l": 2,
    "gf": 23,
-   "ga": 5,
-   "gd": 18,
+   "ga": 7,
+   "gd": 16,
    "pts": 16,
+   "form": [
+    "W",
+    "W",
+    "W",
+    "W",
+    "L"
+   ]
+  },
+  {
+   "pos": 4,
+   "team": 14,
+   "p": 8,
+   "w": 4,
+   "d": 3,
+   "l": 1,
+   "gf": 11,
+   "ga": 8,
+   "gd": 3,
+   "pts": 15,
    "form": [
     "D",
     "W",
-    "W",
+    "L",
     "W",
     "W"
    ]
   },
   {
-   "pos": 4,
+   "pos": 5,
    "team": 6,
    "p": 8,
    "w": 4,
@@ -5848,26 +5867,64 @@
    ]
   },
   {
-   "pos": 5,
-   "team": 14,
-   "p": 7,
-   "w": 3,
-   "d": 3,
+   "pos": 6,
+   "team": 4,
+   "p": 8,
+   "w": 2,
+   "d": 5,
+   "l": 1,
+   "gf": 14,
+   "ga": 9,
+   "gd": 5,
+   "pts": 11,
+   "form": [
+    "D",
+    "W",
+    "D",
+    "L",
+    "D"
+   ]
+  },
+  {
+   "pos": 7,
+   "team": 13,
+   "p": 8,
+   "w": 2,
+   "d": 5,
    "l": 1,
    "gf": 9,
-   "ga": 8,
-   "gd": 1,
-   "pts": 12,
+   "ga": 6,
+   "gd": 3,
+   "pts": 11,
    "form": [
     "W",
     "D",
+    "L",
+    "D",
+    "D"
+   ]
+  },
+  {
+   "pos": 8,
+   "team": 17,
+   "p": 8,
+   "w": 3,
+   "d": 2,
+   "l": 3,
+   "gf": 12,
+   "ga": 14,
+   "gd": -2,
+   "pts": 11,
+   "form": [
+    "L",
     "W",
+    "L",
     "L",
     "W"
    ]
   },
   {
-   "pos": 6,
+   "pos": 9,
    "team": 2,
    "p": 8,
    "w": 3,
@@ -5886,45 +5943,26 @@
    ]
   },
   {
-   "pos": 7,
-   "team": 4,
-   "p": 7,
+   "pos": 10,
+   "team": 11,
+   "p": 8,
    "w": 2,
    "d": 4,
-   "l": 1,
-   "gf": 13,
-   "ga": 8,
-   "gd": 5,
-   "pts": 10,
-   "form": [
-    "D",
-    "D",
-    "W",
-    "D",
-    "L"
-   ]
-  },
-  {
-   "pos": 8,
-   "team": 13,
-   "p": 7,
-   "w": 2,
-   "d": 4,
-   "l": 1,
+   "l": 2,
    "gf": 9,
-   "ga": 6,
-   "gd": 3,
+   "ga": 8,
+   "gd": 1,
    "pts": 10,
    "form": [
     "D",
-    "W",
+    "L",
     "D",
     "L",
     "D"
    ]
   },
   {
-   "pos": 9,
+   "pos": 11,
    "team": 9,
    "p": 8,
    "w": 2,
@@ -5943,7 +5981,7 @@
    ]
   },
   {
-   "pos": 10,
+   "pos": 12,
    "team": 12,
    "p": 8,
    "w": 3,
@@ -5962,26 +6000,26 @@
    ]
   },
   {
-   "pos": 11,
-   "team": 11,
-   "p": 7,
+   "pos": 13,
+   "team": 3,
+   "p": 8,
    "w": 2,
    "d": 3,
-   "l": 2,
-   "gf": 8,
-   "ga": 7,
-   "gd": 1,
+   "l": 3,
+   "gf": 12,
+   "ga": 13,
+   "gd": -1,
    "pts": 9,
    "form": [
     "D",
-    "D",
     "L",
-    "D",
-    "L"
+    "L",
+    "W",
+    "W"
    ]
   },
   {
-   "pos": 12,
+   "pos": 14,
    "team": 19,
    "p": 8,
    "w": 2,
@@ -6000,7 +6038,7 @@
    ]
   },
   {
-   "pos": 13,
+   "pos": 15,
    "team": 10,
    "p": 8,
    "w": 2,
@@ -6019,79 +6057,41 @@
    ]
   },
   {
-   "pos": 14,
-   "team": 17,
-   "p": 7,
-   "w": 2,
-   "d": 2,
-   "l": 3,
-   "gf": 10,
-   "ga": 14,
-   "gd": -4,
-   "pts": 8,
-   "form": [
-    "D",
-    "L",
-    "W",
-    "L",
-    "L"
-   ]
-  },
-  {
-   "pos": 15,
+   "pos": 16,
    "team": 16,
-   "p": 7,
+   "p": 8,
    "w": 1,
    "d": 4,
-   "l": 2,
+   "l": 3,
    "gf": 10,
-   "ga": 10,
-   "gd": 0,
+   "ga": 13,
+   "gd": -3,
    "pts": 7,
    "form": [
-    "D",
     "L",
     "D",
     "D",
-    "D"
-   ]
-  },
-  {
-   "pos": 16,
-   "team": 8,
-   "p": 7,
-   "w": 2,
-   "d": 1,
-   "l": 4,
-   "gf": 9,
-   "ga": 17,
-   "gd": -8,
-   "pts": 7,
-   "form": [
-    "W",
-    "L",
     "D",
-    "W",
     "L"
    ]
   },
   {
    "pos": 17,
-   "team": 3,
-   "p": 7,
-   "w": 1,
-   "d": 3,
-   "l": 3,
+   "team": 8,
+   "p": 8,
+   "w": 2,
+   "d": 1,
+   "l": 5,
    "gf": 9,
-   "ga": 13,
-   "gd": -4,
-   "pts": 6,
+   "ga": 19,
+   "gd": -10,
+   "pts": 7,
    "form": [
-    "D",
-    "D",
     "L",
+    "D",
+    "W",
     "L",
-    "W"
+    "L"
    ]
   },
   {
@@ -6135,20 +6135,20 @@
   {
    "pos": 20,
    "team": 20,
-   "p": 7,
+   "p": 8,
    "w": 1,
-   "d": 1,
+   "d": 2,
    "l": 5,
    "gf": 6,
    "ga": 14,
    "gd": -8,
-   "pts": 4,
+   "pts": 5,
    "form": [
-    "D",
     "L",
     "L",
     "L",
-    "L"
+    "L",
+    "D"
    ]
   }
  ],
@@ -6956,7 +6956,210 @@
    "bonus_change": null
   }
  ],
- "provisional": null,
+ "provisional": {
+  "gw": 8,
+  "observed_at": "2026-10-25T21:58:02Z",
+  "leader": "wayshoonlim",
+  "runner_up": "jack",
+  "margin": 4,
+  "pot": 120,
+  "net": [
+   74,
+   26
+  ],
+  "scores": {
+   "boonsiang": {
+    "points": 21,
+    "hits": 0,
+    "chip": null
+   },
+   "calvinfoo": {
+    "points": 32,
+    "hits": 0,
+    "chip": null
+   },
+   "chris": {
+    "points": 45,
+    "hits": 0,
+    "chip": null
+   },
+   "jack": {
+    "points": 58,
+    "hits": 0,
+    "chip": null
+   },
+   "noel": {
+    "points": 34,
+    "hits": 0,
+    "chip": null
+   },
+   "sam": {
+    "points": 37,
+    "hits": 0,
+    "chip": null
+   },
+   "shaikzahir": {
+    "points": 31,
+    "hits": 0,
+    "chip": null
+   },
+   "soonlee": {
+    "points": 42,
+    "hits": 0,
+    "chip": null
+   },
+   "tianpin": {
+    "points": 42,
+    "hits": 0,
+    "chip": null
+   },
+   "wayshoonlim": {
+    "points": 62,
+    "hits": 0,
+    "chip": "wildcard"
+   },
+   "weichenlim": {
+    "points": 20,
+    "hits": 0,
+    "chip": null
+   },
+   "weihun": {
+    "points": 38,
+    "hits": 0,
+    "chip": null
+   }
+  },
+  "order": [
+   "wayshoonlim",
+   "jack",
+   "chris",
+   "soonlee",
+   "tianpin",
+   "weihun",
+   "sam",
+   "noel",
+   "calvinfoo",
+   "shaikzahir",
+   "boonsiang",
+   "weichenlim"
+  ],
+  "month": {
+   "month": "OCT",
+   "gameweeks": 4,
+   "played": [
+    6,
+    7,
+    8
+   ],
+   "remaining": 1,
+   "stake": 20,
+   "pot": 240,
+   "net": [
+    148,
+    52
+   ],
+   "totals": {
+    "boonsiang": 162,
+    "calvinfoo": 166,
+    "chris": 172,
+    "jack": 182,
+    "noel": 162,
+    "sam": 187,
+    "shaikzahir": 129,
+    "soonlee": 180,
+    "tianpin": 168,
+    "wayshoonlim": 173,
+    "weichenlim": 155,
+    "weihun": 188
+   },
+   "order": [
+    "weihun",
+    "sam",
+    "jack",
+    "soonlee",
+    "wayshoonlim",
+    "chris",
+    "tianpin",
+    "calvinfoo",
+    "boonsiang",
+    "noel",
+    "weichenlim",
+    "shaikzahir"
+   ]
+  },
+  "season": {
+   "round": {
+    "boonsiang": 21,
+    "calvinfoo": 32,
+    "chris": 45,
+    "jack": 58,
+    "noel": 34,
+    "sam": 37,
+    "shaikzahir": 31,
+    "soonlee": 42,
+    "tianpin": 42,
+    "wayshoonlim": 62,
+    "weichenlim": 20,
+    "weihun": 38
+   },
+   "totals": {
+    "boonsiang": 430,
+    "calvinfoo": 478,
+    "chris": 507,
+    "jack": 541,
+    "noel": 479,
+    "sam": 540,
+    "shaikzahir": 448,
+    "soonlee": 549,
+    "tianpin": 491,
+    "wayshoonlim": 531,
+    "weichenlim": 472,
+    "weihun": 516
+   },
+   "order": [
+    "soonlee",
+    "jack",
+    "sam",
+    "wayshoonlim",
+    "weihun",
+    "chris",
+    "tianpin",
+    "noel",
+    "calvinfoo",
+    "weichenlim",
+    "shaikzahir",
+    "boonsiang"
+   ],
+   "behind": {
+    "boonsiang": 119,
+    "calvinfoo": 71,
+    "chris": 42,
+    "jack": 8,
+    "noel": 70,
+    "sam": 9,
+    "shaikzahir": 101,
+    "soonlee": 0,
+    "tianpin": 58,
+    "wayshoonlim": 18,
+    "weichenlim": 77,
+    "weihun": 33
+   },
+   "rank_prev": {
+    "soonlee": 1,
+    "sam": 2,
+    "jack": 3,
+    "weihun": 4,
+    "wayshoonlim": 5,
+    "chris": 6,
+    "weichenlim": 7,
+    "tianpin": 8,
+    "calvinfoo": 9,
+    "noel": 10,
+    "shaikzahir": 11,
+    "boonsiang": 12
+   }
+  }
+ },
  "months": [
   {
    "month": "AUG",
