@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-26T00:35:17Z",
+ "generated_at": "2026-10-26T10:23:45Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -1687,7 +1687,7 @@
     "hs": 1,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 77
    },
@@ -1700,7 +1700,7 @@
     "hs": 2,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 72
    },
@@ -1713,7 +1713,7 @@
     "hs": 2,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 71
    },
@@ -1726,7 +1726,7 @@
     "hs": 0,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 74
    },
@@ -1739,7 +1739,7 @@
     "hs": 0,
     "as": 2,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 73
    },
@@ -1752,7 +1752,7 @@
     "hs": 0,
     "as": 2,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 75
    },
@@ -1765,7 +1765,7 @@
     "hs": 1,
     "as": 1,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 76
    },
@@ -1778,7 +1778,7 @@
     "hs": 2,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 78
    },
@@ -1791,7 +1791,7 @@
     "hs": 0,
     "as": 3,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 79
    },
@@ -1804,7 +1804,7 @@
     "hs": 0,
     "as": 0,
     "started": true,
-    "finished": false,
+    "finished": true,
     "finished_provisional": true,
     "id": 80
    }
