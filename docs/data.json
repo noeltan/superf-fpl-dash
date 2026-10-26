@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-26T10:23:45Z",
+ "generated_at": "2026-10-26T12:41:42Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -6961,7 +6961,7 @@
   "observed_at": "2026-10-25T21:58:02Z",
   "leader": "wayshoonlim",
   "runner_up": "jack",
-  "margin": 4,
+  "margin": 5,
   "pot": 120,
   "net": [
    74,
@@ -6969,12 +6969,12 @@
   ],
   "scores": {
    "boonsiang": {
-    "points": 21,
+    "points": 23,
     "hits": 0,
     "chip": null
    },
    "calvinfoo": {
-    "points": 32,
+    "points": 35,
     "hits": 0,
     "chip": null
    },
@@ -6989,42 +6989,42 @@
     "chip": null
    },
    "noel": {
-    "points": 34,
+    "points": 40,
     "hits": 0,
     "chip": null
    },
    "sam": {
-    "points": 37,
+    "points": 47,
     "hits": 0,
     "chip": null
    },
    "shaikzahir": {
-    "points": 31,
+    "points": 53,
     "hits": 0,
     "chip": null
    },
    "soonlee": {
-    "points": 42,
+    "points": 43,
     "hits": 0,
     "chip": null
    },
    "tianpin": {
-    "points": 42,
+    "points": 44,
     "hits": 0,
     "chip": null
    },
    "wayshoonlim": {
-    "points": 62,
+    "points": 63,
     "hits": 0,
     "chip": "wildcard"
    },
    "weichenlim": {
-    "points": 20,
+    "points": 39,
     "hits": 0,
     "chip": null
    },
    "weihun": {
-    "points": 38,
+    "points": 47,
     "hits": 0,
     "chip": null
    }
@@ -7032,16 +7032,16 @@
   "order": [
    "wayshoonlim",
    "jack",
-   "chris",
-   "soonlee",
-   "tianpin",
-   "weihun",
-   "sam",
-   "noel",
-   "calvinfoo",
    "shaikzahir",
-   "boonsiang",
-   "weichenlim"
+   "sam",
+   "weihun",
+   "chris",
+   "tianpin",
+   "soonlee",
+   "noel",
+   "weichenlim",
+   "calvinfoo",
+   "boonsiang"
   ],
   "month": {
    "month": "OCT",
@@ -7059,90 +7059,90 @@
     52
    ],
    "totals": {
-    "boonsiang": 162,
-    "calvinfoo": 166,
+    "boonsiang": 164,
+    "calvinfoo": 169,
     "chris": 172,
     "jack": 182,
-    "noel": 162,
-    "sam": 187,
-    "shaikzahir": 129,
-    "soonlee": 180,
-    "tianpin": 168,
-    "wayshoonlim": 173,
-    "weichenlim": 155,
-    "weihun": 188
+    "noel": 168,
+    "sam": 197,
+    "shaikzahir": 151,
+    "soonlee": 181,
+    "tianpin": 170,
+    "wayshoonlim": 174,
+    "weichenlim": 174,
+    "weihun": 197
    },
    "order": [
-    "weihun",
     "sam",
+    "weihun",
     "jack",
     "soonlee",
     "wayshoonlim",
+    "weichenlim",
     "chris",
     "tianpin",
     "calvinfoo",
-    "boonsiang",
     "noel",
-    "weichenlim",
+    "boonsiang",
     "shaikzahir"
    ]
   },
   "season": {
    "round": {
-    "boonsiang": 21,
-    "calvinfoo": 32,
+    "boonsiang": 23,
+    "calvinfoo": 35,
     "chris": 45,
     "jack": 58,
-    "noel": 34,
-    "sam": 37,
-    "shaikzahir": 31,
-    "soonlee": 42,
-    "tianpin": 42,
-    "wayshoonlim": 62,
-    "weichenlim": 20,
-    "weihun": 38
+    "noel": 40,
+    "sam": 47,
+    "shaikzahir": 53,
+    "soonlee": 43,
+    "tianpin": 44,
+    "wayshoonlim": 63,
+    "weichenlim": 39,
+    "weihun": 47
    },
    "totals": {
-    "boonsiang": 430,
-    "calvinfoo": 478,
+    "boonsiang": 432,
+    "calvinfoo": 481,
     "chris": 507,
     "jack": 541,
-    "noel": 479,
-    "sam": 540,
-    "shaikzahir": 448,
-    "soonlee": 549,
-    "tianpin": 491,
-    "wayshoonlim": 531,
-    "weichenlim": 472,
-    "weihun": 516
+    "noel": 485,
+    "sam": 550,
+    "shaikzahir": 470,
+    "soonlee": 550,
+    "tianpin": 493,
+    "wayshoonlim": 532,
+    "weichenlim": 491,
+    "weihun": 525
    },
    "order": [
+    "sam",
     "soonlee",
     "jack",
-    "sam",
     "wayshoonlim",
     "weihun",
     "chris",
     "tianpin",
+    "weichenlim",
     "noel",
     "calvinfoo",
-    "weichenlim",
     "shaikzahir",
     "boonsiang"
    ],
    "behind": {
-    "boonsiang": 119,
-    "calvinfoo": 71,
-    "chris": 42,
-    "jack": 8,
-    "noel": 70,
-    "sam": 9,
-    "shaikzahir": 101,
+    "boonsiang": 118,
+    "calvinfoo": 69,
+    "chris": 43,
+    "jack": 9,
+    "noel": 65,
+    "sam": 0,
+    "shaikzahir": 80,
     "soonlee": 0,
-    "tianpin": 58,
+    "tianpin": 57,
     "wayshoonlim": 18,
-    "weichenlim": 77,
-    "weihun": 33
+    "weichenlim": 59,
+    "weihun": 25
    },
    "rank_prev": {
     "soonlee": 1,
