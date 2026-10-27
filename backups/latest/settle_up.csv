@@ -1,12 +1,12 @@
 from,to,amount_rm
-Noel Tan,Sam Lim,95.00
-Shaik Zahir,Sam Lim,95.00
-Tian Pin Lee,Sam Lim,3.00
-Tian Pin Lee,Soon Lee Loo,67.00
-Tian Pin Lee,Christopher Chin,25.00
-Jack Siah,Christopher Chin,6.00
-Jack Siah,Calvin Foo,25.00
-Jack Siah,Way Shoon Lim,25.00
-Jack Siah,Wei Hun Wong,3.00
-Boon Siang Ng,Wei Hun Wong,11.00
-Wei Chen Lim,Wei Hun Wong,11.00
+Noel Tan,Sam Lim,105.00
+Shaik Zahir,Sam Lim,78.00
+Shaik Zahir,Way Shoon Lim,27.00
+Tian Pin Lee,Way Shoon Lim,72.00
+Tian Pin Lee,Soon Lee Loo,33.00
+Jack Siah,Soon Lee Loo,24.00
+Jack Siah,Christopher Chin,9.00
+Boon Siang Ng,Christopher Chin,12.00
+Boon Siang Ng,Calvin Foo,9.00
+Wei Chen Lim,Calvin Foo,6.00
+Wei Chen Lim,Wei Hun Wong,15.00
