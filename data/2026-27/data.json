@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-30T12:36:30Z",
+ "generated_at": "2026-10-31T12:03:12Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -10,7 +10,7 @@
   "season": "2026/27",
   "gameweek": 8,
   "next_gw": 9,
-  "state": "final"
+  "state": "locked"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
