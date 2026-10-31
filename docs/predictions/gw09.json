@@ -1,0 +1,204 @@
+{
+ "gw": 9,
+ "generated_at": "2026-10-31T16:01:43Z",
+ "model": "claude-opus-5",
+ "mode": "mid_round",
+ "mid_round": {
+  "as_of": "2026-10-31T16:01:43Z",
+  "played": 6,
+  "remaining": 4,
+  "total": 10
+ },
+ "projections": [
+  {
+   "manager": "boonsiang",
+   "xp": 44.9,
+   "captain": "N.Jackson",
+   "captain_xp": 4.3,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 3
+   },
+   "banked": 27.0,
+   "remaining": 17.9
+  },
+  {
+   "manager": "chris",
+   "xp": 42.9,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 16.0,
+   "remaining": 26.9
+  },
+  {
+   "manager": "jack",
+   "xp": 42.8,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 4,
+   "concentration": {
+    "club": "BOU",
+    "players": 2
+   },
+   "banked": 17.0,
+   "remaining": 25.8
+  },
+  {
+   "manager": "weihun",
+   "xp": 38.7,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 3
+   },
+   "banked": 21.0,
+   "remaining": 17.7
+  },
+  {
+   "manager": "calvinfoo",
+   "xp": 36.9,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 28.0,
+   "remaining": 8.9
+  },
+  {
+   "manager": "weichenlim",
+   "xp": 35.0,
+   "captain": "Jo\u00e3o Pedro",
+   "captain_xp": 0.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 17.0,
+   "remaining": 18.0
+  },
+  {
+   "manager": "shaikzahir",
+   "xp": 34.1,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BOU",
+    "players": 2
+   },
+   "chip": "wildcard",
+   "squad": 11,
+   "banked": 21.0,
+   "remaining": 13.1
+  },
+  {
+   "manager": "wayshoonlim",
+   "xp": 31.9,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 15.0,
+   "remaining": 16.9
+  },
+  {
+   "manager": "sam",
+   "xp": 30.5,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 22.0,
+   "remaining": 8.5
+  },
+  {
+   "manager": "soonlee",
+   "xp": 30.2,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 3
+   },
+   "banked": 14.0,
+   "remaining": 16.2
+  },
+  {
+   "manager": "tianpin",
+   "xp": 27.7,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "MCI",
+    "players": 2
+   },
+   "banked": 5.0,
+   "remaining": 22.7
+  },
+  {
+   "manager": "noel",
+   "xp": 21.7,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 14.0,
+   "remaining": 7.7
+  }
+ ],
+ "call": {
+  "first": {
+   "manager": "boonsiang",
+   "confidence": "medium"
+  },
+  "second": {
+   "manager": "chris",
+   "confidence": "low"
+  },
+  "agrees_with_projection": true,
+  "swing_player": {
+   "name": "N.Jackson",
+   "owned_by": [
+    "jack",
+    "weihun",
+    "soonlee",
+    "boonsiang",
+    "tianpin",
+    "chris",
+    "shaikzahir"
+   ],
+   "why": "Seven of twelve own him at Villa Park tonight and Boon Siang has the armband on him at xP 4.3 \u2014 the only live captain of any value in the league, since every Haaland owner is sitting on captain xP 1.0. A Jackson goal doubles for Boon Siang and merely nudges the chasers; a blank hands the week to Christopher Chin's Arsenal block."
+  },
+  "reasoning": "Boon Siang Ng leads on xP 44.9 and, crucially, 27.0 of it is banked \u2014 real points, not projection \u2014 with only a thin 17.9 still to come from Suzuki, Barry and his captain N.Jackson. That is the better kind of lead. Christopher Chin is the live danger: xP 42.9 but just 16.0 banked, so almost everything rides on \u00d8degaard, Calafiori, Eze and Virgil in Liverpool v Arsenal, the hardest fixture left at 4/4. Huge one-match concentration. Jack Siah is right there on 42.8 but took a 4-point hit. Shaik Zahir wildcarded into a rebuilt eleven and sits too far back. Second is genuinely open \u2014 hence low."
+ },
+ "result": null,
+ "record": {
+  "played": 0,
+  "exact": 0,
+  "podium": 0,
+  "pair": 0
+ }
+}
