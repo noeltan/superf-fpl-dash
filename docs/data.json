@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-01T13:03:32Z",
+ "generated_at": "2026-11-02T15:26:56Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -1920,11 +1920,11 @@
     "ko": "2026-11-01T16:30:00Z",
     "dh": 4,
     "da": 4,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 87
    },
    {
@@ -5773,6 +5773,25 @@
  "pl_table": [
   {
    "pos": 1,
+   "team": 1,
+   "p": 9,
+   "w": 8,
+   "d": 0,
+   "l": 1,
+   "gf": 14,
+   "ga": 5,
+   "gd": 9,
+   "pts": 24,
+   "form": [
+    "L",
+    "W",
+    "W",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 2,
    "team": 15,
    "p": 9,
    "w": 7,
@@ -5788,25 +5807,6 @@
     "W",
     "L",
     "L"
-   ]
-  },
-  {
-   "pos": 2,
-   "team": 1,
-   "p": 8,
-   "w": 7,
-   "d": 0,
-   "l": 1,
-   "gf": 13,
-   "ga": 5,
-   "gd": 8,
-   "pts": 21,
-   "form": [
-    "W",
-    "L",
-    "W",
-    "W",
-    "W"
    ]
   },
   {
@@ -5850,20 +5850,20 @@
   {
    "pos": 5,
    "team": 14,
-   "p": 8,
+   "p": 9,
    "w": 4,
    "d": 3,
-   "l": 1,
+   "l": 2,
    "gf": 11,
-   "ga": 8,
-   "gd": 3,
+   "ga": 9,
+   "gd": 2,
    "pts": 15,
    "form": [
-    "D",
     "W",
     "L",
     "W",
-    "W"
+    "W",
+    "L"
    ]
   },
   {
