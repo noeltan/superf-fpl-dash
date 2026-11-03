@@ -194,7 +194,14 @@
   },
   "reasoning": "Boon Siang Ng leads on xP 44.9 and, crucially, 27.0 of it is banked \u2014 real points, not projection \u2014 with only a thin 17.9 still to come from Suzuki, Barry and his captain N.Jackson. That is the better kind of lead. Christopher Chin is the live danger: xP 42.9 but just 16.0 banked, so almost everything rides on \u00d8degaard, Calafiori, Eze and Virgil in Liverpool v Arsenal, the hardest fixture left at 4/4. Huge one-match concentration. Jack Siah is right there on 42.8 but took a 4-point hit. Shaik Zahir wildcarded into a rebuilt eleven and sits too far back. Second is genuinely open \u2014 hence low."
  },
- "result": null,
+ "result": {
+  "actual_first": "boonsiang",
+  "actual_second": "jack",
+  "exact_hit": true,
+  "podium_hit": true,
+  "pair_hit": false,
+  "mean_rank_error": 3.0
+ },
  "record": {
   "played": 0,
   "exact": 0,
