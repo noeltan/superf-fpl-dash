@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-03T15:51:12Z",
+ "generated_at": "2026-11-04T06:11:03Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -246,88 +246,88 @@
  },
  "managers": [
   {
-   "id": "noel",
    "display_name": "Noel Tan",
+   "entry_id": 1652821,
+   "id": "noel",
    "short": "Noel",
-   "team_name": "JEONSOMI",
-   "entry_id": 1652821
+   "team_name": "JEONSOMI"
   },
   {
-   "id": "jack",
    "display_name": "Jack Siah",
+   "entry_id": 1427521,
+   "id": "jack",
    "short": "Jack",
-   "team_name": "Apple TV",
-   "entry_id": 1427521
+   "team_name": "Apple TV"
   },
   {
-   "id": "sam",
    "display_name": "Sam Lim",
+   "entry_id": 2686159,
+   "id": "sam",
    "short": "Sam",
-   "team_name": "GeGe",
-   "entry_id": 2686159
+   "team_name": "GeGe"
   },
   {
-   "id": "weihun",
    "display_name": "Wei Hun Wong",
+   "entry_id": 4590653,
+   "id": "weihun",
    "short": "Wei Hun",
-   "team_name": "\u54d1\u5df4\u5403\u9ec4\u8fde , \u6709\u82e6\u8bf4\u4e0d\u51fa",
-   "entry_id": 4590653
+   "team_name": "\u54d1\u5df4\u5403\u9ec4\u8fde , \u6709\u82e6\u8bf4\u4e0d\u51fa"
   },
   {
-   "id": "soonlee",
    "display_name": "Soon Lee Loo",
+   "entry_id": 2488327,
+   "id": "soonlee",
    "short": "Soon Lee",
-   "team_name": "SLucky XI",
-   "entry_id": 2488327
+   "team_name": "SLucky XI"
   },
   {
-   "id": "boonsiang",
    "display_name": "Boon Siang Ng",
+   "entry_id": 1840731,
+   "id": "boonsiang",
    "short": "Boon",
-   "team_name": "Boon",
-   "entry_id": 1840731
+   "team_name": "Boon"
   },
   {
-   "id": "tianpin",
    "display_name": "Tian Pin Lee",
+   "entry_id": 1567532,
+   "id": "tianpin",
    "short": "Tian Pin",
-   "team_name": "Vege went tight",
-   "entry_id": 1567532
+   "team_name": "Vege went tight"
   },
   {
-   "id": "chris",
    "display_name": "Christopher Chin",
+   "entry_id": 1641730,
+   "id": "chris",
    "short": "Chris",
-   "team_name": "ChriSpirit",
-   "entry_id": 1641730
+   "team_name": "ChriSpirit"
   },
   {
-   "id": "calvinfoo",
    "display_name": "Calvin Foo",
+   "entry_id": 4677226,
+   "id": "calvinfoo",
    "short": "Calvin",
-   "team_name": "After 22 yrs",
-   "entry_id": 4677226
+   "team_name": "After 22 yrs"
   },
   {
-   "id": "shaikzahir",
    "display_name": "Shaik Zahir",
+   "entry_id": 4882676,
+   "id": "shaikzahir",
    "short": "Zahir",
-   "team_name": "BestPlaya",
-   "entry_id": 4882676
+   "team_name": "BestPlaya"
   },
   {
-   "id": "weichenlim",
    "display_name": "Wei Chen Lim",
+   "entry_id": 5140825,
+   "id": "weichenlim",
    "short": "Wei Chen",
-   "team_name": "chili pan mee",
-   "entry_id": 5140825
+   "team_name": "chili pan mee"
   },
   {
-   "id": "wayshoonlim",
    "display_name": "Way Shoon Lim",
+   "entry_id": 5250642,
+   "id": "wayshoonlim",
    "short": "Way Shoon",
-   "team_name": "AyamFC",
-   "entry_id": 5250642
+   "team_name": "AyamFC"
   }
  ],
  "teams": {
@@ -6663,7 +6663,7 @@
      "active": true
     },
     "tianpin": {
-     "points": 49,
+     "points": 45,
      "hits": 4,
      "transfers": 2,
      "chip": null,
@@ -6765,7 +6765,7 @@
      "active": true
     },
     "soonlee": {
-     "points": 81,
+     "points": 77,
      "hits": 4,
      "transfers": 4,
      "chip": null,
@@ -6781,7 +6781,7 @@
      "active": true
     },
     "tianpin": {
-     "points": 70,
+     "points": 62,
      "hits": 8,
      "transfers": 3,
      "chip": null,
@@ -6805,7 +6805,7 @@
      "active": true
     },
     "shaikzahir": {
-     "points": 55,
+     "points": 51,
      "hits": 4,
      "transfers": 2,
      "chip": null,
@@ -7083,7 +7083,7 @@
      "active": true
     },
     "jack": {
-     "points": 63,
+     "points": 59,
      "hits": 4,
      "transfers": 2,
      "chip": null,
@@ -7175,7 +7175,7 @@
     "boonsiang"
    ],
    "runners_up": [
-    "jack"
+    "weihun"
    ],
    "winner_net": 7400,
    "runner_up_net": 2600,
@@ -7292,7 +7292,7 @@
     "weihun": 196,
     "soonlee": 198,
     "boonsiang": 162,
-    "tianpin": 171,
+    "tianpin": 167,
     "chris": 200,
     "calvinfoo": 192,
     "shaikzahir": 177,
@@ -7308,8 +7308,8 @@
     "weichenlim",
     "calvinfoo",
     "shaikzahir",
-    "tianpin",
     "sam",
+    "tianpin",
     "boonsiang",
     "noel"
    ],
@@ -7363,15 +7363,15 @@
    ],
    "totals": {
     "noel": 215,
-    "jack": 245,
+    "jack": 241,
     "sam": 239,
     "weihun": 257,
-    "soonlee": 222,
+    "soonlee": 218,
     "boonsiang": 228,
-    "tianpin": 208,
+    "tianpin": 200,
     "chris": 222,
     "calvinfoo": 222,
-    "shaikzahir": 206,
+    "shaikzahir": 202,
     "weichenlim": 231,
     "wayshoonlim": 225
    },
@@ -7382,12 +7382,12 @@
     "weichenlim",
     "boonsiang",
     "wayshoonlim",
-    "soonlee",
     "chris",
     "calvinfoo",
+    "soonlee",
     "noel",
-    "tianpin",
-    "shaikzahir"
+    "shaikzahir",
+    "tianpin"
    ],
    "winners": [
     "weihun"
@@ -7409,8 +7409,8 @@
     "weichenlim": -2000,
     "wayshoonlim": -2000
    },
-   "gap_to_first": 12,
-   "callout": "October settled. Wei Hun take the RM148 with 257 points \u2014 12 clear of Jack, and Jack takes RM52 with 245. The other 10 pay RM20 each. 4 gameweeks in the bucket."
+   "gap_to_first": 16,
+   "callout": "October settled. Wei Hun take the RM148 with 257 points \u2014 16 clear of Jack, and Jack takes RM52 with 241. The other 10 pay RM20 each. 4 gameweeks in the bucket."
   }
  ],
  "month_current": {
@@ -7434,15 +7434,15 @@
  },
  "totals": {
   "noel": 532,
-  "jack": 604,
+  "jack": 600,
   "sam": 592,
   "weihun": 585,
-  "soonlee": 591,
+  "soonlee": 587,
   "boonsiang": 496,
-  "tianpin": 531,
+  "tianpin": 519,
   "chris": 557,
   "calvinfoo": 534,
-  "shaikzahir": 525,
+  "shaikzahir": 521,
   "weichenlim": 548,
   "wayshoonlim": 583
  },
@@ -7456,8 +7456,8 @@
   "weichenlim",
   "calvinfoo",
   "noel",
-  "tianpin",
   "shaikzahir",
+  "tianpin",
   "boonsiang"
  ],
  "rank_prev": {
@@ -7467,26 +7467,26 @@
   "wayshoonlim": 4,
   "weihun": 5,
   "chris": 6,
-  "tianpin": 7,
-  "weichenlim": 8,
-  "noel": 9,
-  "calvinfoo": 10,
+  "weichenlim": 7,
+  "noel": 8,
+  "calvinfoo": 9,
+  "tianpin": 10,
   "shaikzahir": 11,
   "boonsiang": 12
  },
  "behind": {
-  "noel": 72,
+  "noel": 68,
   "jack": 0,
-  "sam": 12,
-  "weihun": 19,
+  "sam": 8,
+  "weihun": 15,
   "soonlee": 13,
-  "boonsiang": 108,
-  "tianpin": 73,
-  "chris": 47,
-  "calvinfoo": 70,
+  "boonsiang": 104,
+  "tianpin": 81,
+  "chris": 43,
+  "calvinfoo": 66,
   "shaikzahir": 79,
-  "weichenlim": 56,
-  "wayshoonlim": 21
+  "weichenlim": 52,
+  "wayshoonlim": 17
  },
  "ledger": {
   "noel": {
@@ -7606,11 +7606,11 @@
    ]
   },
   "jack": {
-   "weekly": 1800,
+   "weekly": -1800,
    "monthly": 2700,
-   "accrued": 4500,
+   "accrued": 900,
    "projected_season": 62000,
-   "delta_last_gw": 7800,
+   "delta_last_gw": 4200,
    "by_gameweek": [
     -1000,
     -1000,
@@ -7620,7 +7620,7 @@
     -1000,
     -1000,
     2600,
-    2600
+    -1000
    ],
    "statement": [
     {
@@ -7707,17 +7707,17 @@
      "date": "2026-11-02",
      "type": "weekly",
      "gw": 9,
-     "detail": "63 pts, 2nd of 12 \u2014 30% share",
-     "amount": 2600,
-     "balance": -700
+     "detail": "59 pts, 3rd of 12",
+     "amount": -1000,
+     "balance": -4300
     },
     {
      "date": "2026-11-02",
      "type": "monthly",
      "month": "OCT",
-     "detail": "245 pts, 2nd in October \u2014 30% share",
+     "detail": "241 pts, 2nd in October \u2014 30% share",
      "amount": 5200,
-     "balance": 4500
+     "balance": 900
     }
    ]
   },
@@ -7791,7 +7791,7 @@
      "date": "2026-09-20",
      "type": "monthly",
      "month": "SEP",
-     "detail": "171 pts, 10th in September",
+     "detail": "171 pts, 9th in September",
      "amount": -1500,
      "balance": 12900
     },
@@ -7838,11 +7838,11 @@
    ]
   },
   "weihun": {
-   "weekly": 3000,
+   "weekly": 6600,
    "monthly": 12300,
-   "accrued": 15300,
+   "accrued": 18900,
    "projected_season": -10000,
-   "delta_last_gw": 13800,
+   "delta_last_gw": 17400,
    "by_gameweek": [
     -1000,
     -1000,
@@ -7852,7 +7852,7 @@
     2600,
     -1000,
     -1000,
-    -1000
+    2600
    ],
    "statement": [
     {
@@ -7939,9 +7939,9 @@
      "date": "2026-11-02",
      "type": "weekly",
      "gw": 9,
-     "detail": "60 pts, 3rd of 12",
-     "amount": -1000,
-     "balance": 500
+     "detail": "60 pts, 2nd of 12 \u2014 30% share",
+     "amount": 2600,
+     "balance": 4100
     },
     {
      "date": "2026-11-02",
@@ -7949,7 +7949,7 @@
      "month": "OCT",
      "detail": "257 pts, 1st in October \u2014 70% share",
      "amount": 14800,
-     "balance": 15300
+     "balance": 18900
     }
    ]
   },
@@ -8015,7 +8015,7 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "47 pts, 6th of 12",
+     "detail": "47 pts, 5th of 12",
      "amount": -1000,
      "balance": 4800
     },
@@ -8031,7 +8031,7 @@
      "date": "2026-10-12",
      "type": "weekly",
      "gw": 6,
-     "detail": "81 pts, 3rd of 12",
+     "detail": "77 pts, 3rd of 12",
      "amount": -1000,
      "balance": 7700
     },
@@ -8063,7 +8063,7 @@
      "date": "2026-11-02",
      "type": "monthly",
      "month": "OCT",
-     "detail": "222 pts, 7th in October",
+     "detail": "218 pts, 9th in October",
      "amount": -2000,
      "balance": 2700
     }
@@ -8131,7 +8131,7 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "46 pts, 7th of 12",
+     "detail": "46 pts, 6th of 12",
      "amount": -1000,
      "balance": -6000
     },
@@ -8247,7 +8247,7 @@
      "date": "2026-09-20",
      "type": "weekly",
      "gw": 5,
-     "detail": "49 pts, 5th of 12",
+     "detail": "45 pts, 7th of 12",
      "amount": -1000,
      "balance": -6000
     },
@@ -8255,7 +8255,7 @@
      "date": "2026-09-20",
      "type": "monthly",
      "month": "SEP",
-     "detail": "171 pts, 9th in September",
+     "detail": "167 pts, 10th in September",
      "amount": -1500,
      "balance": -7500
     },
@@ -8263,7 +8263,7 @@
      "date": "2026-10-12",
      "type": "weekly",
      "gw": 6,
-     "detail": "70 pts, 7th of 12",
+     "detail": "62 pts, 7th of 12",
      "amount": -1000,
      "balance": -8500
     },
@@ -8295,7 +8295,7 @@
      "date": "2026-11-02",
      "type": "monthly",
      "month": "OCT",
-     "detail": "208 pts, 11th in October",
+     "detail": "200 pts, 12th in October",
      "amount": -2000,
      "balance": -13500
     }
@@ -8411,7 +8411,7 @@
      "date": "2026-11-02",
      "type": "monthly",
      "month": "OCT",
-     "detail": "222 pts, 8th in October",
+     "detail": "222 pts, 7th in October",
      "amount": -2000,
      "balance": -900
     }
@@ -8527,7 +8527,7 @@
      "date": "2026-11-02",
      "type": "monthly",
      "month": "OCT",
-     "detail": "222 pts, 9th in October",
+     "detail": "222 pts, 8th in October",
      "amount": -2000,
      "balance": -1500
     }
@@ -8611,7 +8611,7 @@
      "date": "2026-10-12",
      "type": "weekly",
      "gw": 6,
-     "detail": "55 pts, 12th of 12",
+     "detail": "51 pts, 12th of 12",
      "amount": -1000,
      "balance": -8500
     },
@@ -8643,7 +8643,7 @@
      "date": "2026-11-02",
      "type": "monthly",
      "month": "OCT",
-     "detail": "206 pts, 12th in October",
+     "detail": "202 pts, 11th in October",
      "amount": -2000,
      "balance": -13500
     }
@@ -8888,38 +8888,33 @@
   "payments": [
    {
     "from": "noel",
-    "to": "sam",
+    "to": "weihun",
     "amount": 13500
    },
    {
     "from": "shaikzahir",
-    "to": "sam",
-    "amount": 1800
+    "to": "weihun",
+    "amount": 5400
    },
    {
     "from": "shaikzahir",
-    "to": "weihun",
-    "amount": 11700
+    "to": "sam",
+    "amount": 8100
    },
    {
     "from": "tianpin",
-    "to": "weihun",
-    "amount": 3600
+    "to": "sam",
+    "amount": 7200
    },
    {
     "from": "tianpin",
     "to": "wayshoonlim",
-    "amount": 6900
-   },
-   {
-    "from": "tianpin",
-    "to": "jack",
-    "amount": 3000
+    "amount": 6300
    },
    {
     "from": "weichenlim",
-    "to": "jack",
-    "amount": 1500
+    "to": "wayshoonlim",
+    "amount": 600
    },
    {
     "from": "weichenlim",
@@ -8929,7 +8924,7 @@
    {
     "from": "weichenlim",
     "to": "soonlee",
-    "amount": 300
+    "amount": 1200
    },
    {
     "from": "calvinfoo",
@@ -8938,7 +8933,7 @@
    },
    {
     "from": "chris",
-    "to": "soonlee",
+    "to": "jack",
     "amount": 900
    }
   ]
@@ -8972,7 +8967,7 @@
   "wayshoonlim": 2
  },
  "stats": {
-  "avg_points": 556.5,
+  "avg_points": 554.5,
   "high": {
    "gw": 2,
    "manager": "wayshoonlim",
@@ -9000,7 +8995,7 @@
     "heading": "GW9",
     "lines": [
      "Boon takes GW9 on 64 pts and is owed RM74.",
-     "Jack is second on 63 and is owed RM26.",
+     "Wei Hun is second on 60 and is owed RM26.",
      "The other 10 managers owe RM10 each. Pot RM120.",
      "Confirmed bonus moved this one: Jack led at full time, Boon took it."
     ]
@@ -9009,8 +9004,8 @@
     "heading": "Every score",
     "lines": [
      "1. Boon \u2014 64 pts (+RM74)",
-     "2. Jack \u2014 63 pts (+RM26) [-4 hit]",
-     "3. Wei Hun \u2014 60 pts (\u2212RM10)",
+     "2. Wei Hun \u2014 60 pts (+RM26)",
+     "3. Jack \u2014 59 pts (\u2212RM10) [-4 hit]",
      "4. Wei Chen \u2014 57 pts (\u2212RM10)",
      "5. Zahir \u2014 55 pts (\u2212RM10) [wildcard]",
      "6. Calvin \u2014 53 pts (\u2212RM10)",
@@ -9027,21 +9022,21 @@
     "lines": [
      "October is settled over GW6\u2013GW9.",
      "Wei Hun takes the month on 257 pts and is owed RM148.",
-     "Jack is second on 245 and is owed RM52.",
+     "Jack is second on 241 and is owed RM52.",
      "The other 10 managers owe RM20 each. Pot RM240."
     ]
    },
    {
     "heading": "Season so far",
     "lines": [
-     "1. Jack \u2014 604 pts",
-     "2. Sam \u2014 592 pts (12 behind)",
-     "3. Soon Lee \u2014 591 pts (13 behind)",
-     "Jack leads by 12 after 9 gameweeks."
+     "1. Jack \u2014 600 pts",
+     "2. Sam \u2014 592 pts (8 behind)",
+     "3. Soon Lee \u2014 587 pts (13 behind)",
+     "Jack leads by 8 after 9 gameweeks."
     ]
    }
   ],
   "footer": "GW10 deadline: Sat 7 Nov, 02:30 MYT.",
-  "text": "SuperF \u00b7 GW9 settled \u00b7 Mon 2 Nov\n\nGW9\nBoon takes GW9 on 64 pts and is owed RM74.\nJack is second on 63 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\nConfirmed bonus moved this one: Jack led at full time, Boon took it.\n\nEVERY SCORE\n1. Boon \u2014 64 pts (+RM74)\n2. Jack \u2014 63 pts (+RM26) [-4 hit]\n3. Wei Hun \u2014 60 pts (\u2212RM10)\n4. Wei Chen \u2014 57 pts (\u2212RM10)\n5. Zahir \u2014 55 pts (\u2212RM10) [wildcard]\n6. Calvin \u2014 53 pts (\u2212RM10)\n7. Way Shoon \u2014 51 pts (\u2212RM10)\n8. Chris \u2014 50 pts (\u2212RM10)\n9. Noel \u2014 47 pts (\u2212RM10)\n10. Sam \u2014 42 pts (\u2212RM10)\n11. Soon Lee \u2014 41 pts (\u2212RM10)\n12. Tian Pin \u2014 38 pts (\u2212RM10)\n\nOCTOBER \u2014 SETTLED\nOctober is settled over GW6\u2013GW9.\nWei Hun takes the month on 257 pts and is owed RM148.\nJack is second on 245 and is owed RM52.\nThe other 10 managers owe RM20 each. Pot RM240.\n\nSEASON SO FAR\n1. Jack \u2014 604 pts\n2. Sam \u2014 592 pts (12 behind)\n3. Soon Lee \u2014 591 pts (13 behind)\nJack leads by 12 after 9 gameweeks.\n\nGW10 deadline: Sat 7 Nov, 02:30 MYT.\n"
+  "text": "SuperF \u00b7 GW9 settled \u00b7 Mon 2 Nov\n\nGW9\nBoon takes GW9 on 64 pts and is owed RM74.\nWei Hun is second on 60 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\nConfirmed bonus moved this one: Jack led at full time, Boon took it.\n\nEVERY SCORE\n1. Boon \u2014 64 pts (+RM74)\n2. Wei Hun \u2014 60 pts (+RM26)\n3. Jack \u2014 59 pts (\u2212RM10) [-4 hit]\n4. Wei Chen \u2014 57 pts (\u2212RM10)\n5. Zahir \u2014 55 pts (\u2212RM10) [wildcard]\n6. Calvin \u2014 53 pts (\u2212RM10)\n7. Way Shoon \u2014 51 pts (\u2212RM10)\n8. Chris \u2014 50 pts (\u2212RM10)\n9. Noel \u2014 47 pts (\u2212RM10)\n10. Sam \u2014 42 pts (\u2212RM10)\n11. Soon Lee \u2014 41 pts (\u2212RM10)\n12. Tian Pin \u2014 38 pts (\u2212RM10)\n\nOCTOBER \u2014 SETTLED\nOctober is settled over GW6\u2013GW9.\nWei Hun takes the month on 257 pts and is owed RM148.\nJack is second on 241 and is owed RM52.\nThe other 10 managers owe RM20 each. Pot RM240.\n\nSEASON SO FAR\n1. Jack \u2014 600 pts\n2. Sam \u2014 592 pts (8 behind)\n3. Soon Lee \u2014 587 pts (13 behind)\nJack leads by 8 after 9 gameweeks.\n\nGW10 deadline: Sat 7 Nov, 02:30 MYT.\n"
  }
 }

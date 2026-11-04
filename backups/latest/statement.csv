@@ -9,15 +9,15 @@ Jack Siah,2026-09-20,SEP monthly,"198 pts, 3rd in September",-15.00,-39.00
 Jack Siah,2026-10-12,GW6 weekly,"58 pts, 9th of 12",-10.00,-49.00
 Jack Siah,2026-10-19,GW7 weekly,"66 pts, 5th of 12",-10.00,-59.00
 Jack Siah,2026-10-25,GW8 weekly,"58 pts, 2nd of 12 — 30% share",26.00,-33.00
-Jack Siah,2026-11-02,GW9 weekly,"63 pts, 2nd of 12 — 30% share",26.00,-7.00
-Jack Siah,2026-11-02,OCT monthly,"245 pts, 2nd in October — 30% share",52.00,45.00
+Jack Siah,2026-11-02,GW9 weekly,"59 pts, 3rd of 12",-10.00,-43.00
+Jack Siah,2026-11-02,OCT monthly,"241 pts, 2nd in October — 30% share",52.00,9.00
 Sam Lim,2026-08-24,GW1 weekly,"74 pts, 1st of 12, top score — 70% share",74.00,74.00
 Sam Lim,2026-08-31,GW2 weekly,"108 pts, 2nd of 12 — 30% share",26.00,100.00
 Sam Lim,2026-08-31,AUG monthly,"182 pts, 1st in August — 70% share",74.00,174.00
 Sam Lim,2026-09-06,GW3 weekly,"53 pts, 9th of 12",-10.00,164.00
 Sam Lim,2026-09-14,GW4 weekly,"74 pts, 6th of 12",-10.00,154.00
 Sam Lim,2026-09-20,GW5 weekly,"44 pts, 8th of 12",-10.00,144.00
-Sam Lim,2026-09-20,SEP monthly,"171 pts, 10th in September",-15.00,129.00
+Sam Lim,2026-09-20,SEP monthly,"171 pts, 9th in September",-15.00,129.00
 Sam Lim,2026-10-12,GW6 weekly,"71 pts, 6th of 12",-10.00,119.00
 Sam Lim,2026-10-19,GW7 weekly,"79 pts, 1st of 12, top score — 70% share",74.00,193.00
 Sam Lim,2026-10-25,GW8 weekly,"47 pts, 5th of 12",-10.00,183.00
@@ -28,13 +28,13 @@ Soon Lee Loo,2026-08-31,GW2 weekly,"101 pts, 5th of 12",-10.00,16.00
 Soon Lee Loo,2026-08-31,AUG monthly,"171 pts, 2nd in August — 30% share",26.00,42.00
 Soon Lee Loo,2026-09-06,GW3 weekly,"77 pts, 2nd of 12 — 30% share",26.00,68.00
 Soon Lee Loo,2026-09-14,GW4 weekly,"74 pts, 7th of 12",-10.00,58.00
-Soon Lee Loo,2026-09-20,GW5 weekly,"47 pts, 6th of 12",-10.00,48.00
+Soon Lee Loo,2026-09-20,GW5 weekly,"47 pts, 5th of 12",-10.00,48.00
 Soon Lee Loo,2026-09-20,SEP monthly,"198 pts, 2nd in September — 30% share",39.00,87.00
-Soon Lee Loo,2026-10-12,GW6 weekly,"81 pts, 3rd of 12",-10.00,77.00
+Soon Lee Loo,2026-10-12,GW6 weekly,"77 pts, 3rd of 12",-10.00,77.00
 Soon Lee Loo,2026-10-19,GW7 weekly,"57 pts, 7th of 12",-10.00,67.00
 Soon Lee Loo,2026-10-25,GW8 weekly,"43 pts, 8th of 12",-10.00,57.00
 Soon Lee Loo,2026-11-02,GW9 weekly,"41 pts, 11th of 12",-10.00,47.00
-Soon Lee Loo,2026-11-02,OCT monthly,"222 pts, 7th in October",-20.00,27.00
+Soon Lee Loo,2026-11-02,OCT monthly,"218 pts, 9th in October",-20.00,27.00
 Wei Hun Wong,2026-08-24,GW1 weekly,"60 pts, 6th of 12",-10.00,-10.00
 Wei Hun Wong,2026-08-31,GW2 weekly,"72 pts, 9th of 12",-10.00,-20.00
 Wei Hun Wong,2026-08-31,AUG monthly,"132 pts, 9th in August",-10.00,-30.00
@@ -45,8 +45,8 @@ Wei Hun Wong,2026-09-20,SEP monthly,"196 pts, 4th in September",-15.00,9.00
 Wei Hun Wong,2026-10-12,GW6 weekly,"83 pts, 2nd of 12 — 30% share",26.00,35.00
 Wei Hun Wong,2026-10-19,GW7 weekly,"67 pts, 4th of 12",-10.00,25.00
 Wei Hun Wong,2026-10-25,GW8 weekly,"47 pts, 4th of 12",-10.00,15.00
-Wei Hun Wong,2026-11-02,GW9 weekly,"60 pts, 3rd of 12",-10.00,5.00
-Wei Hun Wong,2026-11-02,OCT monthly,"257 pts, 1st in October — 70% share",148.00,153.00
+Wei Hun Wong,2026-11-02,GW9 weekly,"60 pts, 2nd of 12 — 30% share",26.00,41.00
+Wei Hun Wong,2026-11-02,OCT monthly,"257 pts, 1st in October — 70% share",148.00,189.00
 Way Shoon Lim,2026-08-24,GW1 weekly,"52 pts, 8th of 12",-10.00,-10.00
 Way Shoon Lim,2026-08-31,GW2 weekly,"110 pts, 1st of 12, top score — 70% share",74.00,64.00
 Way Shoon Lim,2026-08-31,AUG monthly,"162 pts, 3rd in August",-10.00,54.00
@@ -70,7 +70,7 @@ Christopher Chin,2026-10-12,GW6 weekly,"71 pts, 5th of 12",-10.00,41.00
 Christopher Chin,2026-10-19,GW7 weekly,"56 pts, 9th of 12",-10.00,31.00
 Christopher Chin,2026-10-25,GW8 weekly,"45 pts, 6th of 12",-10.00,21.00
 Christopher Chin,2026-11-02,GW9 weekly,"50 pts, 8th of 12",-10.00,11.00
-Christopher Chin,2026-11-02,OCT monthly,"222 pts, 8th in October",-20.00,-9.00
+Christopher Chin,2026-11-02,OCT monthly,"222 pts, 7th in October",-20.00,-9.00
 Wei Chen Lim,2026-08-24,GW1 weekly,"61 pts, 5th of 12",-10.00,-10.00
 Wei Chen Lim,2026-08-31,GW2 weekly,"62 pts, 11th of 12",-10.00,-20.00
 Wei Chen Lim,2026-08-31,AUG monthly,"123 pts, 10th in August",-10.00,-30.00
@@ -94,7 +94,7 @@ Calvin Foo,2026-10-12,GW6 weekly,"61 pts, 8th of 12",-10.00,-1.00
 Calvin Foo,2026-10-19,GW7 weekly,"73 pts, 2nd of 12 — 30% share",26.00,25.00
 Calvin Foo,2026-10-25,GW8 weekly,"35 pts, 11th of 12",-10.00,15.00
 Calvin Foo,2026-11-02,GW9 weekly,"53 pts, 6th of 12",-10.00,5.00
-Calvin Foo,2026-11-02,OCT monthly,"222 pts, 9th in October",-20.00,-15.00
+Calvin Foo,2026-11-02,OCT monthly,"222 pts, 8th in October",-20.00,-15.00
 Noel Tan,2026-08-24,GW1 weekly,"63 pts, 4th of 12",-10.00,-10.00
 Noel Tan,2026-08-31,GW2 weekly,"98 pts, 6th of 12",-10.00,-20.00
 Noel Tan,2026-08-31,AUG monthly,"161 pts, 5th in August",-10.00,-30.00
@@ -107,18 +107,6 @@ Noel Tan,2026-10-19,GW7 weekly,"72 pts, 3rd of 12",-10.00,-95.00
 Noel Tan,2026-10-25,GW8 weekly,"40 pts, 9th of 12",-10.00,-105.00
 Noel Tan,2026-11-02,GW9 weekly,"47 pts, 9th of 12",-10.00,-115.00
 Noel Tan,2026-11-02,OCT monthly,"215 pts, 10th in October",-20.00,-135.00
-Tian Pin Lee,2026-08-24,GW1 weekly,"49 pts, 10th of 12",-10.00,-10.00
-Tian Pin Lee,2026-08-31,GW2 weekly,"103 pts, 4th of 12",-10.00,-20.00
-Tian Pin Lee,2026-08-31,AUG monthly,"152 pts, 6th in August",-10.00,-30.00
-Tian Pin Lee,2026-09-06,GW3 weekly,"60 pts, 6th of 12",-10.00,-40.00
-Tian Pin Lee,2026-09-14,GW4 weekly,"62 pts, 11th of 12",-10.00,-50.00
-Tian Pin Lee,2026-09-20,GW5 weekly,"49 pts, 5th of 12",-10.00,-60.00
-Tian Pin Lee,2026-09-20,SEP monthly,"171 pts, 9th in September",-15.00,-75.00
-Tian Pin Lee,2026-10-12,GW6 weekly,"70 pts, 7th of 12",-10.00,-85.00
-Tian Pin Lee,2026-10-19,GW7 weekly,"56 pts, 8th of 12",-10.00,-95.00
-Tian Pin Lee,2026-10-25,GW8 weekly,"44 pts, 7th of 12",-10.00,-105.00
-Tian Pin Lee,2026-11-02,GW9 weekly,"38 pts, 12th of 12",-10.00,-115.00
-Tian Pin Lee,2026-11-02,OCT monthly,"208 pts, 11th in October",-20.00,-135.00
 Shaik Zahir,2026-08-24,GW1 weekly,"48 pts, 11th of 12",-10.00,-10.00
 Shaik Zahir,2026-08-31,GW2 weekly,"94 pts, 7th of 12",-10.00,-20.00
 Shaik Zahir,2026-08-31,AUG monthly,"142 pts, 7th in August",-10.00,-30.00
@@ -126,17 +114,29 @@ Shaik Zahir,2026-09-06,GW3 weekly,"51 pts, 10th of 12",-10.00,-40.00
 Shaik Zahir,2026-09-14,GW4 weekly,"76 pts, 5th of 12",-10.00,-50.00
 Shaik Zahir,2026-09-20,GW5 weekly,"50 pts, 4th of 12",-10.00,-60.00
 Shaik Zahir,2026-09-20,SEP monthly,"177 pts, 8th in September",-15.00,-75.00
-Shaik Zahir,2026-10-12,GW6 weekly,"55 pts, 12th of 12",-10.00,-85.00
+Shaik Zahir,2026-10-12,GW6 weekly,"51 pts, 12th of 12",-10.00,-85.00
 Shaik Zahir,2026-10-19,GW7 weekly,"43 pts, 12th of 12",-10.00,-95.00
 Shaik Zahir,2026-10-25,GW8 weekly,"53 pts, 3rd of 12",-10.00,-105.00
 Shaik Zahir,2026-11-02,GW9 weekly,"55 pts, 5th of 12",-10.00,-115.00
-Shaik Zahir,2026-11-02,OCT monthly,"206 pts, 12th in October",-20.00,-135.00
+Shaik Zahir,2026-11-02,OCT monthly,"202 pts, 11th in October",-20.00,-135.00
+Tian Pin Lee,2026-08-24,GW1 weekly,"49 pts, 10th of 12",-10.00,-10.00
+Tian Pin Lee,2026-08-31,GW2 weekly,"103 pts, 4th of 12",-10.00,-20.00
+Tian Pin Lee,2026-08-31,AUG monthly,"152 pts, 6th in August",-10.00,-30.00
+Tian Pin Lee,2026-09-06,GW3 weekly,"60 pts, 6th of 12",-10.00,-40.00
+Tian Pin Lee,2026-09-14,GW4 weekly,"62 pts, 11th of 12",-10.00,-50.00
+Tian Pin Lee,2026-09-20,GW5 weekly,"45 pts, 7th of 12",-10.00,-60.00
+Tian Pin Lee,2026-09-20,SEP monthly,"167 pts, 10th in September",-15.00,-75.00
+Tian Pin Lee,2026-10-12,GW6 weekly,"62 pts, 7th of 12",-10.00,-85.00
+Tian Pin Lee,2026-10-19,GW7 weekly,"56 pts, 8th of 12",-10.00,-95.00
+Tian Pin Lee,2026-10-25,GW8 weekly,"44 pts, 7th of 12",-10.00,-105.00
+Tian Pin Lee,2026-11-02,GW9 weekly,"38 pts, 12th of 12",-10.00,-115.00
+Tian Pin Lee,2026-11-02,OCT monthly,"200 pts, 12th in October",-20.00,-135.00
 Boon Siang Ng,2026-08-24,GW1 weekly,"36 pts, 12th of 12",-10.00,-10.00
 Boon Siang Ng,2026-08-31,GW2 weekly,"70 pts, 10th of 12",-10.00,-20.00
 Boon Siang Ng,2026-08-31,AUG monthly,"106 pts, 12th in August",-10.00,-30.00
 Boon Siang Ng,2026-09-06,GW3 weekly,"56 pts, 7th of 12",-10.00,-40.00
 Boon Siang Ng,2026-09-14,GW4 weekly,"60 pts, 12th of 12",-10.00,-50.00
-Boon Siang Ng,2026-09-20,GW5 weekly,"46 pts, 7th of 12",-10.00,-60.00
+Boon Siang Ng,2026-09-20,GW5 weekly,"46 pts, 6th of 12",-10.00,-60.00
 Boon Siang Ng,2026-09-20,SEP monthly,"162 pts, 11th in September",-15.00,-75.00
 Boon Siang Ng,2026-10-12,GW6 weekly,"91 pts, 1st of 12, top score — 70% share",74.00,-1.00
 Boon Siang Ng,2026-10-19,GW7 weekly,"50 pts, 11th of 12",-10.00,-11.00

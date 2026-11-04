@@ -47,8 +47,9 @@ class ManagerScore:
         Missing a deadline does *not* land here: FPL rolls the previous squad
         over and it scores normally. This is 0 only for a manager who never
         entered a team at all, who is in the league and pays regardless.
+        Transfer hits come off: the FPL ``points`` field is gross of them.
         """
-        return 0 if self.points is None else int(self.points)
+        return 0 if self.points is None else int(self.points) - int(self.hits)
 
 
 @dataclass
