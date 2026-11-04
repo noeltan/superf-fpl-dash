@@ -91,6 +91,20 @@ def test_never_setting_a_team_scores_zero_and_still_pays(league):
     assert sum(result.weekly[1].values()) == 0
 
 
+def test_transfer_hits_come_off_the_points_that_pay(league):
+    # FPL's `points` is gross of hits. Jack's 68 less an 8-point hit is 60,
+    # which drops him below Chris (64) for second — in the week and the month.
+    calendar = full_season({1: GW1_POINTS}, months={1: "AUG"})
+    calendar[1].scores["jack"].hits = 8
+
+    result = settle(league, calendar, [{"month": "AUG", "gameweeks": [1]}], expected_gameweeks=38)
+    assert calendar[1].scores["jack"].net_points == 60
+    assert result.weekly[1]["chris"] == rm_to_sen(14)
+    assert result.weekly[1]["jack"] == rm_to_sen(-10)
+    assert result.monthly["AUG"]["chris"] == rm_to_sen(0.30 * 40 - 5)
+    assert sum(result.weekly[1].values()) == 0
+
+
 def test_a_manager_on_zero_can_still_be_ranked_last_without_breaking_the_pot(league):
     points = {m["id"]: 0 for m in league}
     calendar = full_season({1: points}, months={1: "AUG"})
