@@ -1,0 +1,211 @@
+{
+ "gw": 10,
+ "generated_at": "2026-11-07T18:15:48Z",
+ "model": "claude-opus-5",
+ "mode": "mid_round",
+ "mid_round": {
+  "as_of": "2026-11-07T18:15:48Z",
+  "played": 5,
+  "remaining": 5,
+  "total": 10
+ },
+ "projections": [
+  {
+   "manager": "soonlee",
+   "xp": 71.4,
+   "captain": "\u00d8degaard",
+   "captain_xp": 11.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 51.0,
+   "remaining": 20.4
+  },
+  {
+   "manager": "jack",
+   "xp": 63.4,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "chip": "bboost",
+   "squad": 15,
+   "banked": 26.0,
+   "remaining": 37.4
+  },
+  {
+   "manager": "boonsiang",
+   "xp": 57.7,
+   "captain": "Palmer",
+   "captain_xp": 4.2,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 2
+   },
+   "banked": 26.0,
+   "remaining": 31.7
+  },
+  {
+   "manager": "wayshoonlim",
+   "xp": 57.3,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 34.0,
+   "remaining": 23.3
+  },
+  {
+   "manager": "shaikzahir",
+   "xp": 57.2,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 24.0,
+   "remaining": 33.2
+  },
+  {
+   "manager": "noel",
+   "xp": 54.7,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "chip": "wildcard",
+   "squad": 11,
+   "banked": 25.0,
+   "remaining": 29.7
+  },
+  {
+   "manager": "sam",
+   "xp": 50.1,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 4,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 22.0,
+   "remaining": 28.1
+  },
+  {
+   "manager": "weihun",
+   "xp": 49.2,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 16.0,
+   "remaining": 33.2
+  },
+  {
+   "manager": "weichenlim",
+   "xp": 48.5,
+   "captain": "Rogers",
+   "captain_xp": 4.6,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "chip": "3xc",
+   "squad": 11,
+   "banked": 11.0,
+   "remaining": 37.5
+  },
+  {
+   "manager": "calvinfoo",
+   "xp": 48.4,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 16.0,
+   "remaining": 32.4
+  },
+  {
+   "manager": "chris",
+   "xp": 43.1,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 25.0,
+   "remaining": 18.1
+  },
+  {
+   "manager": "tianpin",
+   "xp": 42.5,
+   "captain": "Haaland",
+   "captain_xp": 1.0,
+   "hits": 8,
+   "concentration": {
+    "club": "AVL",
+    "players": 2
+   },
+   "banked": 10.0,
+   "remaining": 32.5
+  }
+ ],
+ "call": {
+  "first": {
+   "manager": "soonlee",
+   "confidence": "medium"
+  },
+  "second": {
+   "manager": "jack",
+   "confidence": "medium"
+  },
+  "agrees_with_projection": true,
+  "swing_player": {
+   "name": "Rogers",
+   "owned_by": [
+    "noel",
+    "jack",
+    "sam",
+    "weihun",
+    "soonlee",
+    "chris",
+    "calvinfoo",
+    "shaikzahir",
+    "weichenlim",
+    "wayshoonlim"
+   ],
+   "why": "Ten of twelve own him at Sunderland, and Wei Chen Lim has him triple-captained \u2014 Rogers blanking kills weichenlim's chip outright, while a haul drags almost the whole league up and only rewards the triple captain properly. He is the one name that both decides the chase and settles whether anyone can catch Soon Lee Loo."
+  },
+  "reasoning": "Soon Lee Loo leads on xP 71.4 and, crucially, 51.0 of it is already banked \u2014 \u00d8degaard's captaincy has been paid out, with only five players left. That is the safest kind of lead in this league. The chase is Jack Siah: just 26.0 banked but 37.4 remaining off a bench boost, eight names still to play across Bournemouth, Brighton, Chelsea and Villa. Haaland captaincy at xP 1.0 has already failed for most of the pack, which flattens the field. Structural risk: everything funnels into Saturday's 14:00 slot, and Soon Lee Loo's remaining 20.4 is the thinnest of anyone near the top. Wei Chen Lim's triple captain on Rogers is the live wildcard \u2014 a haul vaults him past Jack."
+ },
+ "result": null,
+ "record": {
+  "played": 0,
+  "exact": 0,
+  "podium": 0,
+  "pair": 0
+ }
+}
