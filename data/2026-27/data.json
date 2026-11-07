@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-06T14:04:01Z",
+ "generated_at": "2026-11-07T12:48:04Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 9,
-  "next_gw": 10,
-  "state": "final"
+  "gameweek": 10,
+  "next_gw": 11,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -1948,11 +1948,11 @@
     "ko": "2026-11-06T20:00:00Z",
     "dh": 2,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 3,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 94
    },
    {
@@ -1961,9 +1961,9 @@
     "ko": "2026-11-07T12:30:00Z",
     "dh": 3,
     "da": 3,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 0,
+    "as": 0,
+    "started": true,
     "finished": false,
     "finished_provisional": false,
     "id": 97
@@ -5849,6 +5849,25 @@
   },
   {
    "pos": 5,
+   "team": 9,
+   "p": 10,
+   "w": 4,
+   "d": 4,
+   "l": 2,
+   "gf": 12,
+   "ga": 10,
+   "gd": 2,
+   "pts": 16,
+   "form": [
+    "D",
+    "L",
+    "L",
+    "W",
+    "W"
+   ]
+  },
+  {
+   "pos": 6,
    "team": 14,
    "p": 9,
    "w": 4,
@@ -5867,7 +5886,7 @@
    ]
   },
   {
-   "pos": 6,
+   "pos": 7,
    "team": 4,
    "p": 9,
    "w": 3,
@@ -5882,25 +5901,6 @@
     "D",
     "L",
     "D",
-    "W"
-   ]
-  },
-  {
-   "pos": 7,
-   "team": 9,
-   "p": 9,
-   "w": 3,
-   "d": 4,
-   "l": 2,
-   "gf": 9,
-   "ga": 9,
-   "gd": 0,
-   "pts": 13,
-   "form": [
-    "W",
-    "D",
-    "L",
-    "L",
     "W"
    ]
   },
@@ -6059,20 +6059,20 @@
   {
    "pos": 16,
    "team": 7,
-   "p": 9,
+   "p": 10,
    "w": 3,
    "d": 0,
-   "l": 6,
-   "gf": 9,
-   "ga": 16,
-   "gd": -7,
+   "l": 7,
+   "gf": 10,
+   "ga": 19,
+   "gd": -9,
    "pts": 9,
    "form": [
     "W",
+    "L",
+    "L",
     "W",
-    "L",
-    "L",
-    "W"
+    "L"
    ]
   },
   {
@@ -9036,7 +9036,7 @@
     ]
    }
   ],
-  "footer": "GW10 deadline: Sat 7 Nov, 02:30 MYT.",
-  "text": "SuperF \u00b7 GW9 settled \u00b7 Mon 2 Nov\n\nGW9\nBoon takes GW9 on 64 pts and is owed RM74.\nWei Hun is second on 60 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\nConfirmed bonus moved this one: Jack led at full time, Boon took it.\n\nEVERY SCORE\n1. Boon \u2014 64 pts (+RM74)\n2. Wei Hun \u2014 60 pts (+RM26)\n3. Jack \u2014 59 pts (\u2212RM10) [-4 hit]\n4. Wei Chen \u2014 57 pts (\u2212RM10)\n5. Zahir \u2014 55 pts (\u2212RM10) [wildcard]\n6. Calvin \u2014 53 pts (\u2212RM10)\n7. Way Shoon \u2014 51 pts (\u2212RM10)\n8. Chris \u2014 50 pts (\u2212RM10)\n9. Noel \u2014 47 pts (\u2212RM10)\n10. Sam \u2014 42 pts (\u2212RM10)\n11. Soon Lee \u2014 41 pts (\u2212RM10)\n12. Tian Pin \u2014 38 pts (\u2212RM10)\n\nOCTOBER \u2014 SETTLED\nOctober is settled over GW6\u2013GW9.\nWei Hun takes the month on 257 pts and is owed RM148.\nJack is second on 241 and is owed RM52.\nThe other 10 managers owe RM20 each. Pot RM240.\n\nSEASON SO FAR\n1. Jack \u2014 600 pts\n2. Sam \u2014 592 pts (8 behind)\n3. Soon Lee \u2014 587 pts (13 behind)\nJack leads by 8 after 9 gameweeks.\n\nGW10 deadline: Sat 7 Nov, 02:30 MYT.\n"
+  "footer": "GW11 deadline: Sat 21 Nov, 19:00 MYT.",
+  "text": "SuperF \u00b7 GW9 settled \u00b7 Mon 2 Nov\n\nGW9\nBoon takes GW9 on 64 pts and is owed RM74.\nWei Hun is second on 60 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\nConfirmed bonus moved this one: Jack led at full time, Boon took it.\n\nEVERY SCORE\n1. Boon \u2014 64 pts (+RM74)\n2. Wei Hun \u2014 60 pts (+RM26)\n3. Jack \u2014 59 pts (\u2212RM10) [-4 hit]\n4. Wei Chen \u2014 57 pts (\u2212RM10)\n5. Zahir \u2014 55 pts (\u2212RM10) [wildcard]\n6. Calvin \u2014 53 pts (\u2212RM10)\n7. Way Shoon \u2014 51 pts (\u2212RM10)\n8. Chris \u2014 50 pts (\u2212RM10)\n9. Noel \u2014 47 pts (\u2212RM10)\n10. Sam \u2014 42 pts (\u2212RM10)\n11. Soon Lee \u2014 41 pts (\u2212RM10)\n12. Tian Pin \u2014 38 pts (\u2212RM10)\n\nOCTOBER \u2014 SETTLED\nOctober is settled over GW6\u2013GW9.\nWei Hun takes the month on 257 pts and is owed RM148.\nJack is second on 241 and is owed RM52.\nThe other 10 managers owe RM20 each. Pot RM240.\n\nSEASON SO FAR\n1. Jack \u2014 600 pts\n2. Sam \u2014 592 pts (8 behind)\n3. Soon Lee \u2014 587 pts (13 behind)\nJack leads by 8 after 9 gameweeks.\n\nGW11 deadline: Sat 21 Nov, 19:00 MYT.\n"
  }
 }
