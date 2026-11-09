@@ -8,15 +8,7 @@ Jack Siah,6,OCT,58,0,wildcard,,,-10.00,-24.00
 Jack Siah,7,OCT,66,0,,,,-10.00,-34.00
 Jack Siah,8,OCT,58,0,,,,26.00,-8.00
 Jack Siah,9,OCT,59,4,,,,-10.00,-18.00
-Sam Lim,1,AUG,74,0,bboost,,yes,74.00,74.00
-Sam Lim,2,AUG,108,0,,,,26.00,100.00
-Sam Lim,3,SEP,53,0,3xc,,,-10.00,90.00
-Sam Lim,4,SEP,74,0,,,,-10.00,80.00
-Sam Lim,5,SEP,44,0,,,,-10.00,70.00
-Sam Lim,6,OCT,71,0,wildcard,,,-10.00,60.00
-Sam Lim,7,OCT,79,0,,,yes,74.00,134.00
-Sam Lim,8,OCT,47,0,,,,-10.00,124.00
-Sam Lim,9,OCT,42,0,,,,-10.00,114.00
+Jack Siah,10,NOV,73,0,bboost,,,26.00,8.00
 Soon Lee Loo,1,AUG,70,0,bboost,,,26.00,26.00
 Soon Lee Loo,2,AUG,101,0,,,,-10.00,16.00
 Soon Lee Loo,3,SEP,77,0,,,,26.00,42.00
@@ -26,15 +18,17 @@ Soon Lee Loo,6,OCT,77,4,,,,-10.00,12.00
 Soon Lee Loo,7,OCT,57,0,,,,-10.00,2.00
 Soon Lee Loo,8,OCT,43,0,,,,-10.00,-8.00
 Soon Lee Loo,9,OCT,41,0,,,,-10.00,-18.00
-Wei Hun Wong,1,AUG,60,0,bboost,,,-10.00,-10.00
-Wei Hun Wong,2,AUG,72,0,,,,-10.00,-20.00
-Wei Hun Wong,3,SEP,54,0,3xc,,,-10.00,-30.00
-Wei Hun Wong,4,SEP,100,0,wildcard,,yes,74.00,44.00
-Wei Hun Wong,5,SEP,42,0,,,,-10.00,34.00
-Wei Hun Wong,6,OCT,83,0,,,,26.00,60.00
-Wei Hun Wong,7,OCT,67,0,,,,-10.00,50.00
-Wei Hun Wong,8,OCT,47,0,,,,-10.00,40.00
-Wei Hun Wong,9,OCT,60,0,,,,26.00,66.00
+Soon Lee Loo,10,NOV,70,0,,,,-10.00,-28.00
+Sam Lim,1,AUG,74,0,bboost,,yes,74.00,74.00
+Sam Lim,2,AUG,108,0,,,,26.00,100.00
+Sam Lim,3,SEP,53,0,3xc,,,-10.00,90.00
+Sam Lim,4,SEP,74,0,,,,-10.00,80.00
+Sam Lim,5,SEP,44,0,,,,-10.00,70.00
+Sam Lim,6,OCT,71,0,wildcard,,,-10.00,60.00
+Sam Lim,7,OCT,79,0,,,yes,74.00,134.00
+Sam Lim,8,OCT,47,0,,,,-10.00,124.00
+Sam Lim,9,OCT,42,0,,,,-10.00,114.00
+Sam Lim,10,NOV,58,4,,,,-10.00,104.00
 Way Shoon Lim,1,AUG,52,0,,,,-10.00,-10.00
 Way Shoon Lim,2,AUG,110,0,,,yes,74.00,64.00
 Way Shoon Lim,3,SEP,61,0,3xc,,,-10.00,54.00
@@ -44,6 +38,17 @@ Way Shoon Lim,6,OCT,58,0,,,,-10.00,60.00
 Way Shoon Lim,7,OCT,53,0,,,,-10.00,50.00
 Way Shoon Lim,8,OCT,63,0,wildcard,,yes,74.00,124.00
 Way Shoon Lim,9,OCT,51,0,,,,-10.00,114.00
+Way Shoon Lim,10,NOV,55,0,,,,-10.00,104.00
+Wei Hun Wong,1,AUG,60,0,bboost,,,-10.00,-10.00
+Wei Hun Wong,2,AUG,72,0,,,,-10.00,-20.00
+Wei Hun Wong,3,SEP,54,0,3xc,,,-10.00,-30.00
+Wei Hun Wong,4,SEP,100,0,wildcard,,yes,74.00,44.00
+Wei Hun Wong,5,SEP,42,0,,,,-10.00,34.00
+Wei Hun Wong,6,OCT,83,0,,,,26.00,60.00
+Wei Hun Wong,7,OCT,67,0,,,,-10.00,50.00
+Wei Hun Wong,8,OCT,47,0,,,,-10.00,40.00
+Wei Hun Wong,9,OCT,60,0,,,,26.00,66.00
+Wei Hun Wong,10,NOV,50,0,,,,-10.00,56.00
 Christopher Chin,1,AUG,52,0,,,,-10.00,-10.00
 Christopher Chin,2,AUG,83,0,,,,-10.00,-20.00
 Christopher Chin,3,SEP,74,0,,,,-10.00,-30.00
@@ -53,6 +58,7 @@ Christopher Chin,6,OCT,71,0,,,,-10.00,-60.00
 Christopher Chin,7,OCT,56,0,,,,-10.00,-70.00
 Christopher Chin,8,OCT,45,0,,,,-10.00,-80.00
 Christopher Chin,9,OCT,50,0,,,,-10.00,-90.00
+Christopher Chin,10,NOV,58,0,,,,-10.00,-100.00
 Wei Chen Lim,1,AUG,61,0,,,,-10.00,-10.00
 Wei Chen Lim,2,AUG,62,0,,,,-10.00,-20.00
 Wei Chen Lim,3,SEP,80,0,,,yes,74.00,54.00
@@ -62,15 +68,7 @@ Wei Chen Lim,6,OCT,75,0,,,,-10.00,24.00
 Wei Chen Lim,7,OCT,60,0,,,,-10.00,14.00
 Wei Chen Lim,8,OCT,39,0,,,,-10.00,4.00
 Wei Chen Lim,9,OCT,57,0,,,,-10.00,-6.00
-Calvin Foo,1,AUG,66,0,,,,-10.00,-10.00
-Calvin Foo,2,AUG,54,0,,,,-10.00,-20.00
-Calvin Foo,3,SEP,41,0,wildcard,,,-10.00,-30.00
-Calvin Foo,4,SEP,87,0,,,,-10.00,-40.00
-Calvin Foo,5,SEP,64,0,,,yes,74.00,34.00
-Calvin Foo,6,OCT,61,0,,,,-10.00,24.00
-Calvin Foo,7,OCT,73,0,,,,26.00,50.00
-Calvin Foo,8,OCT,35,0,,,,-10.00,40.00
-Calvin Foo,9,OCT,53,0,,,,-10.00,30.00
+Wei Chen Lim,10,NOV,50,0,3xc,,,-10.00,-16.00
 Noel Tan,1,AUG,63,0,,,,-10.00,-10.00
 Noel Tan,2,AUG,98,0,,,,-10.00,-20.00
 Noel Tan,3,SEP,45,0,,,,-10.00,-30.00
@@ -80,6 +78,7 @@ Noel Tan,6,OCT,56,0,,,,-10.00,-60.00
 Noel Tan,7,OCT,72,0,,,,-10.00,-70.00
 Noel Tan,8,OCT,40,0,,,,-10.00,-80.00
 Noel Tan,9,OCT,47,0,,,,-10.00,-90.00
+Noel Tan,10,NOV,64,0,wildcard,,,-10.00,-100.00
 Shaik Zahir,1,AUG,48,0,,,,-10.00,-10.00
 Shaik Zahir,2,AUG,94,0,,,,-10.00,-20.00
 Shaik Zahir,3,SEP,51,0,,,,-10.00,-30.00
@@ -89,6 +88,17 @@ Shaik Zahir,6,OCT,51,4,,,,-10.00,-60.00
 Shaik Zahir,7,OCT,43,0,,,,-10.00,-70.00
 Shaik Zahir,8,OCT,53,0,,,,-10.00,-80.00
 Shaik Zahir,9,OCT,55,0,wildcard,,,-10.00,-90.00
+Shaik Zahir,10,NOV,70,0,,,,-10.00,-100.00
+Calvin Foo,1,AUG,66,0,,,,-10.00,-10.00
+Calvin Foo,2,AUG,54,0,,,,-10.00,-20.00
+Calvin Foo,3,SEP,41,0,wildcard,,,-10.00,-30.00
+Calvin Foo,4,SEP,87,0,,,,-10.00,-40.00
+Calvin Foo,5,SEP,64,0,,,yes,74.00,34.00
+Calvin Foo,6,OCT,61,0,,,,-10.00,24.00
+Calvin Foo,7,OCT,73,0,,,,26.00,50.00
+Calvin Foo,8,OCT,35,0,,,,-10.00,40.00
+Calvin Foo,9,OCT,53,0,,,,-10.00,30.00
+Calvin Foo,10,NOV,52,0,,,,-10.00,20.00
 Tian Pin Lee,1,AUG,49,0,,,,-10.00,-10.00
 Tian Pin Lee,2,AUG,103,0,,,,-10.00,-20.00
 Tian Pin Lee,3,SEP,60,0,,,,-10.00,-30.00
@@ -98,6 +108,7 @@ Tian Pin Lee,6,OCT,62,8,,,,-10.00,-60.00
 Tian Pin Lee,7,OCT,56,0,,,,-10.00,-70.00
 Tian Pin Lee,8,OCT,44,0,,,,-10.00,-80.00
 Tian Pin Lee,9,OCT,38,0,,,,-10.00,-90.00
+Tian Pin Lee,10,NOV,59,8,,,,-10.00,-100.00
 Boon Siang Ng,1,AUG,36,0,,,,-10.00,-10.00
 Boon Siang Ng,2,AUG,70,0,,,,-10.00,-20.00
 Boon Siang Ng,3,SEP,56,0,,,,-10.00,-30.00
@@ -107,3 +118,4 @@ Boon Siang Ng,6,OCT,91,0,,,yes,74.00,24.00
 Boon Siang Ng,7,OCT,50,0,bboost,,,-10.00,14.00
 Boon Siang Ng,8,OCT,23,0,,,,-10.00,4.00
 Boon Siang Ng,9,OCT,64,0,,,yes,74.00,78.00
+Boon Siang Ng,10,NOV,78,0,,,yes,74.00,152.00

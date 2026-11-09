@@ -201,7 +201,14 @@
   },
   "reasoning": "Soon Lee Loo leads on xP 71.4 and, crucially, 51.0 of it is already banked \u2014 \u00d8degaard's captaincy has been paid out, with only five players left. That is the safest kind of lead in this league. The chase is Jack Siah: just 26.0 banked but 37.4 remaining off a bench boost, eight names still to play across Bournemouth, Brighton, Chelsea and Villa. Haaland captaincy at xP 1.0 has already failed for most of the pack, which flattens the field. Structural risk: everything funnels into Saturday's 14:00 slot, and Soon Lee Loo's remaining 20.4 is the thinnest of anyone near the top. Wei Chen Lim's triple captain on Rogers is the live wildcard \u2014 a haul vaults him past Jack."
  },
- "result": null,
+ "result": {
+  "actual_first": "boonsiang",
+  "actual_second": "jack",
+  "exact_hit": false,
+  "podium_hit": false,
+  "pair_hit": false,
+  "mean_rank_error": 1.5
+ },
  "record": {
   "played": 0,
   "exact": 0,
