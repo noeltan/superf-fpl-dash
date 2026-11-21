@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-20T15:14:07Z",
+ "generated_at": "2026-11-21T14:29:14Z",
  "league": {
   "id": 310479,
   "name": "SuperF",
@@ -8,9 +8,9 @@
  },
  "current": {
   "season": "2026/27",
-  "gameweek": 10,
-  "next_gw": 11,
-  "state": "final"
+  "gameweek": 11,
+  "next_gw": 12,
+  "state": "live"
  },
  "tz": {
   "name": "Asia/Kuala_Lumpur",
@@ -2080,11 +2080,11 @@
     "ko": "2026-11-21T12:30:00Z",
     "dh": 2,
     "da": 5,
-    "hs": null,
-    "as": null,
-    "started": false,
+    "hs": 1,
+    "as": 1,
+    "started": true,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 108
    },
    {
@@ -5812,20 +5812,20 @@
   {
    "pos": 3,
    "team": 15,
-   "p": 10,
+   "p": 11,
    "w": 7,
-   "d": 0,
+   "d": 1,
    "l": 3,
-   "gf": 21,
-   "ga": 13,
+   "gf": 22,
+   "ga": 14,
    "gd": 8,
-   "pts": 21,
+   "pts": 22,
    "form": [
     "W",
-    "W",
     "L",
     "L",
-    "L"
+    "L",
+    "D"
    ]
   },
   {
@@ -6020,6 +6020,25 @@
   },
   {
    "pos": 14,
+   "team": 10,
+   "p": 11,
+   "w": 2,
+   "d": 5,
+   "l": 4,
+   "gf": 11,
+   "ga": 13,
+   "gd": -2,
+   "pts": 11,
+   "form": [
+    "W",
+    "W",
+    "D",
+    "D",
+    "D"
+   ]
+  },
+  {
+   "pos": 15,
    "team": 12,
    "p": 10,
    "w": 3,
@@ -6035,25 +6054,6 @@
     "D",
     "D",
     "L"
-   ]
-  },
-  {
-   "pos": 15,
-   "team": 10,
-   "p": 10,
-   "w": 2,
-   "d": 4,
-   "l": 4,
-   "gf": 10,
-   "ga": 12,
-   "gd": -2,
-   "pts": 10,
-   "form": [
-    "L",
-    "W",
-    "W",
-    "D",
-    "D"
    ]
   },
   {
@@ -9291,7 +9291,7 @@
     ]
    }
   ],
-  "footer": "GW11 deadline: Sat 21 Nov, 19:00 MYT.",
-  "text": "SuperF \u00b7 GW10 settled \u00b7 Sun 8 Nov\n\nGW10\nBoon takes GW10 on 78 pts and is owed RM74.\nJack is second on 73 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\n\nEVERY SCORE\n1. Boon \u2014 78 pts (+RM74)\n2. Jack \u2014 73 pts (+RM26) [bboost]\n3. Soon Lee \u2014 70 pts (\u2212RM10)\n4. Zahir \u2014 70 pts (\u2212RM10)\n5. Noel \u2014 64 pts (\u2212RM10) [wildcard]\n6. Tian Pin \u2014 59 pts (\u2212RM10) [-8 hit]\n7. Chris \u2014 58 pts (\u2212RM10)\n8. Sam \u2014 58 pts (\u2212RM10) [-4 hit]\n9. Way Shoon \u2014 55 pts (\u2212RM10)\n10. Calvin \u2014 52 pts (\u2212RM10)\n11. Wei Chen \u2014 50 pts (\u2212RM10) [3xc]\n12. Wei Hun \u2014 50 pts (\u2212RM10)\n\nNOVEMBER \u2014 RUNNING\nNovember is 1 of 3 gameweeks in \u2014 RM180 in the pot, 2 gameweeks left.\n1. Boon \u2014 78 pts\n2. Jack \u2014 73 pts\n3. Soon Lee \u2014 70 pts\nBoon would take RM111 if it held \u2014 would, not is. Nothing settles until GW12 is final.\n\nSEASON SO FAR\n1. Jack \u2014 673 pts\n2. Soon Lee \u2014 657 pts (16 behind)\n3. Sam \u2014 650 pts (23 behind)\nJack leads by 16 after 10 gameweeks.\n\nGW11 deadline: Sat 21 Nov, 19:00 MYT.\n"
+  "footer": "GW12 deadline: Sat 28 Nov, 02:30 MYT.",
+  "text": "SuperF \u00b7 GW10 settled \u00b7 Sun 8 Nov\n\nGW10\nBoon takes GW10 on 78 pts and is owed RM74.\nJack is second on 73 and is owed RM26.\nThe other 10 managers owe RM10 each. Pot RM120.\n\nEVERY SCORE\n1. Boon \u2014 78 pts (+RM74)\n2. Jack \u2014 73 pts (+RM26) [bboost]\n3. Soon Lee \u2014 70 pts (\u2212RM10)\n4. Zahir \u2014 70 pts (\u2212RM10)\n5. Noel \u2014 64 pts (\u2212RM10) [wildcard]\n6. Tian Pin \u2014 59 pts (\u2212RM10) [-8 hit]\n7. Chris \u2014 58 pts (\u2212RM10)\n8. Sam \u2014 58 pts (\u2212RM10) [-4 hit]\n9. Way Shoon \u2014 55 pts (\u2212RM10)\n10. Calvin \u2014 52 pts (\u2212RM10)\n11. Wei Chen \u2014 50 pts (\u2212RM10) [3xc]\n12. Wei Hun \u2014 50 pts (\u2212RM10)\n\nNOVEMBER \u2014 RUNNING\nNovember is 1 of 3 gameweeks in \u2014 RM180 in the pot, 2 gameweeks left.\n1. Boon \u2014 78 pts\n2. Jack \u2014 73 pts\n3. Soon Lee \u2014 70 pts\nBoon would take RM111 if it held \u2014 would, not is. Nothing settles until GW12 is final.\n\nSEASON SO FAR\n1. Jack \u2014 673 pts\n2. Soon Lee \u2014 657 pts (16 behind)\n3. Sam \u2014 650 pts (23 behind)\nJack leads by 16 after 10 gameweeks.\n\nGW12 deadline: Sat 28 Nov, 02:30 MYT.\n"
  }
 }
