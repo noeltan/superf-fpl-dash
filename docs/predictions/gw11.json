@@ -1,0 +1,206 @@
+{
+ "gw": 11,
+ "generated_at": "2026-11-21T20:12:49Z",
+ "model": "claude-opus-5",
+ "mode": "mid_round",
+ "mid_round": {
+  "as_of": "2026-11-21T20:12:49Z",
+  "played": 7,
+  "remaining": 3,
+  "total": 10
+ },
+ "projections": [
+  {
+   "manager": "shaikzahir",
+   "xp": 60.7,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 41.0,
+   "remaining": 19.7
+  },
+  {
+   "manager": "weichenlim",
+   "xp": 47.4,
+   "captain": "N.Jackson",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 33.0,
+   "remaining": 14.4
+  },
+  {
+   "manager": "chris",
+   "xp": 45.2,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 36.0,
+   "remaining": 9.2
+  },
+  {
+   "manager": "noel",
+   "xp": 44.1,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 34.0,
+   "remaining": 10.1
+  },
+  {
+   "manager": "calvinfoo",
+   "xp": 43.8,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 27.0,
+   "remaining": 16.8
+  },
+  {
+   "manager": "tianpin",
+   "xp": 43.5,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "AVL",
+    "players": 2
+   },
+   "banked": 21.0,
+   "remaining": 22.5
+  },
+  {
+   "manager": "jack",
+   "xp": 42.1,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 23.0,
+   "remaining": 19.1
+  },
+  {
+   "manager": "sam",
+   "xp": 40.1,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 30.0,
+   "remaining": 10.1
+  },
+  {
+   "manager": "weihun",
+   "xp": 38.9,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 24.0,
+   "remaining": 14.9
+  },
+  {
+   "manager": "boonsiang",
+   "xp": 38.4,
+   "captain": "N.Jackson",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 2
+   },
+   "banked": 18.0,
+   "remaining": 20.4
+  },
+  {
+   "manager": "soonlee",
+   "xp": 37.6,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 23.0,
+   "remaining": 14.6
+  },
+  {
+   "manager": "wayshoonlim",
+   "xp": 35.5,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 15.0,
+   "remaining": 20.5
+  }
+ ],
+ "call": {
+  "first": {
+   "manager": "shaikzahir",
+   "confidence": "high"
+  },
+  "second": {
+   "manager": "weichenlim",
+   "confidence": "low"
+  },
+  "agrees_with_projection": true,
+  "swing_player": {
+   "name": "De Cuyper",
+   "owned_by": [
+    "noel",
+    "sam",
+    "weihun",
+    "soonlee",
+    "boonsiang",
+    "tianpin",
+    "chris",
+    "calvinfoo",
+    "shaikzahir",
+    "weichenlim",
+    "wayshoonlim"
+   ],
+   "why": "Eleven of twelve managers hold him, so a Brighton clean sheet at Hull lifts almost everyone \u2014 but it quietly buries Jack Siah, the only non-owner, and decides the chasing pack by attacking returns rather than the base points."
+  },
+  "reasoning": "Shaik Zahir leads on xP 60.7 and, crucially, 41.0 of that is already banked \u2014 the biggest finished total in the league. His 19.7 remaining is a bonus, not a need. That is a real lead, not a projected one, and it would take a collapse at Hull and Anfield for it to go.\n\nSecond is genuinely open. Wei Chen Lim sits on 47.4 with 33.0 banked, but Christopher Chin (36.0 banked) and Noel Tan (34.0) are close behind on safer money. Tian Pin Lee has the most left to play for, 22.5 remaining, and could leapfrog the lot.\n\nNobody played a chip. Everyone is exposed to Brighton at Hull; Haaland captaincy is universal, so no divergence to punish."
+ },
+ "result": null,
+ "record": {
+  "played": 0,
+  "exact": 0,
+  "podium": 0,
+  "pair": 0
+ }
+}

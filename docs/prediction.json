@@ -1,214 +1,202 @@
 {
- "gw": 10,
- "generated_at": "2026-11-07T18:15:48Z",
+ "gw": 11,
+ "generated_at": "2026-11-21T20:12:49Z",
  "model": "claude-opus-5",
  "mode": "mid_round",
  "mid_round": {
-  "as_of": "2026-11-07T18:15:48Z",
-  "played": 5,
-  "remaining": 5,
+  "as_of": "2026-11-21T20:12:49Z",
+  "played": 7,
+  "remaining": 3,
   "total": 10
  },
  "projections": [
   {
-   "manager": "soonlee",
-   "xp": 71.4,
-   "captain": "\u00d8degaard",
-   "captain_xp": 11.0,
+   "manager": "shaikzahir",
+   "xp": 60.7,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 41.0,
+   "remaining": 19.7
+  },
+  {
+   "manager": "weichenlim",
+   "xp": 47.4,
+   "captain": "N.Jackson",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 33.0,
+   "remaining": 14.4
+  },
+  {
+   "manager": "chris",
+   "xp": 45.2,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
    "hits": 0,
    "concentration": {
     "club": "ARS",
     "players": 3
    },
-   "banked": 51.0,
-   "remaining": 20.4
+   "banked": 36.0,
+   "remaining": 9.2
   },
   {
-   "manager": "jack",
-   "xp": 63.4,
+   "manager": "noel",
+   "xp": 44.1,
    "captain": "Haaland",
-   "captain_xp": 1.0,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 2
-   },
-   "chip": "bboost",
-   "squad": 15,
-   "banked": 26.0,
-   "remaining": 37.4
-  },
-  {
-   "manager": "boonsiang",
-   "xp": 57.7,
-   "captain": "Palmer",
-   "captain_xp": 4.2,
-   "hits": 0,
-   "concentration": {
-    "club": "BHA",
-    "players": 2
-   },
-   "banked": 26.0,
-   "remaining": 31.7
-  },
-  {
-   "manager": "wayshoonlim",
-   "xp": 57.3,
-   "captain": "Haaland",
-   "captain_xp": 1.0,
+   "captain_xp": 2.0,
    "hits": 0,
    "concentration": {
     "club": "ARS",
     "players": 3
    },
    "banked": 34.0,
-   "remaining": 23.3
-  },
-  {
-   "manager": "shaikzahir",
-   "xp": 57.2,
-   "captain": "Haaland",
-   "captain_xp": 1.0,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 2
-   },
-   "banked": 24.0,
-   "remaining": 33.2
-  },
-  {
-   "manager": "noel",
-   "xp": 54.7,
-   "captain": "Haaland",
-   "captain_xp": 1.0,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 3
-   },
-   "chip": "wildcard",
-   "squad": 11,
-   "banked": 25.0,
-   "remaining": 29.7
-  },
-  {
-   "manager": "sam",
-   "xp": 50.1,
-   "captain": "Haaland",
-   "captain_xp": 1.0,
-   "hits": 4,
-   "concentration": {
-    "club": "ARS",
-    "players": 3
-   },
-   "banked": 22.0,
-   "remaining": 28.1
-  },
-  {
-   "manager": "weihun",
-   "xp": 49.2,
-   "captain": "Haaland",
-   "captain_xp": 1.0,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 2
-   },
-   "banked": 16.0,
-   "remaining": 33.2
-  },
-  {
-   "manager": "weichenlim",
-   "xp": 48.5,
-   "captain": "Rogers",
-   "captain_xp": 4.6,
-   "hits": 0,
-   "concentration": {
-    "club": "ARS",
-    "players": 2
-   },
-   "chip": "3xc",
-   "squad": 11,
-   "banked": 11.0,
-   "remaining": 37.5
+   "remaining": 10.1
   },
   {
    "manager": "calvinfoo",
-   "xp": 48.4,
+   "xp": 43.8,
    "captain": "Haaland",
-   "captain_xp": 1.0,
+   "captain_xp": 2.0,
    "hits": 0,
    "concentration": {
     "club": "BHA",
     "players": 3
    },
-   "banked": 16.0,
-   "remaining": 32.4
+   "banked": 27.0,
+   "remaining": 16.8
   },
   {
-   "manager": "chris",
-   "xp": 43.1,
+   "manager": "tianpin",
+   "xp": 43.5,
    "captain": "Haaland",
-   "captain_xp": 1.0,
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "AVL",
+    "players": 2
+   },
+   "banked": 21.0,
+   "remaining": 22.5
+  },
+  {
+   "manager": "jack",
+   "xp": 42.1,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 23.0,
+   "remaining": 19.1
+  },
+  {
+   "manager": "sam",
+   "xp": 40.1,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
    "hits": 0,
    "concentration": {
     "club": "ARS",
     "players": 3
    },
-   "banked": 25.0,
-   "remaining": 18.1
+   "banked": 30.0,
+   "remaining": 10.1
   },
   {
-   "manager": "tianpin",
-   "xp": 42.5,
+   "manager": "weihun",
+   "xp": 38.9,
    "captain": "Haaland",
-   "captain_xp": 1.0,
-   "hits": 8,
+   "captain_xp": 2.0,
+   "hits": 0,
    "concentration": {
-    "club": "AVL",
+    "club": "BHA",
+    "players": 3
+   },
+   "banked": 24.0,
+   "remaining": 14.9
+  },
+  {
+   "manager": "boonsiang",
+   "xp": 38.4,
+   "captain": "N.Jackson",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "BHA",
     "players": 2
    },
-   "banked": 10.0,
-   "remaining": 32.5
+   "banked": 18.0,
+   "remaining": 20.4
+  },
+  {
+   "manager": "soonlee",
+   "xp": 37.6,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 2
+   },
+   "banked": 23.0,
+   "remaining": 14.6
+  },
+  {
+   "manager": "wayshoonlim",
+   "xp": 35.5,
+   "captain": "Haaland",
+   "captain_xp": 2.0,
+   "hits": 0,
+   "concentration": {
+    "club": "ARS",
+    "players": 3
+   },
+   "banked": 15.0,
+   "remaining": 20.5
   }
  ],
  "call": {
   "first": {
-   "manager": "soonlee",
-   "confidence": "medium"
+   "manager": "shaikzahir",
+   "confidence": "high"
   },
   "second": {
-   "manager": "jack",
-   "confidence": "medium"
+   "manager": "weichenlim",
+   "confidence": "low"
   },
   "agrees_with_projection": true,
   "swing_player": {
-   "name": "Rogers",
+   "name": "De Cuyper",
    "owned_by": [
     "noel",
-    "jack",
     "sam",
     "weihun",
     "soonlee",
+    "boonsiang",
+    "tianpin",
     "chris",
     "calvinfoo",
     "shaikzahir",
     "weichenlim",
     "wayshoonlim"
    ],
-   "why": "Ten of twelve own him at Sunderland, and Wei Chen Lim has him triple-captained \u2014 Rogers blanking kills weichenlim's chip outright, while a haul drags almost the whole league up and only rewards the triple captain properly. He is the one name that both decides the chase and settles whether anyone can catch Soon Lee Loo."
+   "why": "Eleven of twelve managers hold him, so a Brighton clean sheet at Hull lifts almost everyone \u2014 but it quietly buries Jack Siah, the only non-owner, and decides the chasing pack by attacking returns rather than the base points."
   },
-  "reasoning": "Soon Lee Loo leads on xP 71.4 and, crucially, 51.0 of it is already banked \u2014 \u00d8degaard's captaincy has been paid out, with only five players left. That is the safest kind of lead in this league. The chase is Jack Siah: just 26.0 banked but 37.4 remaining off a bench boost, eight names still to play across Bournemouth, Brighton, Chelsea and Villa. Haaland captaincy at xP 1.0 has already failed for most of the pack, which flattens the field. Structural risk: everything funnels into Saturday's 14:00 slot, and Soon Lee Loo's remaining 20.4 is the thinnest of anyone near the top. Wei Chen Lim's triple captain on Rogers is the live wildcard \u2014 a haul vaults him past Jack."
+  "reasoning": "Shaik Zahir leads on xP 60.7 and, crucially, 41.0 of that is already banked \u2014 the biggest finished total in the league. His 19.7 remaining is a bonus, not a need. That is a real lead, not a projected one, and it would take a collapse at Hull and Anfield for it to go.\n\nSecond is genuinely open. Wei Chen Lim sits on 47.4 with 33.0 banked, but Christopher Chin (36.0 banked) and Noel Tan (34.0) are close behind on safer money. Tian Pin Lee has the most left to play for, 22.5 remaining, and could leapfrog the lot.\n\nNobody played a chip. Everyone is exposed to Brighton at Hull; Haaland captaincy is universal, so no divergence to punish."
  },
- "result": {
-  "actual_first": "boonsiang",
-  "actual_second": "jack",
-  "exact_hit": false,
-  "podium_hit": false,
-  "pair_hit": false,
-  "mean_rank_error": 1.5
- },
+ "result": null,
  "record": {
   "played": 0,
   "exact": 0,
