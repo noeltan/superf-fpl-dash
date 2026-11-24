@@ -196,7 +196,14 @@
   },
   "reasoning": "Shaik Zahir leads on xP 60.7 and, crucially, 41.0 of that is already banked \u2014 the biggest finished total in the league. His 19.7 remaining is a bonus, not a need. That is a real lead, not a projected one, and it would take a collapse at Hull and Anfield for it to go.\n\nSecond is genuinely open. Wei Chen Lim sits on 47.4 with 33.0 banked, but Christopher Chin (36.0 banked) and Noel Tan (34.0) are close behind on safer money. Tian Pin Lee has the most left to play for, 22.5 remaining, and could leapfrog the lot.\n\nNobody played a chip. Everyone is exposed to Brighton at Hull; Haaland captaincy is universal, so no divergence to punish."
  },
- "result": null,
+ "result": {
+  "actual_first": "shaikzahir",
+  "actual_second": "chris",
+  "exact_hit": true,
+  "podium_hit": true,
+  "pair_hit": false,
+  "mean_rank_error": 1.5
+ },
  "record": {
   "played": 0,
   "exact": 0,
